@@ -1031,6 +1031,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	
 	/* create or get the shared instance of NSSavePanel */
 	sp = [NSSavePanel savePanel];
+	[sp setTitle:NSLocalizedString(@"Save as PDF", @"Save as PDF")];
 	
 	[sp setRequiredFileType:@"pdf"];
 	
@@ -1061,7 +1062,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (void)exportedProgressRate:(double)rate PageCount:(int)count
 {
-	NSString *title = NSLocalizedString(@"Export to PDF", @"Export to PDF");
+	NSString *title = NSLocalizedString(@"Save as PDF", @"Save as PDF");
 	NSString *label = [NSString stringWithFormat:@"%@ : %d %@", title, count, NSLocalizedString(@"pages", @"pages")];
 	[exportNoticeLabel setStringValue:label];
 	[exportProgressIndicator setDoubleValue:rate];

@@ -8,7 +8,6 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="564"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -271,7 +270,7 @@
 								</object>
 								<object class="NSMenuItem" id="675755588">
 									<reference key="NSMenu" ref="720053764"/>
-									<string key="NSTitle">Export to PDF...</string>
+									<string key="NSTitle">Save as PDF...</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -2404,7 +2403,7 @@
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
-					<string>{{390, 773}, {201, 193}}</string>
+					<string>{{390, 773}, {189, 193}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{155, 774}, {199, 203}}</string>
@@ -2506,6 +2505,7 @@
 							<string>changeTopic:</string>
 							<string>closeTab:</string>
 							<string>doneFind:</string>
+							<string>endExportProgressSheet:</string>
 							<string>exportToPDF:</string>
 							<string>findInFile:</string>
 							<string>findNext:</string>
@@ -2527,6 +2527,7 @@
 							<string>setSearchInFile:</string>
 							<string>setSearchInIndex:</string>
 							<string>showAddBookmark:</string>
+							<string>showExportProgressSheet:</string>
 							<string>showFindPanel:</string>
 							<string>toggleSidebar:</string>
 							<string>zoom:</string>
@@ -2535,6 +2536,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2569,6 +2571,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -2578,6 +2581,9 @@
 							<string>addBookmarkPanel</string>
 							<string>docTabView</string>
 							<string>documentWindow</string>
+							<string>exportNoticeLabel</string>
+							<string>exportProgressIndicator</string>
+							<string>exportProgressSheet</string>
 							<string>historyItemView</string>
 							<string>homeItemView</string>
 							<string>searchItemView</string>
@@ -2593,6 +2599,9 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPanel</string>
 							<string>NSTabView</string>
+							<string>NSWindow</string>
+							<string>NSTextField</string>
+							<string>NSProgressIndicator</string>
 							<string>NSWindow</string>
 							<string>NSSegmentedControl</string>
 							<string>NSButton</string>

@@ -42,3 +42,9 @@
 
 /* Index */
 "Index" = "索引";
+
+/* pages */
+"pages" = "页";
+
+/* Save as PDF */
+"Save as PDF" = "另存为PDF";

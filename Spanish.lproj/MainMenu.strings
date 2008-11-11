@@ -226,3 +226,6 @@
 
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "562"; */
 "562.title" = "Eliminar";
+
+/* Class = "NSMenuItem"; title = "Save as PDF..."; ObjectID = "564"; */
+"564.title" = "Guardar como PDF...";
