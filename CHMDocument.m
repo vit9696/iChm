@@ -705,7 +705,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 		NSString* oldestKey = nil;
 		for (NSString *key in [filesInfoList allKeys] ) {
 			NSDictionary *info = [filesInfoList objectForKey:key];
-			if (oldest == nil || [oldest objectForKey:PREF_UPDATED_AT] < [info objectForKey:PREF_UPDATED_AT])
+			if (oldest == nil || 
+				[[oldest objectForKey:PREF_UPDATED_AT] compare: [info objectForKey:PREF_UPDATED_AT]] ==  NSOrderedDescending)
 			{
 				oldest = info;
 				oldestKey = key;
