@@ -17,6 +17,7 @@
 	[document retain];
 	pageList = list;
 
+	pageCount = 0;
 	curPageId = 0;
 	webView = [[WebView alloc] init];
 	[webView setPolicyDelegate:document];
@@ -48,13 +49,20 @@
 - (void)export
 {
 	if (curPageId == [pageList count])
-		return [self release];
+	{
+		[self release];
+		[document endExportProgressSheet:nil];
+		return;
+	}
 	
 	LinkItem *page = [pageList objectAtIndex:curPageId];
 	
 	NSURL *url = [document composeURL:[page path]];
 	NSURLRequest *req = [NSURLRequest requestWithURL:url];
-	[[webView mainFrame] loadRequest:req];		
+	[[webView mainFrame] loadRequest:req];
+	
+	double rate = 100.0 * curPageId / [pageList count];
+	[document exportedProgressRate:rate PageCount:pageCount];
 }
 
 - (void)dealloc
@@ -84,6 +92,7 @@
 		CGContextBeginPage(ctx, &pageRecct);
 		CGContextDrawPDFPage(ctx, page);
 		CGContextEndPage(ctx);
+		++pageCount;
 	}
 	CGPDFDocumentRelease(pdfDoc);
 	

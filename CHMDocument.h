@@ -32,6 +32,10 @@ struct chmFile;
 	IBOutlet NSPanel *addBookmarkPanel;
 	IBOutlet NSMenu *sidebarViewMenu;
 	
+	IBOutlet NSWindow *exportProgressSheet;
+	IBOutlet NSProgressIndicator *exportProgressIndicator;
+	IBOutlet NSTextField *exportNoticeLabel;
+	
 	struct chmFile *chmFileHandle;
 	NSString *filePath;
 	
@@ -91,6 +95,9 @@ struct chmFile;
 
 // dump to pdf
 - (IBAction)exportToPDF:(id)sender;
+- (IBAction)showExportProgressSheet:(id)sender;
+- (IBAction)endExportProgressSheet:(id)sender;
+- (void)exportedProgressRate:(double)rate PageCount:(int)count;
 
 // search
 - (IBAction)setSearchInFile:(id)sender;

@@ -951,6 +951,13 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	
 }
 
+- (void)updateHistoryButton
+{
+	[historyItemView setEnabled:[curWebView canGoBack]	forSegment:0];
+	[historyItemView setEnabled:[curWebView canGoForward] forSegment:1];
+}
+
+#pragma mark export to pdf
 - (IBAction)exportToPDF:(id)sender
 {
 	NSSavePanel *sp;
@@ -962,7 +969,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	[sp setRequiredFileType:@"pdf"];
 	
 	/* display the NSSavePanel */
-	runResult = [sp runModal];
+	runResult = [sp runModalForDirectory:nil file:[[filePath lastPathComponent] stringByDeletingPathExtension] ];
 	
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
@@ -970,13 +977,28 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:filename WithPageList:[tocSource pageList]];
 		[exporter export];
 		[exporter release];
+		[self showExportProgressSheet:self];
 	}
 }
 
-- (void)updateHistoryButton
+- (IBAction)showExportProgressSheet:(id)sender
 {
-	[historyItemView setEnabled:[curWebView canGoBack]	forSegment:0];
-	[historyItemView setEnabled:[curWebView canGoForward] forSegment:1];
+	[NSApp beginSheet:exportProgressSheet modalForWindow:documentWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[exportProgressIndicator setIndeterminate:FALSE];
+}
+
+- (IBAction)endExportProgressSheet:(id)sender
+{
+	[NSApp endSheet:exportProgressSheet];
+	[exportProgressSheet orderOut:sender];
+}
+
+- (void)exportedProgressRate:(double)rate PageCount:(int)count
+{
+	NSString *title = NSLocalizedString(@"Export to PDF", @"Export to PDF");
+	NSString *label = [NSString stringWithFormat:@"%@ : %d %@", title, count, NSLocalizedString(@"pages", @"pages")];
+	[exportNoticeLabel setStringValue:label];
+	[exportProgressIndicator setDoubleValue:rate];
 }
 
 # pragma mark TabVew
