@@ -20,6 +20,14 @@
 #import "CHMExporter.h"
 #import "lcid.h"
 
+#define PREF_FILES_INFO @"files info"
+#define PREF_UPDATED_AT @"updated at"
+#define PREF_LAST_PATH @"last path"
+#define PREF_SEARCH_TYPE @"search type"
+
+#define PREF_VALUE_SEARCH_IN_INDEX @"index"
+#define PREF_VALUE_SEARCH_IN_FILE  @"file"
+
 static NSString* 	ICHMToolbarIdentifier 		= @"ICHM Toolbar Identifier";
 static NSString*	HistoryToolbarItemIdentifier 	= @"History Item Identifier";
 static NSString*	TextSizeToolbarItemIdentifier 	= @"Text Size Item Identifier";
@@ -574,7 +582,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	[self setupToolbar];
 	[self restoreSidebar];
 		
-	NSString *lastPath = [self getLoastURLforFile:filePath];
+	// go to last viewed page
+	NSString *lastPath = (NSString*) [self getPreferenceforFile:filePath withKey:PREF_LAST_PATH];
 	if (nil == lastPath)
 		[self goHome:self];
 	else
@@ -582,6 +591,12 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	
 	[self prepareSearchIndex];
 	
+	// set search type and search menu
+	NSString* type = [self getPreferenceforFile:filePath withKey:PREF_SEARCH_TYPE];
+	if (type != nil && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX])
+		[self setSearchInIndex:[[searchItemView cell] searchMenuTemplate] ];
+	
+	// invoke search if query string provided in command line
 	if (firstDocument)
 	{
 		NSUserDefaults *args = [NSUserDefaults standardUserDefaults];
@@ -683,20 +698,12 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-#define PREF_FILES_INFO @"files info"
-#define PREF_UPDATED_AT @"updated at"
-#define PREF_LAST_PATH @"last path"
-
-- (void)setLastPath:(NSString*)path forFile:(NSString*)filename
+- (void)setPreference:(id)object forFile:(NSString*)filename withKey:(NSString*)key
 {
-	NSString *trimedPath = [NSString stringWithString:path];
-	while ([trimedPath hasPrefix:@"/"])
-		trimedPath = [trimedPath substringFromIndex:1];
-	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSMutableDictionary *filesInfoList = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:PREF_FILES_INFO]];
 	NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:[filesInfoList objectForKey:filename]];
-	[fileInfo setObject:trimedPath forKey:PREF_LAST_PATH];
+	[fileInfo setObject:object forKey:key];
 	[fileInfo setObject:[NSDate date] forKey:PREF_UPDATED_AT];
 	[filesInfoList setObject:fileInfo forKey:filename];
 	
@@ -720,7 +727,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	[defaults setObject:filesInfoList forKey:PREF_FILES_INFO];
 }
 
-- (NSString*)getLoastURLforFile:(NSString*)filename
+- (id)getPreferenceforFile:(NSString*)filename withKey:(NSString*)key
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSDictionary *filesInfoList = [defaults dictionaryForKey:PREF_FILES_INFO];
@@ -729,7 +736,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	NSDictionary *fileInfo = [filesInfoList objectForKey:filename];
 	if (nil == fileInfo)
 		return nil;
-	return [fileInfo objectForKey:PREF_LAST_PATH];
+	return [fileInfo objectForKey:key];
 }
 
 #pragma mark Properties
@@ -780,8 +787,12 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			[self findNext:self];
 		}
 	}
-
-	[self setLastPath:[url path] forFile:filePath];	
+	
+	// setup last path
+	NSString *trimedPath = [NSString stringWithString:[url path]];
+	while ([trimedPath hasPrefix:@"/"])
+		trimedPath = [trimedPath substringFromIndex:1];	
+	[self setPreference:trimedPath forFile:filePath	withKey:PREF_LAST_PATH];
 }
 
 # pragma mark Javascript
@@ -1311,13 +1322,19 @@ static int forEachFile(struct chmFile *h,
 	
 	if ([[searchItemView stringValue] length] > 0)
 		[self searchInFile:self];
+	
+	[self setPreference:PREF_VALUE_SEARCH_IN_FILE forFile:filePath withKey:PREF_SEARCH_TYPE];
 }
 
 - (IBAction)setSearchInIndex:(id)sender
 {
 	[searchItemView setAction:@selector(searchInIndex:)];
 	NSSearchFieldCell *cell  = [searchItemView cell];
-	NSMenu *menu = [sender menu];
+	NSMenu *menu;
+	if ([sender isKindOfClass:[NSMenu class]])
+		menu = sender;
+	else
+		menu = [sender menu];
 	NSMenuItem *item = [menu itemWithTag:2];
 	[item setState:NSOnState];
 	[[menu itemWithTag:1] setState:NSOffState];
@@ -1325,6 +1342,8 @@ static int forEachFile(struct chmFile *h,
 	
 	if ([[searchItemView stringValue] length] > 0)
 		[self searchInIndex:self];
+
+	[self setPreference:PREF_VALUE_SEARCH_IN_INDEX forFile:filePath withKey:PREF_SEARCH_TYPE];
 }
 
 - (IBAction)searchInIndex:(id)sender

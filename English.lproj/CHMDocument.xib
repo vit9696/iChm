@@ -8,8 +8,9 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="5"/>
 			<integer value="100190"/>
+			<integer value="100175"/>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -634,6 +635,7 @@
 				<string key="NSWindowTitle"/>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
+				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="278247573">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -1481,7 +1483,7 @@
 					<string>{{491, 755}, {362, 81}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{491, 755}, {362, 81}}</string>
-					<integer value="0"/>
+					<integer value="0" id="8"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1490,7 +1492,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{150, 347}, {819, 559}}</string>
 					<reference ref="9"/>
-					<integer value="0"/>
+					<reference ref="8"/>
 					<string>{{201, 387}, {507, 413}}</string>
 					<reference ref="9"/>
 					<string>{3.40282e+38, 3.40282e+38}</string>
