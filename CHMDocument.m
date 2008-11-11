@@ -574,7 +574,11 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	[self setupToolbar];
 	[self restoreSidebar];
 		
-	[self goHome:self];
+	NSString *lastPath = [self getLoastURLforFile:filePath];
+	if (nil == lastPath)
+		[self goHome:self];
+	else
+		[self loadPath:lastPath];
 	
 	[self prepareSearchIndex];
 	
@@ -679,6 +683,54 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
+#define PREF_FILES_INFO @"files info"
+#define PREF_UPDATED_AT @"updated at"
+#define PREF_LAST_PATH @"last path"
+
+- (void)setLastPath:(NSString*)path forFile:(NSString*)filename
+{
+	NSString *trimedPath = [NSString stringWithString:path];
+	while ([trimedPath hasPrefix:@"/"])
+		trimedPath = [trimedPath substringFromIndex:1];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSMutableDictionary *filesInfoList = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:PREF_FILES_INFO]];
+	NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:[filesInfoList objectForKey:filename]];
+	[fileInfo setObject:trimedPath forKey:PREF_LAST_PATH];
+	[fileInfo setObject:[NSDate date] forKey:PREF_UPDATED_AT];
+	[filesInfoList setObject:fileInfo forKey:filename];
+	
+	if ([filesInfoList count] > 20) {
+		NSDictionary *oldest = nil;
+		NSString* oldestKey = nil;
+		for (NSString *key in [filesInfoList allKeys] ) {
+			NSDictionary *info = [filesInfoList objectForKey:key];
+			if (oldest == nil || [oldest objectForKey:PREF_UPDATED_AT] < [info objectForKey:PREF_UPDATED_AT])
+			{
+				oldest = info;
+				oldestKey = key;
+			}
+		}
+		[oldestKey retain];
+		[filesInfoList removeObjectForKey:oldestKey];
+		[oldestKey release];
+	}
+	
+	[defaults setObject:filesInfoList forKey:PREF_FILES_INFO];
+}
+
+- (NSString*)getLoastURLforFile:(NSString*)filename
+{
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSDictionary *filesInfoList = [defaults dictionaryForKey:PREF_FILES_INFO];
+	if (nil == filesInfoList)
+		return nil;
+	NSDictionary *fileInfo = [filesInfoList objectForKey:filename];
+	if (nil == fileInfo)
+		return nil;
+	return [fileInfo objectForKey:PREF_LAST_PATH];
+}
+
 #pragma mark Properties
 - (NSString*)currentURL
 {
@@ -727,6 +779,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			[self findNext:self];
 		}
 	}
+
+	[self setLastPath:[url path] forFile:filePath];	
 }
 
 # pragma mark Javascript

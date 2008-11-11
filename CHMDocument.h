@@ -93,6 +93,10 @@ struct chmFile;
 
 - (IBAction)locateTOC:(id)sender;
 
+// file preferences
+- (void)setLastPath:(NSString*)path forFile:(NSString*)filename;
+- (NSString*)getLoastURLforFile:(NSString*)filename;
+
 // dump to pdf
 - (IBAction)exportToPDF:(id)sender;
 - (IBAction)showExportProgressSheet:(id)sender;
