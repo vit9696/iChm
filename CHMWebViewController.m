@@ -19,7 +19,6 @@
 	if (![super initWithNibName:@"CHMWebView" bundle:nil])
 		return nil;
 	[self loadView];
-	[self hideFindPanel:self];
 	return self;
 }
 

@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.02">
+<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.03">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">9F33</string>
-		<string key="IBDocument.InterfaceBuilderVersion">672</string>
-		<string key="IBDocument.AppKitVersion">949.34</string>
-		<string key="IBDocument.HIToolboxVersion">352.00</string>
+		<string key="IBDocument.SystemVersion">9J61</string>
+		<string key="IBDocument.InterfaceBuilderVersion">677</string>
+		<string key="IBDocument.AppKitVersion">949.46</string>
+		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1" id="9"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>com.apple.WebKitIBPlugin</string>
 			<string>com.apple.InterfaceBuilderKit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+		</object>
+		<object class="NSMutableDictionary" key="IBDocument.Metadata">
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -28,7 +36,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="1005">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -40,6 +48,7 @@
 							<object class="NSMutableArray" key="set.sortedObjects">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<string>Apple HTML pasteboard type</string>
+								<string>Apple PDF pasteboard type</string>
 								<string>Apple PICT pasteboard type</string>
 								<string>Apple URL pasteboard type</string>
 								<string>Apple Web Archive pasteboard type</string>
@@ -50,11 +59,12 @@
 								<string>NeXT Rich Text Format v1.0 pasteboard type</string>
 								<string>NeXT TIFF v4.0 pasteboard type</string>
 								<string>WebURLsWithTitlesPboardType</string>
+								<string>public.png</string>
 								<string>public.url</string>
 								<string>public.url-name</string>
 							</object>
 						</object>
-						<string key="NSFrameSize">{480, 247}</string>
+						<string key="NSFrameSize">{480, 272}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<reference key="NSNextKeyView"/>
 						<string key="FrameName"/>
@@ -76,7 +86,7 @@
 					</object>
 					<object class="NSCustomView" id="1067057059">
 						<reference key="NSNextResponder" ref="1005"/>
-						<int key="NSvFlags">266</int>
+						<int key="NSvFlags">-2147483382</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="NSButton" id="855362353">
@@ -164,7 +174,7 @@
 												<object class="NSMutableArray" key="dict.values">
 													<bool key="EncodedWithXMLCoder">YES</bool>
 													<string>cancel</string>
-													<reference ref="9"/>
+													<integer value="1"/>
 												</object>
 											</object>
 										</object>
@@ -224,7 +234,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{480, 272}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 		</object>
@@ -496,6 +505,8 @@
 							<string>changeTopic:</string>
 							<string>closeTab:</string>
 							<string>doneFind:</string>
+							<string>endExportProgressSheet:</string>
+							<string>exportToPDF:</string>
 							<string>findInFile:</string>
 							<string>findNext:</string>
 							<string>findPrev:</string>
@@ -504,6 +515,8 @@
 							<string>goForward:</string>
 							<string>goHistory:</string>
 							<string>goHome:</string>
+							<string>gotoNextPage:</string>
+							<string>gotoPrevPage:</string>
 							<string>hideSidebar:</string>
 							<string>locateTOC:</string>
 							<string>openInNewTab:</string>
@@ -514,6 +527,7 @@
 							<string>setSearchInFile:</string>
 							<string>setSearchInIndex:</string>
 							<string>showAddBookmark:</string>
+							<string>showExportProgressSheet:</string>
 							<string>showFindPanel:</string>
 							<string>toggleSidebar:</string>
 							<string>zoom:</string>
@@ -522,6 +536,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -553,6 +571,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -562,6 +581,9 @@
 							<string>addBookmarkPanel</string>
 							<string>docTabView</string>
 							<string>documentWindow</string>
+							<string>exportNoticeLabel</string>
+							<string>exportProgressIndicator</string>
+							<string>exportProgressSheet</string>
 							<string>historyItemView</string>
 							<string>homeItemView</string>
 							<string>searchItemView</string>
@@ -577,6 +599,9 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPanel</string>
 							<string>NSTabView</string>
+							<string>NSWindow</string>
+							<string>NSTextField</string>
+							<string>NSProgressIndicator</string>
 							<string>NSWindow</string>
 							<string>NSSegmentedControl</string>
 							<string>NSButton</string>
