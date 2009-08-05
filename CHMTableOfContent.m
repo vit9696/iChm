@@ -387,7 +387,7 @@ static void elementDidStart( CHMTableOfContent *context, const xmlChar *name, co
 		}
 		
 		if( ( type != NULL ) && ( value != NULL ) ) {
-			if( !strcasecmp( "Name", (char *)type ) ) {
+			if( !strcasecmp( "Name", (char *)type ) || !strcasecmp( "Keyword", (char *)type )) {
 				// Name of the topic
 				NSString *str = [[NSString alloc] initWithUTF8String:(char *)value];
 				if (![[context curItem] name])

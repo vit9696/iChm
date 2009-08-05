@@ -755,6 +755,17 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 }
 
 # pragma mark WebFrameLoadDelegate
+- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+	NSLog(@"falied to load page:%@", error);
+}
+
+- (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+	NSLog(@"falied to load page:%@", error);
+}
+
+
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
 	[self updateHistoryButton];

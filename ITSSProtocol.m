@@ -64,8 +64,11 @@
 		return;
     }
     
+	NSString *type = nil;
+	if ([[[path pathExtension] lowercaseString] isEqualToString:@"html"])
+		type = @"text/html";
     NSURLResponse *response = [[NSURLResponse alloc] initWithURL: [[self request] URL]
-														MIMEType:nil
+														MIMEType:type
 										   expectedContentLength:[data length]
 												textEncodingName:encoding];
     [[self client] URLProtocol:self     
