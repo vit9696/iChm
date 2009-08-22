@@ -76,6 +76,18 @@
 }
 
 #pragma mark WebFrameLoadDelegate
+- (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+	curPageId += 1;
+	[self export];        
+}
+
+- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame
+{
+	curPageId += 1;
+	[self export];    
+}
+
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
 	NSView *docView = [[[webView mainFrame] frameView] documentView];
