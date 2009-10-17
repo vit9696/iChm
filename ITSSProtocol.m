@@ -65,7 +65,8 @@
     }
     
 	NSString *type = nil;
-	if ([[[path pathExtension] lowercaseString] isEqualToString:@"html"])
+	if ([[[path pathExtension] lowercaseString] isEqualToString:@"html"] ||
+         [[[path pathExtension] lowercaseString] isEqualToString:@"htm"])
 		type = @"text/html";
     NSURLResponse *response = [[NSURLResponse alloc] initWithURL: [[self request] URL]
 														MIMEType:type
