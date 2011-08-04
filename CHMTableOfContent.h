@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 @class LinkItem;
 
-@interface CHMTableOfContent : NSObject {
+@interface CHMTableOfContent : NSObject <NSOutlineViewDataSource> {
 	LinkItem *rootItems;
 	
 	NSMutableArray *itemStack;

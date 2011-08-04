@@ -147,7 +147,7 @@
 		[chmFile setTitle:[doc docTitle]];
 		[context save:&error];
 		if ( ![context save:&error] )
-			NSLog(@"Can not fetch file info: %d",error );
+			NSLog(@"Can not fetch file info: %@",error );
 	}
 	
 	CHMBookmark *bookmark = [CHMBookmark bookmarkByURL:[doc currentURL] withContext:[self managedObjectContext]];
@@ -164,7 +164,7 @@
 	[bookmark setTagsString:[tagField stringValue]];
 	if ( ![context save:&error] )
 	{
-		NSLog(@"Can not fetch file info: %d",error );
+		NSLog(@"Can not fetch file info: %@",error );
 		return;
 	}
 }
@@ -363,7 +363,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch file info: %d",error );
+		NSLog(@"Can not fetch file info: %@",error );
 		return;
 	}
 	for (CHMBookmark* bm in array) {

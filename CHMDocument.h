@@ -17,7 +17,7 @@
 @class CHMConsole;
 struct chmFile;
 
-@interface CHMDocument : NSDocument {
+@interface CHMDocument : NSDocument <NSToolbarDelegate> {
 	IBOutlet PSMTabBarControl *tabBar;
 	IBOutlet NSTabView *docTabView;
 	IBOutlet NSOutlineView *tocView;
