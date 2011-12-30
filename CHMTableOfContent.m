@@ -150,6 +150,11 @@
 	[_children removeObjectsAtIndexes:set];
 	[set release];
 }
+
+-(NSString *)description
+{
+    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", _name, _path, _children];
+}
 @end
 
 @interface CHMTableOfContent (Private)
@@ -323,8 +328,11 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 
 - (void)new_item
 {
-	curItem = [[LinkItem alloc] init];
+    if ([itemStack count] == 0) {
+        [self push_item];
+    }
 	LinkItem * parent = [itemStack lastObject];
+	curItem = [[LinkItem alloc] init];
 	[parent appendChild:curItem];
 }
 
