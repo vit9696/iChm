@@ -570,6 +570,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 - (void)windowControllerDidLoadNib:(NSWindowController *) aController
 {
     [super windowControllerDidLoadNib:aController];
+    [aController.window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 	
 	[self setupTabBar];
 	[self addNewTab:self];
