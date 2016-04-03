@@ -23,10 +23,10 @@
 		C33DE50B0E40A651009FF1F4 /* ichm.css in Resources */ = {isa = PBXBuildFile; fileRef = C33DE50A0E40A651009FF1F4 /* ichm.css */; };
 		C33DE67D0E40C40A009FF1F4 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = C33DE67B0E40C40A009FF1F4 /* highlight.js */; };
 		C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
-		C346DF0B0E530E9E00A76373 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
+		C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
 		C35B99FA0E39C23400A63BC3 /* redbird.icns in Resources */ = {isa = PBXBuildFile; fileRef = C35B99F90E39C23400A63BC3 /* redbird.icns */; };
 		C35B9BCE0E39E38500A63BC3 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */; };
-		C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */; };
+		C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */; };
 		C36FD4240E482D3800496822 /* CHMWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C36FD4230E482D3800496822 /* CHMWebView.xib */; };
 		C36FD52C0E48403F00496822 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C36FD52B0E48403F00496822 /* Localizable.strings */; };
 		C3907F3D0EC005430018AA80 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3907F3C0EC005430018AA80 /* Quartz.framework */; };
@@ -51,16 +51,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C35B9BE70E39E4AB00A63BC3 /* CopyFiles */ = {
+		C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C346DF0B0E530E9E00A76373 /* Sparkle.framework in CopyFiles */,
 				C3C397000E3F8E2E00A52FBE /* chm_lib.framework in CopyFiles */,
-				C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in CopyFiles */,
+				C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */,
+				C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in Copy Frameworks */,
 			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -164,11 +165,11 @@
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				C3DB24CE0E2DB849000E5A20 /* WebKit.framework in Frameworks */,
-				C35B9BCE0E39E38500A63BC3 /* PSMTabBarControl.framework in Frameworks */,
 				C3C396F90E3F8E2800A52FBE /* chm_lib.framework in Frameworks */,
-				C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */,
 				C3907F3D0EC005430018AA80 /* Quartz.framework in Frameworks */,
 				C3907F690EC005B30018AA80 /* ApplicationServices.framework in Frameworks */,
+				C35B9BCE0E39E38500A63BC3 /* PSMTabBarControl.framework in Frameworks */,
+				C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,8 +333,8 @@
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
-				C35B9BE70E39E4AB00A63BC3 /* CopyFiles */,
 				C3806F110E5D0948005E7585 /* ShellScript */,
+				C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
