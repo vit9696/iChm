@@ -33,12 +33,12 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch file info: %d",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 		return nil;
 	}
 	if ([array count] == 0)
 	{
-		NSLog(@"Can not fetch file with path: %%",path );
+		NSLog(@"Cannot fetch file with path: %@", path);
 		return nil;
 	}
 	return [array objectAtIndex:0];
@@ -58,7 +58,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch file info: %d",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 	}
 	return array;	
 }

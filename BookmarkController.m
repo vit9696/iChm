@@ -12,6 +12,20 @@
 #import "CHMBookmark.h"
 #import "CHMTag.h"
 
+
+#define MD_DEBUG 1
+
+#if defined(MD_DEBUG)
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+static void MDLog(NSString *string, ...) {
+	(void)string;
+}
+#endif
+
+
+
+
 @interface BookmarkController (Private)
 - (void)groupByTagsMenuNeedsUpdate:(NSMenu*)menu;
 - (void)groupByFilesMenuNeedsUpdate:(NSMenu*)menu;
@@ -91,7 +105,8 @@
 
 - (void)windowDidLoad
 {
-    NSLog(@"Nib file is loaded");
+	MDLog(@"[%@ %@] Nib file is loaded", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[tableController fetch:self];
 }
 
@@ -129,7 +144,8 @@
 
 - (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	NSLog(@"add bookmark ended with return code:%d", returnCode);
+	MDLog(@"[%@ %@] add bookmark ended with returnCode == %ld", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (long)returnCode);
+	
 	if( 0 == returnCode || !contextInfo)
 		return;
 	
@@ -147,7 +163,7 @@
 		[chmFile setTitle:[doc docTitle]];
 		[context save:&error];
 		if ( ![context save:&error] )
-			NSLog(@"Can not fetch file info: %@",error );
+			NSLog(@"Cannot fetch file info: %@", error);
 	}
 	
 	CHMBookmark *bookmark = [CHMBookmark bookmarkByURL:[doc currentURL] withContext:[self managedObjectContext]];
@@ -164,7 +180,7 @@
 	[bookmark setTagsString:[tagField stringValue]];
 	if ( ![context save:&error] )
 	{
-		NSLog(@"Can not fetch file info: %@",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 		return;
 	}
 }
@@ -363,7 +379,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch file info: %@",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 		return;
 	}
 	for (CHMBookmark* bm in array) {

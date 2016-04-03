@@ -20,6 +20,19 @@
 #import "CHMExporter.h"
 #import "lcid.h"
 
+
+#define MD_DEBUG 1
+
+#if defined(MD_DEBUG)
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+static void MDLog(NSString *string, ...) {
+	(void)string;
+}
+#endif
+
+
+
 #define PREF_FILES_INFO @"files info"
 #define PREF_UPDATED_AT @"updated at"
 #define PREF_LAST_PATH @"last path"
@@ -50,7 +63,7 @@ static BOOL firstDocument = YES;
 
 - (void)log:(NSString*)string
 {
-	NSLog(string);
+	NSLog(@"%@", string);
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)selector {
@@ -419,22 +432,22 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			
 			if( !docTitle || ( [docTitle length] == 0 ) ) { 
 				docTitle = readTrimmedString( stringsData, readLong( windowsData, entryOffset + 0x14), encodingName );
-				NSLog(@"STRINGS title: %@", docTitle);
+				MDLog(@"[%@ %@] STRINGS title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 			}
 			
 			if( !tocPath || ( [tocPath length] == 0 ) ) { 
 				tocPath = readString( stringsData, readLong( windowsData, entryOffset + 0x60 ), encodingName );
-				NSLog(@"STRINGS path of TOC: %@", tocPath);
+				MDLog(@"[%@ %@] STRINGS path of TOC == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 			}
 			
 			if( !indexPath || ( [indexPath length] == 0 ) ) { 
 				indexPath = readString( stringsData, readLong( windowsData, entryOffset + 0x64 ), encodingName );
-				NSLog(@"STRINGS path of index file: %@", indexPath);
+				MDLog(@"[%@ %@] STRINGS path of index file == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 			}
 			
 			if( !homePath || ( [homePath length] == 0 ) ) { 
 				homePath = readString( stringsData, readLong( windowsData, entryOffset + 0x68 ), encodingName );
-				NSLog(@"STRINGS path of home: %@", homePath);
+				MDLog(@"[%@ %@] STRINGS path of home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 			}
 		}
     }
@@ -452,33 +465,33 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			case 0:
 				if( !tocPath || ( [tocPath length] == 0 ) ) {
 					tocPath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Table of contents: %@", tocPath );
+					MDLog(@"[%@ %@] SYSTEM Table of contents == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 				}
 				break;
 			case 1:
 				if( !indexPath || ( [indexPath length] == 0 ) ) {
 					indexPath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Index: %@", indexPath );
+					MDLog(@"[%@ %@] SYSTEM Index == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
 				break;
 			case 2:
 				if( !homePath || ( [homePath length] == 0 ) ) {
 					homePath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Home: %@", homePath );
+					MDLog(@"[%@ %@] SYSTEM Home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 				}
 				break;
 			case 3:
 				if( !docTitle || ( [docTitle length] == 0 ) ) {
 					docTitle = readTrimmedString( systemData, offset + 4, encodingName );
-					NSLog( @"SYSTEM Title: %@", docTitle );
+					MDLog(@"[%@ %@] SYSTEM Title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 				}
 				break;
 			case 4:
 			{
 				unsigned int lcid = readLong(systemData, offset + 4);
-				NSLog(@"SYSTEM LCID: %d", lcid);
+				MDLog(@"[%@ %@] SYSTEM LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), lcid);
 				encodingName = LCIDtoEncodingName(lcid);
-				NSLog(@"SYSTEM encoding: %@", encodingName);
+				MDLog(@"[%@ %@] SYSTEM ecoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
 			}
 				break;
 			case 6:
@@ -500,7 +513,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 						indexPath = path;
 					}
 				}
-				NSLog( @"SYSTEM Table of contents: %@", tocPath );
+				MDLog(@"[%@ %@] SYSTEM Table of contents == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 				[prefix release];
 			}
 				break;
@@ -509,7 +522,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			case 16:
 				break;
 			default:
-				NSLog(@"SYSTEM unhandled value:%d", readShort( systemData, offset ));
+				MDLog(@"[%@ %@] SYSTEM unhandled value == %d", NSStringFromClass([self class]), NSStringFromSelector(_cmd), readShort(systemData, offset));
 				break;
 		}
 		offset += readShort(systemData, offset+2) + 4;
@@ -526,7 +539,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
     // Check for lack of index page
     if( !homePath ) {
         homePath = [self findHomeForPath:@"/"];
-        NSLog( @"Implicit home: %@", homePath );
+		MDLog(@"[%@ %@] Implicit home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
     }
     
     [homePath retain];
