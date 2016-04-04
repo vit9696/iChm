@@ -116,26 +116,11 @@ static BOOL firstDocument = YES;
     
         // Add your subclass-specific initialization here.
         // If an error occurs here, send a [self release] message and return nil.
-		chmFileHandle = nil;
-		filePath = nil;
-		
-		docTitle = nil;
-		homePath = nil;
-		tocPath = nil;
-		indexPath = nil;
-		
-		skIndex = nil;
-		searchIndexObject = nil;
-		isIndexDone = false;
+		isIndexDone = NO;
 		searchIndexCondition = [[NSCondition alloc] init];
 		
-		tocSource = nil;
-		searchSource = nil;
 		webViews = [[NSMutableArray alloc] init];
 		console = [[CHMConsole alloc] init];
-		curWebView = nil;
-		
-		customizedEncodingTag = 0;
 		
 		isSidebarRestored = NO;
     }
@@ -1301,7 +1286,7 @@ static int forEachFile(struct chmFile *h,
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[searchIndexCondition lock];
 	chm_enumerate(chmFileHandle, CHM_ENUMERATE_FILES||CHM_ENUMERATE_NORMAL, forEachFile, (void*)self);
-	isIndexDone = true;
+	isIndexDone = YES;
 	[searchIndexCondition signal];
 	[searchIndexCondition unlock];
 	[pool release];
@@ -1425,8 +1410,7 @@ static int forEachFile(struct chmFile *h,
 		return;
 	}
 	
-	if (searchSource)
-		[searchSource release];
+	[searchSource release];
 	
 	searchSource = [[CHMSearchResult alloc] initwithTOC:tocSource withIndex:indexSource];
 	if (!indexSource && !tocSource)

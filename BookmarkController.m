@@ -59,17 +59,13 @@ static void MDLog(NSString *string, ...) {
 - (id)init
 {
 	children = [[NSMutableArray alloc] init];
-	request = nil;
-	title = nil;
 	return self;
 }
 
 - (void)dealloc
 {
-	if (request)
-		[request release];
-	if (title)
-		[title release];
+	[request release];
+	[title release];
 	[children release];
 	[super dealloc];
 }
@@ -97,9 +93,6 @@ static void MDLog(NSString *string, ...) {
 {
     if (![super initWithWindowNibName:@"Bookmark"])
         return nil;
-	
-	tocSource = nil;
-
 	[CHMFile purgeWithContext:[self managedObjectContext]];
 
     return self;
@@ -405,8 +398,7 @@ static void MDLog(NSString *string, ...) {
 # pragma mark NSOutlineView datasource
 - (void)setupDataSource
 {
-	if(tocSource)
-		[tocSource release];
+	[tocSource release];
 	
 	tocSource = [[FetchRequestItem alloc] init];
 	

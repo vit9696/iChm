@@ -16,8 +16,6 @@
 - (id)init
 {
 	_children = [[NSMutableArray alloc] init];
-	_name = nil;
-	_path = nil;
 	return self;
 }
 
@@ -242,7 +240,6 @@ NULL, /* getParameterEntity */
 - (void) dealloc
 {
 	[rootItems release];
-
 	[super dealloc];
 }
 
@@ -452,11 +449,8 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 
 - (void) dealloc
 {
-	if (tableOfContent)
-		[tableOfContent release];
-
-	if (indexContent)
-		[indexContent release];
+	[tableOfContent release];
+	[indexContent release];
 	[super dealloc];
 }
 
