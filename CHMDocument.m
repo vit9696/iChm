@@ -181,12 +181,10 @@ static inline unsigned short readShort( NSData *data, NSUInteger offset ) {
     return NSSwapLittleShortToHost( value );
 }
 
-static inline unsigned long readLong( NSData *data, unsigned int offset ) {
-    NSRange valueRange = { offset, 4 };
-    unsigned long value;
-    
-    [data getBytes:(void *)&value range:valueRange];
-    return NSSwapLittleLongToHost( value );
+static inline UInt32 readInt(NSData *data, NSUInteger offset) {
+	UInt32 value = 0;
+	[data getBytes:&value range:NSMakeRange(offset, 4)];
+	return NSSwapLittleIntToHost(value);
 }
 
 static inline NSString * readString( NSData *data, unsigned long offset, NSString *encodingName ) {
@@ -424,29 +422,29 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
     NSData *stringsData = [self content:@"/#STRINGS"];
 	
     if( windowsData && stringsData ) {
-		const unsigned long entryCount = readLong( windowsData, 0 );
-		const unsigned long entrySize = readLong( windowsData, 4 );
+		const UInt32 entryCount = readInt(windowsData, 0);
+		const UInt32 entrySize = readInt(windowsData, 4);
 		
-		for( int entryIndex = 0; entryIndex < entryCount; ++entryIndex ) {
-			unsigned long entryOffset = 8 + ( entryIndex * entrySize );
+		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex ) {
+			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
 			
 			if( !docTitle || ( [docTitle length] == 0 ) ) { 
-				docTitle = readTrimmedString( stringsData, readLong( windowsData, entryOffset + 0x14), encodingName );
+				docTitle = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encodingName);
 				MDLog(@"[%@ %@] STRINGS title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 			}
 			
 			if( !tocPath || ( [tocPath length] == 0 ) ) { 
-				tocPath = readString( stringsData, readLong( windowsData, entryOffset + 0x60 ), encodingName );
+				tocPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60 ), encodingName);
 				MDLog(@"[%@ %@] STRINGS path of TOC == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 			}
 			
 			if( !indexPath || ( [indexPath length] == 0 ) ) { 
-				indexPath = readString( stringsData, readLong( windowsData, entryOffset + 0x64 ), encodingName );
+				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64 ), encodingName);
 				MDLog(@"[%@ %@] STRINGS path of index file == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 			}
 			
 			if( !homePath || ( [homePath length] == 0 ) ) { 
-				homePath = readString( stringsData, readLong( windowsData, entryOffset + 0x68 ), encodingName );
+				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68 ), encodingName);
 				MDLog(@"[%@ %@] STRINGS path of home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 			}
 		}
@@ -487,9 +485,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 					MDLog(@"[%@ %@] SYSTEM Title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 				}
 				break;
-			case 4:
-			{
-				unsigned int lcid = readLong(systemData, offset + 4);
+			case 4: {
+				UInt32 lcid = readInt(systemData, offset + 4);
 				MDLog(@"[%@ %@] SYSTEM LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), lcid);
 				encodingName = LCIDtoEncodingName(lcid);
 				MDLog(@"[%@ %@] SYSTEM ecoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
