@@ -12,8 +12,10 @@
 @implementation CHMTextEncodingMenu
 - (id)init
 {
-	initialized = NO;
-	encodingNames = [[NSMutableArray alloc] init];
+	if ((self = [super init])) {
+		initialized = NO;
+		encodingNames = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 

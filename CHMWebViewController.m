@@ -16,9 +16,9 @@
 
 - (id) init
 {
-	if (![super initWithNibName:@"CHMWebView" bundle:nil])
-		return nil;
-	[self loadView];
+	if ((self = [super initWithNibName:@"CHMWebView" bundle:nil])) {
+		[self loadView];
+	}
 	return self;
 }
 

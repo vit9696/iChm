@@ -13,36 +13,39 @@
 @implementation CHMExporter
 - (id)initWithCHMDocument:(CHMDocument*)doc toFileName:(NSString*)filename WithPageList:(NSArray*)list
 {
-	document = doc;
-	[document retain];
-	pageList = list;
-
-	pageCount = 0;
-	curPageId = 0;
-	webView = [[WebView alloc] init];
-	[webView setPolicyDelegate:document];
-	[webView setFrameLoadDelegate:self];
-	[webView setResourceLoadDelegate:document];	
-
-	CFURLRef fileURL = CFURLCreateWithFileSystemPath(NULL, 
-													 (CFStringRef) filename, kCFURLPOSIXPathStyle, false);
-	NSPrintInfo * sharedInfo = [document printInfo];
-	NSMutableDictionary *printInfoDict = [NSMutableDictionary dictionaryWithDictionary: [sharedInfo dictionary]];
-	[printInfoDict setObject:NSPrintSaveJob 
-					  forKey:NSPrintJobDisposition];
-	tmpFileName = [NSString stringWithFormat:@"%@/ichm-export.pdf", NSTemporaryDirectory()];
-	[tmpFileName retain];
-	[printInfoDict setObject:tmpFileName forKey:NSPrintSavePath];
-	printInfo = [[NSPrintInfo alloc] initWithDictionary: printInfoDict];
-	[printInfo setHorizontalPagination: NSAutoPagination];
-	[printInfo setVerticalPagination: NSAutoPagination];
-	[printInfo setVerticallyCentered:NO];	
 	
-	NSSize pageSize = [printInfo paperSize];
-	pageRecct = CGRectMake(0	, 0, pageSize.width , pageSize.height);
-	ctx = CGPDFContextCreateWithURL(fileURL, &pageRecct, NULL);	
-	CFRelease(fileURL);
-	[self retain];
+	if ((self = [super init])) {
+		document = doc;
+		[document retain];
+		pageList = list;
+		
+		pageCount = 0;
+		curPageId = 0;
+		webView = [[WebView alloc] init];
+		[webView setPolicyDelegate:document];
+		[webView setFrameLoadDelegate:self];
+		[webView setResourceLoadDelegate:document];
+		
+		CFURLRef fileURL = CFURLCreateWithFileSystemPath(NULL, 
+														 (CFStringRef) filename, kCFURLPOSIXPathStyle, false);
+		NSPrintInfo * sharedInfo = [document printInfo];
+		NSMutableDictionary *printInfoDict = [NSMutableDictionary dictionaryWithDictionary: [sharedInfo dictionary]];
+		[printInfoDict setObject:NSPrintSaveJob 
+						  forKey:NSPrintJobDisposition];
+		tmpFileName = [NSString stringWithFormat:@"%@/ichm-export.pdf", NSTemporaryDirectory()];
+		[tmpFileName retain];
+		[printInfoDict setObject:tmpFileName forKey:NSPrintSavePath];
+		printInfo = [[NSPrintInfo alloc] initWithDictionary: printInfoDict];
+		[printInfo setHorizontalPagination: NSAutoPagination];
+		[printInfo setVerticalPagination: NSAutoPagination];
+		[printInfo setVerticallyCentered:NO];	
+		
+		NSSize pageSize = [printInfo paperSize];
+		pageRecct = CGRectMake(0	, 0, pageSize.width , pageSize.height);
+		ctx = CGPDFContextCreateWithURL(fileURL, &pageRecct, NULL);	
+		CFRelease(fileURL);
+		[self retain];
+	}
 	return self;
 }
 

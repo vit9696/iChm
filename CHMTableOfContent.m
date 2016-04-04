@@ -15,7 +15,9 @@
 
 - (id)init
 {
-	_children = [[NSMutableArray alloc] init];
+	if ((self = [super init])) {
+		_children = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 
@@ -29,11 +31,10 @@
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path
 {
-	[self init];
-	_name = name;
-	_path = path;
-	[_name retain];
-	[_path retain];
+	if ((self = [super init])) {
+		_name = [name retain];
+		_path = [path retain];
+	}
 	return self;
 }
 
@@ -203,36 +204,40 @@ NULL, /* getParameterEntity */
 
 - (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName
 {
-	itemStack = [[NSMutableArray alloc] init];
-	pageList = [[NSMutableArray alloc] init];
-	rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
-	curItem = rootItems;
-	
-	if(!encodingName || [encodingName length] == 0)
-		encodingName = @"iso_8859_1";
-	
-	htmlDocPtr doc = htmlSAXParseDoc( (xmlChar *)[data bytes], [encodingName UTF8String],
+	if ((self = [super init])) {
+		itemStack = [[NSMutableArray alloc] init];
+		pageList = [[NSMutableArray alloc] init];
+		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		curItem = rootItems;
+		
+		if(!encodingName || [encodingName length] == 0)
+			encodingName = @"iso_8859_1";
+		
+		htmlDocPtr doc = htmlSAXParseDoc( (xmlChar *)[data bytes], [encodingName UTF8String],
 									  &saxHandler, self);
-	[itemStack release];
-	
-	if( doc ) {
-	    xmlFreeDoc( doc );
+		[itemStack release];
+		
+		if( doc ) {
+			xmlFreeDoc( doc );
+		}
+		[rootItems purge];
+		[rootItems enumerateItemsWithSEL:@selector(addToPageList:) ForTarget:self];
 	}
-	[rootItems purge];
-	[rootItems enumerateItemsWithSEL:@selector(addToPageList:) ForTarget:self];
+	
 	return self;
 }
 
 - (id)initWithTOC:(CHMTableOfContent*)toc filterByPredicate:(NSPredicate*)predicate
 {
-	rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
-	NSMutableArray *children = [rootItems children];
-	if (toc)
-	{
-		LinkItem * items = [toc rootItems];
-		NSArray *src_children = [items children];
-		NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
-		[children addObjectsFromArray:results];
+	if ((self = [super init])) {
+		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		NSMutableArray *children = [rootItems children];
+		if (toc) {
+			LinkItem * items = [toc rootItems];
+			NSArray *src_children = [items children];
+			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
+			[children addObjectsFromArray:results];
+		}
 	}
 	return self;
 }
@@ -428,22 +433,18 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 
 - (id) init
 {
-	rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	Path:@"/" Score:0];
+	if ((self = [super init])) {
+		rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	Path:@"/" Score:0];
+	}
 	return self;
 }
 
 - (id)initwithTOC:(CHMTableOfContent*)toc withIndex:(CHMTableOfContent*)index
 {
-	[self init];
-
-	tableOfContent = toc;
-	if (tableOfContent)
-		[tableOfContent retain];
-	
-	indexContent = index;
-	if (indexContent)
-		[indexContent retain];
-	
+	if ((self = [self init])) {
+		tableOfContent = [toc retain];
+		indexContent = [index retain];
+	}
 	return self;
 }
 
@@ -492,8 +493,10 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path Score:(float)score
 {
-	relScore = score;
-	return [self initWithName:name Path:path];
+	if ((self = [super initWithName:name Path:path])) {
+		relScore = score;
+	}
+	return self;
 }
 
 @end

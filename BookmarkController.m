@@ -58,7 +58,9 @@ static void MDLog(NSString *string, ...) {
 
 - (id)init
 {
-	children = [[NSMutableArray alloc] init];
+	if ((self = [super init])) {
+		children = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 
@@ -91,10 +93,9 @@ static void MDLog(NSString *string, ...) {
 @implementation BookmarkController
 - (id)init
 {
-    if (![super initWithWindowNibName:@"Bookmark"])
-        return nil;
-	[CHMFile purgeWithContext:[self managedObjectContext]];
-
+	if ((self = [super initWithWindowNibName:@"Bookmark"])) {
+		[CHMFile purgeWithContext:[self managedObjectContext]];
+	}
     return self;
 }
 
