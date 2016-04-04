@@ -467,6 +467,7 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 		return;
 	ScoredLinkItem * newitem = [[ScoredLinkItem alloc] initWithName:[item name] Path:[item path] Score:score];
 	[rootItems appendChild:newitem];
+	[newitem release];
 }
 
 - (void)sort

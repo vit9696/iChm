@@ -74,8 +74,7 @@
 		{
 			BOOL isDirectory;
 			BOOL isValid = [[NSFileManager defaultManager] fileExistsAtPath:[file path] isDirectory:&isDirectory] && !isDirectory ;
-			NSNumber *number = [[NSNumber alloc] initWithBool:isValid];
-			[file setIsValid:number];
+			[file setIsValid:[NSNumber numberWithBool:isValid]];
 		}
 	}
 }

@@ -403,7 +403,7 @@ static void MDLog(NSString *string, ...) {
 	
 	tocSource = [[FetchRequestItem alloc] init];
 	
-	FetchRequestItem * allItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * allItem = [[[FetchRequestItem alloc] init] autorelease];
 	[allItem setTitle:NSLocalizedString(@"All", @"All")];
 	[tocSource addChild:allItem];
 	
@@ -412,14 +412,14 @@ static void MDLog(NSString *string, ...) {
 												entityForName:@"Bookmark" 
 												inManagedObjectContext:moc];
 	
-	FetchRequestItem * tagsItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * tagsItem = [[[FetchRequestItem alloc] init] autorelease];
 	[tagsItem setTitle:NSLocalizedString(@"Tags", @"Tags")];
 	[tocSource addChild:tagsItem];	
 	for (CHMTag* tag in [CHMTag allTagswithContext:moc])
 	{
 		if ([tag.bookmarks count] == 0)
 			continue;
-		FetchRequestItem * tagItem = [[FetchRequestItem alloc] init];
+		FetchRequestItem * tagItem = [[[FetchRequestItem alloc] init] autorelease];
 		[tagItem setTitle:tag.tag];
 		NSFetchRequest * request = [[[NSFetchRequest alloc] init] autorelease];
 		[request setEntity:bookmarkDescription];
@@ -430,14 +430,14 @@ static void MDLog(NSString *string, ...) {
 		[tagsItem addChild:tagItem];
 	}
 	
-	FetchRequestItem * filesItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * filesItem = [[[FetchRequestItem alloc] init] autorelease];
 	[filesItem setTitle:NSLocalizedString(@"Files", @"Files")];
 	[tocSource addChild:filesItem];	
 	for (CHMFile* file in [CHMFile allFileswithContext:moc])
 	{
 		if ([file.bookmarks count] == 0)
 			continue;
-		FetchRequestItem * fileItem = [[FetchRequestItem alloc] init];
+		FetchRequestItem * fileItem = [[[FetchRequestItem alloc] init] autorelease];
 		[fileItem setTitle:file.title];
 		NSFetchRequest * request = [[[NSFetchRequest alloc] init] autorelease];
 		[request setEntity:bookmarkDescription];
