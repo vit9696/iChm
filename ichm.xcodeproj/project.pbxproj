@@ -458,7 +458,6 @@
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
-				C3806F110E5D0948005E7585 /* ShellScript */,
 				C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */,
 				C18622111C8E331000C1DD80 /* Copy CHM.mdimporter */,
 			);
@@ -583,22 +582,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		C3806F110E5D0948005E7585 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /usr/bin/ruby;
-			shellScript = "#!/usr/bin/env ruby\n\n# Xcode auto-versioning script for Subversion by Axel Andersson\n# Updated for git by Marcus S. Zarra and Matt Long\n# Converted to ruby by Abizern\n# Appends the git sha to the version number set in Xcode.\n\n# These are the common places where git is installed.\n# Change this if your path isn’t here\ncommon_git_paths = %w[/usr/local/bin/git /usr/local/git/bin/git /opt/local/bin/git]\ngit_path = \"\"\n\ncommon_git_paths.each do |p|\n  if File.exist?(p)\n    git_path = p\n    break\n  end\nend\n\nif git_path == \"\"\n  puts \"Path to git not found\"\n  exit\nend\n\ncommand_line = git_path + \" rev-parse --short HEAD\"\nsha = `#{command_line}`.chomp\n\ninfo_file = ENV['BUILT_PRODUCTS_DIR'] + \"/\" + ENV['INFOPLIST_PATH']\n\nf = File.open(info_file, \"r\").read\nre = /([\\t ]+<key>CFBundleVersion<\\/key>\\n[\\t ]+<string>)(.*?)(<\\/string>)/\nf =~ re\n\n# Get the version info from the source Info.plist file\n# If the script has already been run we need to remove the git sha\n# from the bundle’s Info.plist.\nversion = $2.sub(/ \\([\\w]+\\)/, \"\")\n\n# Inject the git has into the bundle’s Info.plist\nsub = \"\\\\1#{version} (#{sha})\\\\3\"\nf.gsub!(re, sub)\nFile.open(info_file, \"w\") { |file| file.write(f) } ";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D15AC300486D014006FF6A4 /* Sources */ = {
