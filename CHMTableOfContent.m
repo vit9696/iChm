@@ -40,16 +40,16 @@
 
 - (void)setName:(NSString *)name
 {
+	[name retain];
 	[_name release];
 	_name = name;
-	[_name retain];
 }
 
 - (void)setPath:(NSString *)path
 {
+	[path retain];
 	[_path release];
 	_path = path;
-	[_path retain];
 }
 
 - (void)setPageID:(NSUInteger)pid
