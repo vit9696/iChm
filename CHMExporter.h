@@ -7,10 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class CHMDocument;
-@class WebView;
+#import <WebKit/WebKit.h>
 
-@interface CHMExporter : NSObject {
+@class CHMDocument;
+
+
+@interface CHMExporter : NSObject <WebFrameLoadDelegate> {
 	CHMDocument *document;
 	NSUInteger curPageId;
 	NSInteger pageCount;

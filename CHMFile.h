@@ -10,8 +10,8 @@
 
 @class CHMBookmark;
 
-@interface CHMFile :  NSManagedObject  
-{
+@interface CHMFile :  NSManagedObject {
+	
 }
 
 @property (retain) NSString * path;

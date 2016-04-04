@@ -8,8 +8,8 @@
 
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 
-@class WebView;
 @class CHMTableOfContent;
 @class CHMSearchResult;
 @class LinkItem;
@@ -17,7 +17,6 @@
 @class CHMConsole;
 struct chmFile;
 
-@interface CHMDocument : NSDocument <NSToolbarDelegate> {
 	IBOutlet PSMTabBarControl *tabBar;
 	IBOutlet NSTabView *docTabView;
 	IBOutlet NSOutlineView *tocView;
@@ -31,6 +30,7 @@ struct chmFile;
 	IBOutlet NSMenuItem *textEncodingMenu;
 	IBOutlet NSPanel *addBookmarkPanel;
 	IBOutlet NSMenu *sidebarViewMenu;
+@interface CHMDocument : NSDocument <NSToolbarDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
 	
 	IBOutlet NSWindow *exportProgressSheet;
 	IBOutlet NSProgressIndicator *exportProgressIndicator;

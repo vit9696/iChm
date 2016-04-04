@@ -6,7 +6,6 @@
 //  Copyright __MyCompanyName__ 2008 . All rights reserved.
 //
 
-#import <WebKit/WebKit.h>
 #import "CHMDocument.h"
 #import <CHM/CHM.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>

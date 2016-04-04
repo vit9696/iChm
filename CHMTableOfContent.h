@@ -30,8 +30,8 @@
 - (LinkItem*)getPrevPage:(LinkItem*)item;
 @end
 
-@interface CHMSearchResult : CHMTableOfContent
-{
+
+@interface CHMSearchResult : CHMTableOfContent <NSOutlineViewDataSource> {
 	CHMTableOfContent* tableOfContent;
 	CHMTableOfContent* indexContent;
 }
