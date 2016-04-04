@@ -646,17 +646,17 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-- (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)docType {
-    NSLog( @"CHMDocument:readFromFile:%@", fileName );
-	if(filePath) [filePath release];
-	filePath = fileName;
-	[filePath retain];
-		
-    chmFileHandle = chm_open( [fileName fileSystemRepresentation] );
-    if( !chmFileHandle ) return NO;
+
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
+	MDLog(@"[%@ %@] url.path == %@, type == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url.path, typeName);
 	
+	[filePath release];
+	filePath = [[url path] retain];
 	
-    [self loadMetadata];
+	chmFileHandle = chm_open([filePath fileSystemRepresentation]);
+	if (!chmFileHandle) return NO;
+	
+	[self loadMetadata];
 	[self setupTOCSource];
 	return YES;
 }
