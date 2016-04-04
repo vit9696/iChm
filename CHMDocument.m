@@ -471,7 +471,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 				break;
 			case 4: {
 				UInt32 lcid = readInt(systemData, offset + 4);
-				MDLog(@"[%@ %@] SYSTEM LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), lcid);
+				MDLog(@"[%@ %@] SYSTEM LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
 				encodingName = LCIDtoEncodingName(lcid);
 				MDLog(@"[%@ %@] SYSTEM ecoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
 			}
@@ -1090,10 +1090,10 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (NSTabViewItem*)createWebViewInTab:(id)sender
 {
-	CHMWebViewController * chmWebView = [[CHMWebViewController alloc] init];
+	CHMWebViewController *chmWebViewController = [[CHMWebViewController alloc] init];
 	
 	// init the webview
-	WebView *newView = [chmWebView webView];
+	WebView *newView = [chmWebViewController webView];
 	[(CHMWebView*)newView setDocument:self];
 	[newView setPreferencesIdentifier:WebVewPreferenceIndentifier];
 	if ([webViews count] == 0)
@@ -1120,15 +1120,15 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	
 	// create new tab item
 	NSTabViewItem *newItem = [[[NSTabViewItem alloc] init] autorelease];
-	[newItem setView:[chmWebView view]];
+	[newItem setView:[chmWebViewController view]];
     [newItem setLabel:@"(Untitled)"];
-	[newItem setIdentifier:chmWebView];
+	[newItem setIdentifier:chmWebViewController];
 	
 	// add to tab view
     [docTabView addTabViewItem:newItem];
 	[webViews addObject:newView];
 	
-	[chmWebView autorelease];
+	[chmWebViewController autorelease];
 	return newItem;
 }
 

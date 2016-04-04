@@ -17,50 +17,50 @@
 @class CHMConsole;
 struct chmFile;
 
-	IBOutlet PSMTabBarControl *tabBar;
-	IBOutlet NSTabView *docTabView;
-	IBOutlet NSOutlineView *tocView;
-	IBOutlet NSWindow *documentWindow;
-	IBOutlet NSSegmentedControl *historyItemView;
-	IBOutlet NSButton *homeItemView;
-	IBOutlet NSSegmentedControl *textSizeItemView;
-	IBOutlet NSButton* sidebarItemView;
-	IBOutlet NSSearchField *searchItemView;
-	IBOutlet NSSplitView *splitView;
-	IBOutlet NSMenuItem *textEncodingMenu;
-	IBOutlet NSPanel *addBookmarkPanel;
-	IBOutlet NSMenu *sidebarViewMenu;
 @interface CHMDocument : NSDocument <NSToolbarDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+	IBOutlet PSMTabBarControl		*tabBar;
+	IBOutlet NSTabView				*docTabView;
+	IBOutlet NSOutlineView			*tocView;
+	IBOutlet NSWindow				*documentWindow;
+	IBOutlet NSSegmentedControl		*historyItemView;
+	IBOutlet NSButton				*homeItemView;
+	IBOutlet NSSegmentedControl		*textSizeItemView;
+	IBOutlet NSButton				*sidebarItemView;
+	IBOutlet NSSearchField			*searchItemView;
+	IBOutlet NSSplitView			*splitView;
+	IBOutlet NSMenuItem				*textEncodingMenu;
+	IBOutlet NSPanel				*addBookmarkPanel;
+	IBOutlet NSMenu					*sidebarViewMenu;
 	
-	IBOutlet NSWindow *exportProgressSheet;
-	IBOutlet NSProgressIndicator *exportProgressIndicator;
-	IBOutlet NSTextField *exportNoticeLabel;
+	IBOutlet NSWindow				*exportProgressSheet;
+	IBOutlet NSProgressIndicator	*exportProgressIndicator;
+	IBOutlet NSTextField			*exportNoticeLabel;
 	
-	struct chmFile *chmFileHandle;
-	NSString *filePath;
+	struct chmFile					*chmFileHandle;
+	NSString						*filePath;
 	
-    NSString *docTitle;
-    NSString *homePath;
-    NSString *tocPath;
-    NSString *indexPath;
+    NSString						*docTitle;
+    NSString						*homePath;
+    NSString						*tocPath;
+    NSString						*indexPath;
 	
-	CHMTableOfContent *tocSource ;
-	CHMTableOfContent *indexSource ;
-	CHMSearchResult *searchSource;
+	CHMTableOfContent				*tocSource;
+	CHMTableOfContent				*indexSource;
+	CHMSearchResult					*searchSource;
 	
-	SKIndexRef skIndex;
-	NSMutableData *searchIndexObject;
-	BOOL isIndexDone;
-	NSCondition *searchIndexCondition;
+	SKIndexRef						skIndex;
+	NSMutableData					*searchIndexObject;
+	BOOL							isIndexDone;
+	NSCondition						*searchIndexCondition;
 	
-	BOOL isSidebarRestored;
+	BOOL							isSidebarRestored;
 	
-	NSMutableArray *webViews;
-	WebView *curWebView;
-	CHMConsole *console;
+	NSMutableArray					*webViews;
+	WebView							*curWebView;
+	CHMConsole						*console;
 	
-	NSString* encodingName;
 	NSInteger						customizedEncodingTag;
+	NSString						*encodingName;
 }
 
 @property (readonly) NSString* filePath;
