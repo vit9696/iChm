@@ -140,8 +140,8 @@ static BOOL firstDocument = YES;
 	[tocSource release];
 	[searchSource release];
 	
-	if(!skIndex)
-		SKIndexClose(skIndex);
+	if (skIndex) SKIndexClose(skIndex);
+	
 	[searchIndexObject release];
 	[searchIndexCondition release];
 	
@@ -661,6 +661,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	return YES;
 }
 
+
 - (void)close
 {
 	[self resetEncodingMenu];
@@ -716,7 +717,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			}
 		}
 		[oldestKey retain];
-		[filesInfoList removeObjectForKey:oldestKey];
+		if (oldestKey)[filesInfoList removeObjectForKey:oldestKey];
 		[oldestKey release];
 	}
 	
@@ -1255,10 +1256,15 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark Search
 - (void)prepareSearchIndex
 {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[searchIndexObject release];
 	searchIndexObject = [[NSMutableData dataWithCapacity: 2^22] retain];
-	if(!skIndex)
+	
+	if (skIndex) {
 		SKIndexClose(skIndex);
+		skIndex = NULL;
+	}
 	
 	skIndex = SKIndexCreateWithMutableData((CFMutableDataRef) searchIndexObject,
 											  NULL,
@@ -1282,6 +1288,8 @@ static int forEachFile(struct chmFile *h,
 
 - (void)buildSearchIndex
 {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[searchIndexCondition lock];
 	chm_enumerate(chmFileHandle, CHM_ENUMERATE_FILES||CHM_ENUMERATE_NORMAL, forEachFile, (void*)self);
@@ -1293,6 +1301,8 @@ static int forEachFile(struct chmFile *h,
 
 - (void)addToSearchIndex:(const char*)path
 {
+//	MDLog(@"[%@ %@] %s", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
+	
 	NSString *filepath = [NSString stringWithCString:path encoding:nameToEncoding(encodingName)];
 	if([filepath hasPrefix:@"/"])
 		filepath = [filepath substringFromIndex:1];
@@ -1379,7 +1389,9 @@ static int forEachFile(struct chmFile *h,
 		return;
 	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString ];
-	searchSource = [[CHMTableOfContent alloc]
+//	searchSource = [[CHMTableOfContent alloc]
+//					initWithTOC:indexSource filterByPredicate:predicate];
+	searchSource = [[CHMSearchResult alloc]
 					initWithTOC:indexSource filterByPredicate:predicate];
 	
 	[tocView deselectAll:self];
@@ -1391,6 +1403,10 @@ static int forEachFile(struct chmFile *h,
 
 - (IBAction)searchInFile:(id)sender
 {
+#if MD_DEBUG
+	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+#endif
+	
 	// waiting for the building of index
 	[searchIndexCondition lock];
 	while (!isIndexDone)
