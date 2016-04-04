@@ -13,7 +13,7 @@
 - (void)rightMouseDown:(NSEvent *)theEvent {       
 	NSPoint p = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	
-	int i = [self rowAtPoint:p];
+	NSInteger i = [self rowAtPoint:p];
 	
 	if (i < [self numberOfRows] && ![[self selectedRowIndexes] containsIndex:i]) {
 		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:i] byExtendingSelection:NO];

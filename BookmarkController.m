@@ -34,6 +34,8 @@ static void MDLog(NSString *string, ...) {
 - (void)addEmptyItemToMenu:(NSMenu*)menu;
 @end
 
+
+
 @interface FetchRequestItem : NSObject
 {
 	NSFetchRequest *request;
@@ -45,8 +47,8 @@ static void MDLog(NSString *string, ...) {
 @property (readwrite, retain) NSString* title;
 
 - (void)addChild:(FetchRequestItem*)child;
-- (FetchRequestItem*)childAtIndex:(int)index;
-- (int)numberOfChildren;
+- (FetchRequestItem*)childAtIndex:(NSInteger)index;
+- (NSInteger)numberOfChildren;
 @end
 
 @implementation FetchRequestItem
@@ -77,12 +79,12 @@ static void MDLog(NSString *string, ...) {
 	[children addObject:child];
 }
 
-- (FetchRequestItem*)childAtIndex:(int)index
+- (FetchRequestItem*)childAtIndex:(NSInteger)index
 {
 	return [children objectAtIndex:index];
 }
 
-- (int)numberOfChildren
+- (NSInteger)numberOfChildren
 {
 	return [children count];
 }
@@ -137,12 +139,12 @@ static void MDLog(NSString *string, ...) {
 
 - (IBAction)endAddBookmark:(id)sender
 {
-	unsigned int tag = [sender tag];
+	NSInteger tag = [(NSButton *)sender tag];
 	[NSApp endSheet:addPanel returnCode:tag];
 	[addPanel orderOut:sender];
 }
 
-- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
 	MDLog(@"[%@ %@] add bookmark ended with returnCode == %ld", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (long)returnCode);
 	
@@ -187,7 +189,7 @@ static void MDLog(NSString *string, ...) {
 
 - (IBAction)filterBookmarks:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	if( selectedRow >= 0 ) {
 		FetchRequestItem *item = [tocView itemAtRow:selectedRow];
 		NSError *error;
@@ -455,24 +457,17 @@ static void MDLog(NSString *string, ...) {
 	[tocView reloadData];
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView
-numberOfChildrenOfItem:(id)item
-{
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
 	if(!item)
 		item = tocSource;
 	return [(FetchRequestItem*)item numberOfChildren];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView
-   isItemExpandable:(id)item
-{
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
     return [item numberOfChildren] > 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView
-			child:(int)theIndex
-		   ofItem:(id)item
-{
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)theIndex ofItem:(id)item {
 	if (!item)
 		item = tocSource;
 	

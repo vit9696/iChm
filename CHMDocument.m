@@ -173,7 +173,7 @@ static inline NSStringEncoding nameToEncoding(NSString* name) {
 	  CFStringConvertIANACharSetNameToEncoding((CFStringRef) name));
 }
 
-static inline unsigned short readShort( NSData *data, unsigned int offset ) {
+static inline unsigned short readShort( NSData *data, NSUInteger offset ) {
     NSRange valueRange = { offset, 2 };
     unsigned short value;
     
@@ -458,8 +458,9 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 		return NO;
     }
 	
-    unsigned int maxOffset = [systemData length];
-	unsigned int offset = 4;
+	NSUInteger maxOffset = [systemData length];
+	NSUInteger offset = 4;
+	
     for( ;offset<maxOffset; ) {
 		switch( readShort( systemData, offset ) ) {
 			case 0:
@@ -910,7 +911,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark actions
 - (IBAction)changeTopic:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
     
     if( selectedRow >= 0 ) {
 		LinkItem *topic = [tocView itemAtRow:selectedRow];
@@ -956,7 +957,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (IBAction)gotoNextPage:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	LinkItem *topic = [tocView itemAtRow:selectedRow];
 	LinkItem* nextPage = [tocSource getNextPage:topic];
 	if (nextPage)
@@ -965,7 +966,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (IBAction)gotoPrevPage:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	LinkItem *topic = [tocView itemAtRow:selectedRow];
 	LinkItem* prevPage = [tocSource getPrevPage:topic];
 	if (prevPage)
@@ -1085,10 +1086,10 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	[exportProgressSheet orderOut:sender];
 }
 
-- (void)exportedProgressRate:(double)rate PageCount:(int)count
+- (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count
 {
 	NSString *title = NSLocalizedString(@"Save as PDF", @"Save as PDF");
-	NSString *label = [NSString stringWithFormat:@"%@ : %d %@", title, count, NSLocalizedString(@"pages", @"pages")];
+	NSString *label = [NSString stringWithFormat:@"%@ : %ld %@", title, (long)count, NSLocalizedString(@"pages", @"pages")];
 	[exportNoticeLabel setStringValue:label];
 	[exportProgressIndicator setDoubleValue:rate];
 }
@@ -1606,7 +1607,7 @@ static int forEachFile(struct chmFile *h,
 	[self locateTOC:self];
 }
 
-- (NSString*)getEncodingByTag:(int)tag
+- (NSString*)getEncodingByTag:(NSInteger)tag
 {
 	ICHMApplication* chmapp = [NSApp delegate];
 	

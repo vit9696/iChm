@@ -80,7 +80,7 @@
 	initialized = YES;
 }
 
-- (NSString*)getEncodingByTag:(int)tag
+- (NSString*)getEncodingByTag:(NSInteger)tag
 {
 	if(0==tag)
 		return nil;

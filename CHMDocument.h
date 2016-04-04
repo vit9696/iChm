@@ -59,8 +59,8 @@ struct chmFile;
 	WebView *curWebView;
 	CHMConsole *console;
 	
-	int customizedEncodingTag;
 	NSString* encodingName;
+	NSInteger						customizedEncodingTag;
 }
 
 @property (readonly) NSString* filePath;
@@ -101,7 +101,7 @@ struct chmFile;
 - (IBAction)exportToPDF:(id)sender;
 - (IBAction)showExportProgressSheet:(id)sender;
 - (IBAction)endExportProgressSheet:(id)sender;
-- (void)exportedProgressRate:(double)rate PageCount:(int)count;
+- (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count;
 
 // search
 - (IBAction)setSearchInFile:(id)sender;
@@ -145,7 +145,7 @@ struct chmFile;
 - (void)setupEncodingMenu;
 - (void)resetEncodingMenu;
 - (IBAction)changeEncoding:(id)sender;
-- (NSString*)getEncodingByTag:(int)tag;
+- (NSString*)getEncodingByTag:(NSInteger)tag;
 - (NSString*)currentEncodingName;
 
 @end

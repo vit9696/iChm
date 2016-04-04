@@ -13,7 +13,7 @@
 @interface CHMExporter : NSObject {
 	CHMDocument *document;
 	NSUInteger curPageId;
-	int pageCount;
+	NSInteger pageCount;
 	WebView *webView;
 	CGRect pageRecct;
 	CGContextRef ctx;

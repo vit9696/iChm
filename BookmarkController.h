@@ -33,7 +33,7 @@
 - (IBAction)endAddBookmark:(id)sender;
 - (IBAction)openBookmark:(id)sender;
 - (IBAction)filterBookmarks:(id)sender;
-- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 
 - (NSManagedObjectModel *)managedObjectModel;
 - (NSManagedObjectContext *)managedObjectContext;

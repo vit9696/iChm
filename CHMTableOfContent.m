@@ -58,12 +58,12 @@
 	pageID = pid;
 }
 
-- (int)numberOfChildren
+- (NSInteger)numberOfChildren
 {
 	return _children ? [_children count] : 0;
 }
 
-- (LinkItem *)childAtIndex:(int)n
+- (LinkItem *)childAtIndex:(NSInteger)n
 {
 	return [_children objectAtIndex:n];
 }
@@ -157,6 +157,8 @@
 }
 @end
 
+
+
 @interface CHMTableOfContent (Private)
 - (void)push_item;
 - (void)pop_item;
@@ -164,6 +166,7 @@
 
 - (void)addToPageList:(LinkItem*)item;
 @end
+
 
 @implementation CHMTableOfContent
 @synthesize rootItems;
@@ -258,7 +261,7 @@ NULL, /* getParameterEntity */
 	return item;
 }
 
-- (int)rootChildrenCount
+- (NSInteger)rootChildrenCount
 {
 	return [rootItems numberOfChildren];
 }
@@ -284,7 +287,7 @@ NULL, /* getParameterEntity */
 	return [pageList objectAtIndex:idx];
 }
 # pragma mark NSOutlineView datasource
-- (int)outlineView:(NSOutlineView *)outlineView
+- (NSInteger)outlineView:(NSOutlineView *)outlineView
 numberOfChildrenOfItem:(id)item
 {
 	if (!item)
@@ -300,7 +303,7 @@ numberOfChildrenOfItem:(id)item
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView
-			child:(int)theIndex
+			child:(NSInteger)theIndex
 		   ofItem:(id)item
 {
 	if (!item)
@@ -385,7 +388,7 @@ static void elementDidStart( CHMTableOfContent *context, const xmlChar *name, co
 		const xmlChar *type = NULL;
 		const xmlChar *value = NULL;
 		
-		for( int i = 0; atts[ i ] != NULL ; i += 2 ) {
+		for( NSUInteger i = 0; atts[ i ] != NULL ; i += 2 ) {
 			if( !strcasecmp( "name", (char *)atts[ i ] ) ) {
 				type = atts[ i + 1 ];
 			}
@@ -421,6 +424,8 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
     }	
 }
 @end
+
+
 
 @implementation CHMSearchResult
 
@@ -474,6 +479,8 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 	[(ScoredLinkItem*)rootItems sort];
 }
 @end
+
+
 
 @implementation ScoredLinkItem
 
