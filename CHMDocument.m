@@ -771,7 +771,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL * url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem* item = [[tocView dataSource] itemForPath:path withStack:nil];
+	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if(!name || [name length] == 0)
@@ -872,7 +872,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark WebUIDelegate
 - (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request
 {
-	WebView* wv = [[[self createWebViewInTab:sender] identifier] webView];
+	WebView* wv = [(CHMWebViewController *)[[self createWebViewInTab:sender] identifier] webView];
 	[[wv mainFrame] loadRequest:request];
 	return wv;
 }
@@ -960,7 +960,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	NSURL * url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem* item = [[tocView dataSource] itemForPath:path withStack:tocStack];
+	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:tocStack];
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	for (LinkItem *p in enumerator) {
 		[tocView expandItem:p];
@@ -1136,7 +1136,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 - (IBAction)addNewTab:(id)sender
 {
 	NSTabViewItem *item = [self createWebViewInTab:sender];
-	curWebView = [[item identifier] webView];
+	curWebView = [(CHMWebViewController *)[item identifier] webView];
 	[docTabView selectTabViewItem:item];
 }
 
@@ -1161,7 +1161,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	curWebView = [[tabViewItem identifier] webView];
+	curWebView = [(CHMWebViewController *)[tabViewItem identifier] webView];
 }
 
 - (IBAction)selectNextTabViewItem:(id)sender

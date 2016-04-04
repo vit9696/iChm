@@ -311,7 +311,7 @@ numberOfChildrenOfItem:(id)item
 	if (!item)
 		item = rootItems;
 	
-    return [item childAtIndex:theIndex];
+    return [(LinkItem *)item childAtIndex:theIndex];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView
