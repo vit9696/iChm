@@ -71,7 +71,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch bookmark info: %d",error );
+		NSLog(@"Cannot fetch bookmark info: %@", error);
 		return nil;
 	}
 	if ([array count] == 0)

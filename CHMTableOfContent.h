@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 @class LinkItem;
 
+
 @interface CHMTableOfContent : NSObject <NSOutlineViewDataSource> {
 	LinkItem *rootItems;
 	
@@ -23,14 +24,14 @@
 - (id)initWithTOC:(CHMTableOfContent*)toc filterByPredicate:(NSPredicate*)predicate;
 - (LinkItem *)curItem;
 - (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray*)stack;
-- (int)rootChildrenCount;
+- (NSInteger)rootChildrenCount;
 - (void)sort;
 - (LinkItem*)getNextPage:(LinkItem*)item;
 - (LinkItem*)getPrevPage:(LinkItem*)item;
 @end
 
-@interface CHMSearchResult : CHMTableOfContent
-{
+
+@interface CHMSearchResult : CHMTableOfContent <NSOutlineViewDataSource> {
 	CHMTableOfContent* tableOfContent;
 	CHMTableOfContent* indexContent;
 }
@@ -38,6 +39,8 @@
 - (id)initwithTOC:(CHMTableOfContent*)toc withIndex:(CHMTableOfContent*)index;
 - (void)addPath:(NSString*)path Score:(float)score;
 @end
+
+
 
 @interface LinkItem	: NSObject
 {
@@ -49,8 +52,8 @@
 @property (readonly) NSUInteger pageID;
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path;
-- (int)numberOfChildren;
-- (LinkItem *)childAtIndex:(int)n;
+- (NSInteger)numberOfChildren;
+- (LinkItem *)childAtIndex:(NSInteger)n;
 - (NSString *)name;
 - (NSString *)uppercaseName;
 - (NSString *)path;
@@ -65,6 +68,7 @@
 - (void)sort;
 @end
 
+
 @interface ScoredLinkItem : LinkItem
 {
 	float relScore;
@@ -74,3 +78,4 @@
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path Score:(float)score;
 @end
+

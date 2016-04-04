@@ -15,9 +15,9 @@
 
 - (id)init
 {
-	_children = [[NSMutableArray alloc] init];
-	_name = nil;
-	_path = nil;
+	if ((self = [super init])) {
+		_children = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 
@@ -31,26 +31,25 @@
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path
 {
-	[self init];
-	_name = name;
-	_path = path;
-	[_name retain];
-	[_path retain];
+	if ((self = [super init])) {
+		_name = [name retain];
+		_path = [path retain];
+	}
 	return self;
 }
 
 - (void)setName:(NSString *)name
 {
+	[name retain];
 	[_name release];
 	_name = name;
-	[_name retain];
 }
 
 - (void)setPath:(NSString *)path
 {
+	[path retain];
 	[_path release];
 	_path = path;
-	[_path retain];
 }
 
 - (void)setPageID:(NSUInteger)pid
@@ -58,12 +57,12 @@
 	pageID = pid;
 }
 
-- (int)numberOfChildren
+- (NSInteger)numberOfChildren
 {
 	return _children ? [_children count] : 0;
 }
 
-- (LinkItem *)childAtIndex:(int)n
+- (LinkItem *)childAtIndex:(NSInteger)n
 {
 	return [_children objectAtIndex:n];
 }
@@ -157,6 +156,8 @@
 }
 @end
 
+
+
 @interface CHMTableOfContent (Private)
 - (void)push_item;
 - (void)pop_item;
@@ -164,6 +165,7 @@
 
 - (void)addToPageList:(LinkItem*)item;
 @end
+
 
 @implementation CHMTableOfContent
 @synthesize rootItems;
@@ -202,36 +204,40 @@ NULL, /* getParameterEntity */
 
 - (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName
 {
-	itemStack = [[NSMutableArray alloc] init];
-	pageList = [[NSMutableArray alloc] init];
-	rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
-	curItem = rootItems;
-	
-	if(!encodingName || [encodingName length] == 0)
-		encodingName = @"iso_8859_1";
-	
-	htmlDocPtr doc = htmlSAXParseDoc( (xmlChar *)[data bytes], [encodingName UTF8String],
+	if ((self = [super init])) {
+		itemStack = [[NSMutableArray alloc] init];
+		pageList = [[NSMutableArray alloc] init];
+		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		curItem = rootItems;
+		
+		if(!encodingName || [encodingName length] == 0)
+			encodingName = @"iso_8859_1";
+		
+		htmlDocPtr doc = htmlSAXParseDoc( (xmlChar *)[data bytes], [encodingName UTF8String],
 									  &saxHandler, self);
-	[itemStack release];
-	
-	if( doc ) {
-	    xmlFreeDoc( doc );
+		[itemStack release];
+		
+		if( doc ) {
+			xmlFreeDoc( doc );
+		}
+		[rootItems purge];
+		[rootItems enumerateItemsWithSEL:@selector(addToPageList:) ForTarget:self];
 	}
-	[rootItems purge];
-	[rootItems enumerateItemsWithSEL:@selector(addToPageList:) ForTarget:self];
+	
 	return self;
 }
 
 - (id)initWithTOC:(CHMTableOfContent*)toc filterByPredicate:(NSPredicate*)predicate
 {
-	rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
-	NSMutableArray *children = [rootItems children];
-	if (toc)
-	{
-		LinkItem * items = [toc rootItems];
-		NSArray *src_children = [items children];
-		NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
-		[children addObjectsFromArray:results];
+	if ((self = [super init])) {
+		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		NSMutableArray *children = [rootItems children];
+		if (toc) {
+			LinkItem * items = [toc rootItems];
+			NSArray *src_children = [items children];
+			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
+			[children addObjectsFromArray:results];
+		}
 	}
 	return self;
 }
@@ -239,7 +245,6 @@ NULL, /* getParameterEntity */
 - (void) dealloc
 {
 	[rootItems release];
-
 	[super dealloc];
 }
 
@@ -258,7 +263,7 @@ NULL, /* getParameterEntity */
 	return item;
 }
 
-- (int)rootChildrenCount
+- (NSInteger)rootChildrenCount
 {
 	return [rootItems numberOfChildren];
 }
@@ -284,7 +289,7 @@ NULL, /* getParameterEntity */
 	return [pageList objectAtIndex:idx];
 }
 # pragma mark NSOutlineView datasource
-- (int)outlineView:(NSOutlineView *)outlineView
+- (NSInteger)outlineView:(NSOutlineView *)outlineView
 numberOfChildrenOfItem:(id)item
 {
 	if (!item)
@@ -300,13 +305,13 @@ numberOfChildrenOfItem:(id)item
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView
-			child:(int)theIndex
+			child:(NSInteger)theIndex
 		   ofItem:(id)item
 {
 	if (!item)
 		item = rootItems;
 	
-    return [item childAtIndex:theIndex];
+    return [(LinkItem *)item childAtIndex:theIndex];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView
@@ -385,7 +390,7 @@ static void elementDidStart( CHMTableOfContent *context, const xmlChar *name, co
 		const xmlChar *type = NULL;
 		const xmlChar *value = NULL;
 		
-		for( int i = 0; atts[ i ] != NULL ; i += 2 ) {
+		for( NSUInteger i = 0; atts[ i ] != NULL ; i += 2 ) {
 			if( !strcasecmp( "name", (char *)atts[ i ] ) ) {
 				type = atts[ i + 1 ];
 			}
@@ -422,36 +427,31 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 }
 @end
 
+
+
 @implementation CHMSearchResult
 
 - (id) init
 {
-	rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	Path:@"/" Score:0];
+	if ((self = [super init])) {
+		rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	Path:@"/" Score:0];
+	}
 	return self;
 }
 
 - (id)initwithTOC:(CHMTableOfContent*)toc withIndex:(CHMTableOfContent*)index
 {
-	[self init];
-
-	tableOfContent = toc;
-	if (tableOfContent)
-		[tableOfContent retain];
-	
-	indexContent = index;
-	if (indexContent)
-		[indexContent retain];
-	
+	if ((self = [self init])) {
+		tableOfContent = [toc retain];
+		indexContent = [index retain];
+	}
 	return self;
 }
 
 - (void) dealloc
 {
-	if (tableOfContent)
-		[tableOfContent release];
-
-	if (indexContent)
-		[indexContent release];
+	[tableOfContent release];
+	[indexContent release];
 	[super dealloc];
 }
 
@@ -467,6 +467,7 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 		return;
 	ScoredLinkItem * newitem = [[ScoredLinkItem alloc] initWithName:[item name] Path:[item path] Score:score];
 	[rootItems appendChild:newitem];
+	[newitem release];
 }
 
 - (void)sort
@@ -474,6 +475,8 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 	[(ScoredLinkItem*)rootItems sort];
 }
 @end
+
+
 
 @implementation ScoredLinkItem
 
@@ -491,8 +494,10 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path Score:(float)score
 {
-	relScore = score;
-	return [self initWithName:name Path:path];
+	if ((self = [super initWithName:name Path:path])) {
+		relScore = score;
+	}
+	return self;
 }
 
 @end

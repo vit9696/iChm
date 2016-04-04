@@ -12,6 +12,20 @@
 #import "CHMBookmark.h"
 #import "CHMTag.h"
 
+
+#define MD_DEBUG 1
+
+#if defined(MD_DEBUG)
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+static void MDLog(NSString *string, ...) {
+	(void)string;
+}
+#endif
+
+
+
+
 @interface BookmarkController (Private)
 - (void)groupByTagsMenuNeedsUpdate:(NSMenu*)menu;
 - (void)groupByFilesMenuNeedsUpdate:(NSMenu*)menu;
@@ -19,6 +33,8 @@
 - (void)setupDataSource;
 - (void)addEmptyItemToMenu:(NSMenu*)menu;
 @end
+
+
 
 @interface FetchRequestItem : NSObject
 {
@@ -31,8 +47,8 @@
 @property (readwrite, retain) NSString* title;
 
 - (void)addChild:(FetchRequestItem*)child;
-- (FetchRequestItem*)childAtIndex:(int)index;
-- (int)numberOfChildren;
+- (FetchRequestItem*)childAtIndex:(NSInteger)index;
+- (NSInteger)numberOfChildren;
 @end
 
 @implementation FetchRequestItem
@@ -42,18 +58,16 @@
 
 - (id)init
 {
-	children = [[NSMutableArray alloc] init];
-	request = nil;
-	title = nil;
+	if ((self = [super init])) {
+		children = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 
 - (void)dealloc
 {
-	if (request)
-		[request release];
-	if (title)
-		[title release];
+	[request release];
+	[title release];
 	[children release];
 	[super dealloc];
 }
@@ -63,12 +77,12 @@
 	[children addObject:child];
 }
 
-- (FetchRequestItem*)childAtIndex:(int)index
+- (FetchRequestItem*)childAtIndex:(NSInteger)index
 {
 	return [children objectAtIndex:index];
 }
 
-- (int)numberOfChildren
+- (NSInteger)numberOfChildren
 {
 	return [children count];
 }
@@ -79,19 +93,16 @@
 @implementation BookmarkController
 - (id)init
 {
-    if (![super initWithWindowNibName:@"Bookmark"])
-        return nil;
-	
-	tocSource = nil;
-
-	[CHMFile purgeWithContext:[self managedObjectContext]];
-
+	if ((self = [super initWithWindowNibName:@"Bookmark"])) {
+		[CHMFile purgeWithContext:[self managedObjectContext]];
+	}
     return self;
 }
 
 - (void)windowDidLoad
 {
-    NSLog(@"Nib file is loaded");
+	MDLog(@"[%@ %@] Nib file is loaded", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[tableController fetch:self];
 }
 
@@ -122,14 +133,15 @@
 
 - (IBAction)endAddBookmark:(id)sender
 {
-	unsigned int tag = [sender tag];
+	NSInteger tag = [(NSButton *)sender tag];
 	[NSApp endSheet:addPanel returnCode:tag];
 	[addPanel orderOut:sender];
 }
 
-- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)addBookmarkDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-	NSLog(@"add bookmark ended with return code:%d", returnCode);
+	MDLog(@"[%@ %@] add bookmark ended with returnCode == %ld", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (long)returnCode);
+	
 	if( 0 == returnCode || !contextInfo)
 		return;
 	
@@ -147,7 +159,7 @@
 		[chmFile setTitle:[doc docTitle]];
 		[context save:&error];
 		if ( ![context save:&error] )
-			NSLog(@"Can not fetch file info: %@",error );
+			NSLog(@"Cannot fetch file info: %@", error);
 	}
 	
 	CHMBookmark *bookmark = [CHMBookmark bookmarkByURL:[doc currentURL] withContext:[self managedObjectContext]];
@@ -164,14 +176,14 @@
 	[bookmark setTagsString:[tagField stringValue]];
 	if ( ![context save:&error] )
 	{
-		NSLog(@"Can not fetch file info: %@",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 		return;
 	}
 }
 
 - (IBAction)filterBookmarks:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	if( selectedRow >= 0 ) {
 		FetchRequestItem *item = [tocView itemAtRow:selectedRow];
 		NSError *error;
@@ -222,7 +234,7 @@
     fileManager = [NSFileManager defaultManager];
     applicationSupportFolder = [self applicationSupportFolder];
     if ( ![fileManager fileExistsAtPath:applicationSupportFolder isDirectory:NULL] ) {
-        [fileManager createDirectoryAtPath:applicationSupportFolder attributes:nil];
+		[fileManager createDirectoryAtPath:applicationSupportFolder withIntermediateDirectories:YES attributes:nil error:NULL];
     }
     
     url = [NSURL fileURLWithPath: [applicationSupportFolder stringByAppendingPathComponent: @"Bookmarks.sqlite"]];
@@ -363,7 +375,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch file info: %@",error );
+		NSLog(@"Cannot fetch file info: %@", error);
 		return;
 	}
 	for (CHMBookmark* bm in array) {
@@ -387,12 +399,11 @@
 # pragma mark NSOutlineView datasource
 - (void)setupDataSource
 {
-	if(tocSource)
-		[tocSource release];
+	[tocSource release];
 	
 	tocSource = [[FetchRequestItem alloc] init];
 	
-	FetchRequestItem * allItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * allItem = [[[FetchRequestItem alloc] init] autorelease];
 	[allItem setTitle:NSLocalizedString(@"All", @"All")];
 	[tocSource addChild:allItem];
 	
@@ -401,14 +412,14 @@
 												entityForName:@"Bookmark" 
 												inManagedObjectContext:moc];
 	
-	FetchRequestItem * tagsItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * tagsItem = [[[FetchRequestItem alloc] init] autorelease];
 	[tagsItem setTitle:NSLocalizedString(@"Tags", @"Tags")];
 	[tocSource addChild:tagsItem];	
 	for (CHMTag* tag in [CHMTag allTagswithContext:moc])
 	{
 		if ([tag.bookmarks count] == 0)
 			continue;
-		FetchRequestItem * tagItem = [[FetchRequestItem alloc] init];
+		FetchRequestItem * tagItem = [[[FetchRequestItem alloc] init] autorelease];
 		[tagItem setTitle:tag.tag];
 		NSFetchRequest * request = [[[NSFetchRequest alloc] init] autorelease];
 		[request setEntity:bookmarkDescription];
@@ -419,14 +430,14 @@
 		[tagsItem addChild:tagItem];
 	}
 	
-	FetchRequestItem * filesItem = [[FetchRequestItem alloc] init];
+	FetchRequestItem * filesItem = [[[FetchRequestItem alloc] init] autorelease];
 	[filesItem setTitle:NSLocalizedString(@"Files", @"Files")];
 	[tocSource addChild:filesItem];	
 	for (CHMFile* file in [CHMFile allFileswithContext:moc])
 	{
 		if ([file.bookmarks count] == 0)
 			continue;
-		FetchRequestItem * fileItem = [[FetchRequestItem alloc] init];
+		FetchRequestItem * fileItem = [[[FetchRequestItem alloc] init] autorelease];
 		[fileItem setTitle:file.title];
 		NSFetchRequest * request = [[[NSFetchRequest alloc] init] autorelease];
 		[request setEntity:bookmarkDescription];
@@ -439,24 +450,17 @@
 	[tocView reloadData];
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView
-numberOfChildrenOfItem:(id)item
-{
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
 	if(!item)
 		item = tocSource;
 	return [(FetchRequestItem*)item numberOfChildren];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView
-   isItemExpandable:(id)item
-{
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
     return [item numberOfChildren] > 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView
-			child:(int)theIndex
-		   ofItem:(id)item
-{
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)theIndex ofItem:(id)item {
 	if (!item)
 		item = tocSource;
 	

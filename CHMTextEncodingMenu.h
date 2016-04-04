@@ -16,5 +16,5 @@
 }
 
 - (void)initEncodingMenu;
-- (NSString*)getEncodingByTag:(int)tag;
+- (NSString*)getEncodingByTag:(NSInteger)tag;
 @end

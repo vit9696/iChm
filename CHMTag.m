@@ -31,7 +31,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch tag info: %d",error );
+		NSLog(@"Cannot fetch tag info: %@", error);
 		return nil;
 	}
 	if ([array count] != 0)
@@ -45,7 +45,7 @@
 		tag.tag = tagstr;
 		if ( ![context save:&error] )
 		{
-			NSLog(@"Can not create tag: %d",error );
+			NSLog(@"Cannot create tag: %@", error);
 			return nil;
 		}
 		return tag;
@@ -67,7 +67,7 @@
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if (array == nil)
 	{
-		NSLog(@"Can not fetch tag info: %d",error );
+		NSLog(@"Cannot fetch tag info: %@", error);
 	}
 	return array;
 }

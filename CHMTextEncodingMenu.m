@@ -12,8 +12,10 @@
 @implementation CHMTextEncodingMenu
 - (id)init
 {
-	initialized = NO;
-	encodingNames = [[NSMutableArray alloc] init];
+	if ((self = [super init])) {
+		initialized = NO;
+		encodingNames = [[NSMutableArray alloc] init];
+	}
 	return self;
 }
 
@@ -39,48 +41,41 @@
 		return;
 	
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"textencoding" ofType:@"plist"];
-	NSData *plistData;
-	NSString *error;
-	NSPropertyListFormat format;
-	NSArray * plist;
-	plistData = [NSData dataWithContentsOfFile:path];
 	
-	plist = [NSPropertyListSerialization propertyListFromData:plistData
-											 mutabilityOption:NSPropertyListImmutable
-													   format:&format
-											 errorDescription:&error];
+	NSArray *plist = [NSArray arrayWithContentsOfFile:path];
 	if(!plist)
 	{
-		NSLog(@"%@",error);
-		[error release];
+		NSLog(@"[%@ %@] failed to load textencoding.plist", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 		return;
 	}
 	
 	NSMenu * submenu = [menu submenu];
-	NSInteger lastitem;
-	for(NSArray *section in plist)
-	{
-		for(NSDictionary *item in section)
-		{
+	
+	NSUInteger sectionCount = plist.count;
+	NSUInteger sectionIndex = 0;
+	
+	for (NSArray *section in plist) {
+		
+		for (NSDictionary *item in section) {
 			NSString *title = [item objectForKey:@"title"];
-			NSMenuItem *newitem = [[NSMenuItem alloc] init];
+			NSMenuItem *newitem = [[[NSMenuItem alloc] init] autorelease];
 			[newitem setTitle:title];
-			int tag = [encodingNames count];
+			NSInteger tag = [encodingNames count];
 			NSString *name = [item objectForKey:@"name"];
 			[encodingNames addObject:name];
 			[newitem setTag:tag];
+			
 			[submenu addItem:newitem];
-			[newitem autorelease];
 		}
-		NSMenuItem *seperator = [NSMenuItem separatorItem];
-		[submenu addItem:seperator];
-		lastitem = [submenu indexOfItem:seperator];
+		sectionIndex++;
+		if (sectionIndex < sectionCount) {
+			[submenu addItem:[NSMenuItem separatorItem]];
+		}
 	}
-	[submenu removeItemAtIndex:lastitem];
 	initialized = YES;
 }
 
-- (NSString*)getEncodingByTag:(int)tag
+- (NSString*)getEncodingByTag:(NSInteger)tag
 {
 	if(0==tag)
 		return nil;

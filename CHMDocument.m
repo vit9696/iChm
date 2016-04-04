@@ -6,9 +6,8 @@
 //  Copyright __MyCompanyName__ 2008 . All rights reserved.
 //
 
-#import <WebKit/WebKit.h>
 #import "CHMDocument.h"
-#import <chm_lib/chm_lib.h>
+#import <CHM/CHM.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "ITSSProtocol.h"
 #import "CHMTableOfContent.h"
@@ -19,6 +18,19 @@
 #import "CHMWebView.h"
 #import "CHMExporter.h"
 #import "lcid.h"
+
+
+#define MD_DEBUG 1
+
+#if defined(MD_DEBUG)
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+static void MDLog(NSString *string, ...) {
+	(void)string;
+}
+#endif
+
+
 
 #define PREF_FILES_INFO @"files info"
 #define PREF_UPDATED_AT @"updated at"
@@ -50,7 +62,7 @@ static BOOL firstDocument = YES;
 
 - (void)log:(NSString*)string
 {
-	NSLog(string);
+	NSLog(@"%@", string);
 }
 
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)selector {
@@ -103,26 +115,11 @@ static BOOL firstDocument = YES;
     
         // Add your subclass-specific initialization here.
         // If an error occurs here, send a [self release] message and return nil.
-		chmFileHandle = nil;
-		filePath = nil;
-		
-		docTitle = nil;
-		homePath = nil;
-		tocPath = nil;
-		indexPath = nil;
-		
-		skIndex = nil;
-		searchIndexObject = nil;
-		isIndexDone = false;
+		isIndexDone = NO;
 		searchIndexCondition = [[NSCondition alloc] init];
 		
-		tocSource = nil;
-		searchSource = nil;
 		webViews = [[NSMutableArray alloc] init];
 		console = [[CHMConsole alloc] init];
-		curWebView = nil;
-		
-		customizedEncodingTag = 0;
 		
 		isSidebarRestored = NO;
     }
@@ -143,8 +140,8 @@ static BOOL firstDocument = YES;
 	[tocSource release];
 	[searchSource release];
 	
-	if(!skIndex)
-		SKIndexClose(skIndex);
+	if (skIndex) SKIndexClose(skIndex);
+	
 	[searchIndexObject release];
 	[searchIndexCondition release];
 	
@@ -160,7 +157,7 @@ static inline NSStringEncoding nameToEncoding(NSString* name) {
 	  CFStringConvertIANACharSetNameToEncoding((CFStringRef) name));
 }
 
-static inline unsigned short readShort( NSData *data, unsigned int offset ) {
+static inline unsigned short readShort( NSData *data, NSUInteger offset ) {
     NSRange valueRange = { offset, 2 };
     unsigned short value;
     
@@ -168,12 +165,10 @@ static inline unsigned short readShort( NSData *data, unsigned int offset ) {
     return NSSwapLittleShortToHost( value );
 }
 
-static inline unsigned long readLong( NSData *data, unsigned int offset ) {
-    NSRange valueRange = { offset, 4 };
-    unsigned long value;
-    
-    [data getBytes:(void *)&value range:valueRange];
-    return NSSwapLittleLongToHost( value );
+static inline UInt32 readInt(NSData *data, NSUInteger offset) {
+	UInt32 value = 0;
+	[data getBytes:&value range:NSMakeRange(offset, 4)];
+	return NSSwapLittleIntToHost(value);
 }
 
 static inline NSString * readString( NSData *data, unsigned long offset, NSString *encodingName ) {
@@ -411,30 +406,30 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
     NSData *stringsData = [self content:@"/#STRINGS"];
 	
     if( windowsData && stringsData ) {
-		const unsigned long entryCount = readLong( windowsData, 0 );
-		const unsigned long entrySize = readLong( windowsData, 4 );
+		const UInt32 entryCount = readInt(windowsData, 0);
+		const UInt32 entrySize = readInt(windowsData, 4);
 		
-		for( int entryIndex = 0; entryIndex < entryCount; ++entryIndex ) {
-			unsigned long entryOffset = 8 + ( entryIndex * entrySize );
+		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex ) {
+			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
 			
 			if( !docTitle || ( [docTitle length] == 0 ) ) { 
-				docTitle = readTrimmedString( stringsData, readLong( windowsData, entryOffset + 0x14), encodingName );
-				NSLog(@"STRINGS title: %@", docTitle);
+				docTitle = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encodingName);
+				MDLog(@"[%@ %@] STRINGS title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 			}
 			
 			if( !tocPath || ( [tocPath length] == 0 ) ) { 
-				tocPath = readString( stringsData, readLong( windowsData, entryOffset + 0x60 ), encodingName );
-				NSLog(@"STRINGS path of TOC: %@", tocPath);
+				tocPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60 ), encodingName);
+				MDLog(@"[%@ %@] STRINGS path of TOC == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 			}
 			
 			if( !indexPath || ( [indexPath length] == 0 ) ) { 
-				indexPath = readString( stringsData, readLong( windowsData, entryOffset + 0x64 ), encodingName );
-				NSLog(@"STRINGS path of index file: %@", indexPath);
+				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64 ), encodingName);
+				MDLog(@"[%@ %@] STRINGS path of index file == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 			}
 			
 			if( !homePath || ( [homePath length] == 0 ) ) { 
-				homePath = readString( stringsData, readLong( windowsData, entryOffset + 0x68 ), encodingName );
-				NSLog(@"STRINGS path of home: %@", homePath);
+				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68 ), encodingName);
+				MDLog(@"[%@ %@] STRINGS path of home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 			}
 		}
     }
@@ -445,40 +440,40 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 		return NO;
     }
 	
-    unsigned int maxOffset = [systemData length];
-	unsigned int offset = 4;
+	NSUInteger maxOffset = [systemData length];
+	NSUInteger offset = 4;
+	
     for( ;offset<maxOffset; ) {
 		switch( readShort( systemData, offset ) ) {
 			case 0:
 				if( !tocPath || ( [tocPath length] == 0 ) ) {
 					tocPath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Table of contents: %@", tocPath );
+					MDLog(@"[%@ %@] SYSTEM Table of contents == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 				}
 				break;
 			case 1:
 				if( !indexPath || ( [indexPath length] == 0 ) ) {
 					indexPath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Index: %@", indexPath );
+					MDLog(@"[%@ %@] SYSTEM Index == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
 				break;
 			case 2:
 				if( !homePath || ( [homePath length] == 0 ) ) {
 					homePath = readString( systemData, offset + 4, encodingName );
-                    NSLog( @"SYSTEM Home: %@", homePath );
+					MDLog(@"[%@ %@] SYSTEM Home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 				}
 				break;
 			case 3:
 				if( !docTitle || ( [docTitle length] == 0 ) ) {
 					docTitle = readTrimmedString( systemData, offset + 4, encodingName );
-					NSLog( @"SYSTEM Title: %@", docTitle );
+					MDLog(@"[%@ %@] SYSTEM Title == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 				}
 				break;
-			case 4:
-			{
-				unsigned int lcid = readLong(systemData, offset + 4);
-				NSLog(@"SYSTEM LCID: %d", lcid);
+			case 4: {
+				UInt32 lcid = readInt(systemData, offset + 4);
+				MDLog(@"[%@ %@] SYSTEM LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
 				encodingName = LCIDtoEncodingName(lcid);
-				NSLog(@"SYSTEM encoding: %@", encodingName);
+				MDLog(@"[%@ %@] SYSTEM ecoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
 			}
 				break;
 			case 6:
@@ -500,7 +495,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 						indexPath = path;
 					}
 				}
-				NSLog( @"SYSTEM Table of contents: %@", tocPath );
+				MDLog(@"[%@ %@] SYSTEM Table of contents == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tocPath);
 				[prefix release];
 			}
 				break;
@@ -509,7 +504,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			case 16:
 				break;
 			default:
-				NSLog(@"SYSTEM unhandled value:%d", readShort( systemData, offset ));
+				MDLog(@"[%@ %@] SYSTEM unhandled value == %d", NSStringFromClass([self class]), NSStringFromSelector(_cmd), readShort(systemData, offset));
 				break;
 		}
 		offset += readShort(systemData, offset+2) + 4;
@@ -526,7 +521,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
     // Check for lack of index page
     if( !homePath ) {
         homePath = [self findHomeForPath:@"/"];
-        NSLog( @"Implicit home: %@", homePath );
+		MDLog(@"[%@ %@] Implicit home == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
     }
     
     [homePath retain];
@@ -651,20 +646,21 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-- (BOOL)readFromFile:(NSString *)fileName ofType:(NSString *)docType {
-    NSLog( @"CHMDocument:readFromFile:%@", fileName );
-	if(filePath) [filePath release];
-	filePath = fileName;
-	[filePath retain];
-		
-    chmFileHandle = chm_open( [fileName fileSystemRepresentation] );
-    if( !chmFileHandle ) return NO;
+
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
+	MDLog(@"[%@ %@] url.path == %@, type == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url.path, typeName);
 	
+	[filePath release];
+	filePath = [[url path] retain];
 	
-    [self loadMetadata];
+	chmFileHandle = chm_open([filePath fileSystemRepresentation]);
+	if (!chmFileHandle) return NO;
+	
+	[self loadMetadata];
 	[self setupTOCSource];
 	return YES;
 }
+
 
 - (void)close
 {
@@ -721,7 +717,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 			}
 		}
 		[oldestKey retain];
-		[filesInfoList removeObjectForKey:oldestKey];
+		if (oldestKey)[filesInfoList removeObjectForKey:oldestKey];
 		[oldestKey release];
 	}
 	
@@ -775,7 +771,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL * url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem* item = [[tocView dataSource] itemForPath:path withStack:nil];
+	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if(!name || [name length] == 0)
@@ -876,7 +872,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark WebUIDelegate
 - (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request
 {
-	WebView* wv = [[[self createWebViewInTab:sender] identifier] webView];
+	WebView* wv = [(CHMWebViewController *)[[self createWebViewInTab:sender] identifier] webView];
 	[[wv mainFrame] loadRequest:request];
 	return wv;
 }
@@ -897,7 +893,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark actions
 - (IBAction)changeTopic:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
     
     if( selectedRow >= 0 ) {
 		LinkItem *topic = [tocView itemAtRow:selectedRow];
@@ -943,7 +939,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (IBAction)gotoNextPage:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	LinkItem *topic = [tocView itemAtRow:selectedRow];
 	LinkItem* nextPage = [tocSource getNextPage:topic];
 	if (nextPage)
@@ -952,7 +948,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (IBAction)gotoPrevPage:(id)sender
 {
-	int selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [tocView selectedRow];
 	LinkItem *topic = [tocView itemAtRow:selectedRow];
 	LinkItem* prevPage = [tocSource getPrevPage:topic];
 	if (prevPage)
@@ -964,7 +960,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	NSURL * url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem* item = [[tocView dataSource] itemForPath:path withStack:tocStack];
+	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:tocStack];
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	for (LinkItem *p in enumerator) {
 		[tocView expandItem:p];
@@ -1072,10 +1068,10 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	[exportProgressSheet orderOut:sender];
 }
 
-- (void)exportedProgressRate:(double)rate PageCount:(int)count
+- (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count
 {
 	NSString *title = NSLocalizedString(@"Save as PDF", @"Save as PDF");
-	NSString *label = [NSString stringWithFormat:@"%@ : %d %@", title, count, NSLocalizedString(@"pages", @"pages")];
+	NSString *label = [NSString stringWithFormat:@"%@ : %ld %@", title, (long)count, NSLocalizedString(@"pages", @"pages")];
 	[exportNoticeLabel setStringValue:label];
 	[exportProgressIndicator setDoubleValue:rate];
 }
@@ -1095,10 +1091,10 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (NSTabViewItem*)createWebViewInTab:(id)sender
 {
-	CHMWebViewController * chmWebView = [[CHMWebViewController alloc] init];
+	CHMWebViewController *chmWebViewController = [[CHMWebViewController alloc] init];
 	
 	// init the webview
-	WebView *newView = [chmWebView webView];
+	WebView *newView = [chmWebViewController webView];
 	[(CHMWebView*)newView setDocument:self];
 	[newView setPreferencesIdentifier:WebVewPreferenceIndentifier];
 	if ([webViews count] == 0)
@@ -1125,22 +1121,22 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	
 	// create new tab item
 	NSTabViewItem *newItem = [[[NSTabViewItem alloc] init] autorelease];
-	[newItem setView:[chmWebView view]];
+	[newItem setView:[chmWebViewController view]];
     [newItem setLabel:@"(Untitled)"];
-	[newItem setIdentifier:chmWebView];
+	[newItem setIdentifier:chmWebViewController];
 	
 	// add to tab view
     [docTabView addTabViewItem:newItem];
 	[webViews addObject:newView];
 	
-	[chmWebView autorelease];
+	[chmWebViewController autorelease];
 	return newItem;
 }
 
 - (IBAction)addNewTab:(id)sender
 {
 	NSTabViewItem *item = [self createWebViewInTab:sender];
-	curWebView = [[item identifier] webView];
+	curWebView = [(CHMWebViewController *)[item identifier] webView];
 	[docTabView selectTabViewItem:item];
 }
 
@@ -1165,7 +1161,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	curWebView = [[tabViewItem identifier] webView];
+	curWebView = [(CHMWebViewController *)[tabViewItem identifier] webView];
 }
 
 - (IBAction)selectNextTabViewItem:(id)sender
@@ -1260,10 +1256,15 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 # pragma mark Search
 - (void)prepareSearchIndex
 {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[searchIndexObject release];
 	searchIndexObject = [[NSMutableData dataWithCapacity: 2^22] retain];
-	if(!skIndex)
+	
+	if (skIndex) {
 		SKIndexClose(skIndex);
+		skIndex = NULL;
+	}
 	
 	skIndex = SKIndexCreateWithMutableData((CFMutableDataRef) searchIndexObject,
 											  NULL,
@@ -1287,10 +1288,12 @@ static int forEachFile(struct chmFile *h,
 
 - (void)buildSearchIndex
 {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[searchIndexCondition lock];
 	chm_enumerate(chmFileHandle, CHM_ENUMERATE_FILES||CHM_ENUMERATE_NORMAL, forEachFile, (void*)self);
-	isIndexDone = true;
+	isIndexDone = YES;
 	[searchIndexCondition signal];
 	[searchIndexCondition unlock];
 	[pool release];
@@ -1298,6 +1301,8 @@ static int forEachFile(struct chmFile *h,
 
 - (void)addToSearchIndex:(const char*)path
 {
+//	MDLog(@"[%@ %@] %s", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
+	
 	NSString *filepath = [NSString stringWithCString:path encoding:nameToEncoding(encodingName)];
 	if([filepath hasPrefix:@"/"])
 		filepath = [filepath substringFromIndex:1];
@@ -1384,7 +1389,9 @@ static int forEachFile(struct chmFile *h,
 		return;
 	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString ];
-	searchSource = [[CHMTableOfContent alloc]
+//	searchSource = [[CHMTableOfContent alloc]
+//					initWithTOC:indexSource filterByPredicate:predicate];
+	searchSource = [[CHMSearchResult alloc]
 					initWithTOC:indexSource filterByPredicate:predicate];
 	
 	[tocView deselectAll:self];
@@ -1396,6 +1403,10 @@ static int forEachFile(struct chmFile *h,
 
 - (IBAction)searchInFile:(id)sender
 {
+#if MD_DEBUG
+	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+#endif
+	
 	// waiting for the building of index
 	[searchIndexCondition lock];
 	while (!isIndexDone)
@@ -1414,8 +1425,7 @@ static int forEachFile(struct chmFile *h,
 		return;
 	}
 	
-	if (searchSource)
-		[searchSource release];
+	[searchSource release];
 	
 	searchSource = [[CHMSearchResult alloc] initwithTOC:tocSource withIndex:indexSource];
 	if (!indexSource && !tocSource)
@@ -1593,7 +1603,7 @@ static int forEachFile(struct chmFile *h,
 	[self locateTOC:self];
 }
 
-- (NSString*)getEncodingByTag:(int)tag
+- (NSString*)getEncodingByTag:(NSInteger)tag
 {
 	ICHMApplication* chmapp = [NSApp delegate];
 	
