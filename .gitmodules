@@ -1,9 +1,10 @@
 [submodule "chmlib"]
 	path = chmlib
-	url = https://NSGod@github.com/NSGod/chmlib.git
-[submodule "PSMTabBarControl"]
-	path = PSMTabBarControl
-	url = https://NSGod@github.com/NSGod/PSMTabBarControl.git
+	url = https://github.com/NSGod/chmlib.git
+	branch = develop
 [submodule "CHMSpotlightImporter"]
 	path = CHMSpotlightImporter
-	url = https://NSGod@github.com/NSGod/Spotlight-CHM-importer.git
+	url = https://github.com/NSGod/Spotlight-CHM-importer.git
+[submodule "PSMTabBarControl"]
+	path = PSMTabBarControl
+	url = https://github.com/NSGod/PSMTabBarControl.git
