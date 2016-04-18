@@ -8,3 +8,6 @@
 [submodule "PSMTabBarControl"]
 	path = PSMTabBarControl
 	url = https://github.com/NSGod/PSMTabBarControl.git
+[submodule "CHMQuickLook"]
+	path = CHMQuickLook
+	url = https://github.com/NSGod/QuickCHM.git
