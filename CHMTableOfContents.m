@@ -17,7 +17,7 @@
 - (void)pop_item;
 - (void)new_item;
 
-- (void)addToPageList:(LinkItem*)item;
+- (void)addToPageList:(LinkItem *)item;
 @end
 
 
@@ -25,54 +25,54 @@
 @synthesize rootItems;
 @synthesize pageList;
 
-static void elementDidStart( CHMTableOfContents *toc, const xmlChar *name, const xmlChar **atts );
-static void elementDidEnd( CHMTableOfContents *toc, const xmlChar *name );
+static void elementDidStart(CHMTableOfContents *toc, const xmlChar *name, const xmlChar **atts);
+static void elementDidEnd(CHMTableOfContents *toc, const xmlChar *name);
 
 static htmlSAXHandler saxHandler = {
-NULL, /* internalSubset */
-NULL, /* isStandalone */
-NULL, /* hasInternalSubset */
-NULL, /* hasExternalSubset */
-NULL, /* resolveEntity */
-NULL, /* getEntity */
-NULL, /* entityDecl */
-NULL, /* notationDecl */
-NULL, /* attributeDecl */
-NULL, /* elementDecl */
-NULL, /* unparsedEntityDecl */
-NULL, /* setDocumentLocator */
-NULL, /* startDocument */
-NULL, /* endDocument */
-(startElementSAXFunc) elementDidStart, /* startElement */
-(endElementSAXFunc) elementDidEnd, /* endElement */
-NULL, /* reference */
-NULL, /* characters */
-NULL, /* ignorableWhitespace */
-NULL, /* processingInstruction */
-NULL, /* comment */
-NULL, /* xmlParserWarning */
-NULL, /* xmlParserError */
-NULL, /* xmlParserError */
-NULL, /* getParameterEntity */
+	NULL, /* internalSubset */
+	NULL, /* isStandalone */
+	NULL, /* hasInternalSubset */
+	NULL, /* hasExternalSubset */
+	NULL, /* resolveEntity */
+	NULL, /* getEntity */
+	NULL, /* entityDecl */
+	NULL, /* notationDecl */
+	NULL, /* attributeDecl */
+	NULL, /* elementDecl */
+	NULL, /* unparsedEntityDecl */
+	NULL, /* setDocumentLocator */
+	NULL, /* startDocument */
+	NULL, /* endDocument */
+	(startElementSAXFunc)elementDidStart, /* startElement */
+	(endElementSAXFunc)elementDidEnd, /* endElement */
+	NULL, /* reference */
+	NULL, /* characters */
+	NULL, /* ignorableWhitespace */
+	NULL, /* processingInstruction */
+	NULL, /* comment */
+	NULL, /* xmlParserWarning */
+	NULL, /* xmlParserError */
+	NULL, /* xmlParserError */
+	NULL, /* getParameterEntity */
 };
 
-- (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName
-{
+
+- (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName {
 	if ((self = [super init])) {
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
-		rootItems = [[LinkItem alloc] initWithName:@"root"	path:@"/"];
+		rootItems = [[LinkItem alloc] initWithName:@"root" path:@"/"];
 		curItem = rootItems;
 		
-		if(!encodingName || [encodingName length] == 0)
+		if (!encodingName || [encodingName length] == 0) {
 			encodingName = @"iso_8859_1";
+		}
 		
-		htmlDocPtr doc = htmlSAXParseDoc( (xmlChar *)[data bytes], [encodingName UTF8String],
-									  &saxHandler, self);
+		htmlDocPtr doc = htmlSAXParseDoc((xmlChar *)[data bytes], [encodingName UTF8String], &saxHandler, self);
 		[itemStack release];
 		
-		if( doc ) {
-			xmlFreeDoc( doc );
+		if (doc) {
+			xmlFreeDoc(doc);
 		}
 		[rootItems purge];
 		[rootItems enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
@@ -81,13 +81,13 @@ NULL, /* getParameterEntity */
 	return self;
 }
 
-- (id)initWithTOC:(CHMTableOfContents*)toc filterByPredicate:(NSPredicate*)predicate
-{
+
+- (id)initWithTOC:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
 	if ((self = [super init])) {
-		rootItems = [[LinkItem alloc] initWithName:@"root"	path:@"/"];
+		rootItems = [[LinkItem alloc] initWithName:@"root" path:@"/"];
 		NSMutableArray *children = [rootItems children];
 		if (toc) {
-			LinkItem * items = [toc rootItems];
+			LinkItem *items = [toc rootItems];
 			NSArray *src_children = [items children];
 			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
 			[children addObjectsFromArray:results];
@@ -96,205 +96,188 @@ NULL, /* getParameterEntity */
 	return self;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
 	[rootItems release];
 	[super dealloc];
 }
 
-- (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray*)stack
-{
-	if( [path hasPrefix:@"/"] ) {
+- (LinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack {
+	if ([path hasPrefix:@"/"]) {
 		path = [path substringFromIndex:1];
-    }
-	
+	}
 	LinkItem *item = [rootItems itemForPath:path withStack:stack];
-	if (!item)
-	{
+	if (!item) {
 		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		item = [rootItems itemForPath:encoded_path withStack:stack];
 	}
 	return item;
 }
 
-- (NSInteger)rootChildrenCount
-{
+
+- (NSInteger)rootChildrenCount {
 	return [rootItems numberOfChildren];
 }
 
-- (void)sort
-{
-	[rootItems sort];	
+- (void)sort {
+	[rootItems sort];
 }
 
-- (LinkItem*)getNextPage:(LinkItem*)item
-{
+- (LinkItem *)getNextPage:(LinkItem *)item {
 	NSUInteger idx = [item pageID] + 1;
-	if (idx == [pageList count])
+	if (idx == [pageList count]) {
 		return nil;
+	}
 	return [pageList objectAtIndex:idx];
 }
 
-- (LinkItem*)getPrevPage:(LinkItem*)item
-{
+- (LinkItem *)getPrevPage:(LinkItem *)item {
 	NSUInteger idx = [item pageID] - 1;
-	if (idx == -1)
+	if (idx == -1) {
 		return nil;
+	}
 	return [pageList objectAtIndex:idx];
 }
-# pragma mark NSOutlineView datasource
-- (NSInteger)outlineView:(NSOutlineView *)outlineView
-numberOfChildrenOfItem:(id)item
-{
-	if (!item)
-		item = rootItems;
-	
+
+
+#pragma mark - <NSOutlineViewDataSource>
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
+	if (item == nil) item = rootItems;
     return [item numberOfChildren];
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView
-   isItemExpandable:(id)item
-{
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
     return [item numberOfChildren] > 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView
-			child:(NSInteger)theIndex
-		   ofItem:(id)item
-{
-	if (!item)
-		item = rootItems;
-	
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)theIndex ofItem:(id)item {
+	if (item == nil) item = rootItems;
     return [(LinkItem *)item childAtIndex:theIndex];
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView
-objectValueForTableColumn:(NSTableColumn *)tableColumn
-		   byItem:(id)item
-{
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
     return [item name];
 }
 
-- (LinkItem *)curItem
-{
+#pragma mark <NSOutlineViewDataSource>
+#pragma mark -
+
+
+- (LinkItem *)curItem {
 	return curItem;
 }
 
-- (void)push_item
-{
+- (void)push_item {
 	[itemStack addObject:curItem];
 }
 
-- (void)new_item
-{
+- (void)new_item {
     if ([itemStack count] == 0) {
         [self push_item];
     }
-	LinkItem * parent = [itemStack lastObject];
+	LinkItem *parent = [itemStack lastObject];
 	curItem = [[LinkItem alloc] init];
 	[parent appendChild:curItem];
 }
 
-- (void)pop_item
-{
+
+- (void)pop_item {
 	curItem = [itemStack lastObject];
 	[itemStack removeLastObject];
 }
 
-- (void)addToPageList:(LinkItem*)item
-{
-	if ([item path] == nil)
-		return;
+
+- (void)addToPageList:(LinkItem *)item {
+	if ([item path] == nil) return;
 	
-	LinkItem* latest = [pageList lastObject];
+	LinkItem *latest = [pageList lastObject];
 	
-	if(nil == latest)
-	{
+	if (latest == nil) {
 		[pageList addObject:item];
-	}
-	else
-	{
+		
+	} else {
 		NSURL *baseURL = [NSURL URLWithString:@"http://dummy.com"];
 		NSURL *url = [NSURL URLWithString:[item path] relativeToURL:baseURL];
 		NSURL *curUrl = [NSURL URLWithString:[latest path] relativeToURL:baseURL];
-		if (![[url path] isEqualToString:[curUrl path]])
-			[pageList addObject:item];
+		
+		if (![[url path] isEqualToString:[curUrl path]]) [pageList addObject:item];
+		
 	}
+	
 	[item setPageID:([pageList count] - 1)];
 }
 
-# pragma mark NSXMLParser delegation
-static void elementDidStart( CHMTableOfContents *context, const xmlChar *name, const xmlChar **atts ) 
-{
-	if (!context)
-		return;
+
+#pragma mark NSXMLParser delegation
+static void elementDidStart(CHMTableOfContents *context, const xmlChar *name, const xmlChar **atts) {
+	if (context == NULL) return;
 	
-    if ( !strcasecmp( "ul", (char *)name ) ) {
+	if (!strcasecmp("ul", (char *)name)) {
 		[context push_item];
-        return;
-    }
+		return;
+	}
 	
-    if ( !strcasecmp( "li", (char *)name ) ) {
+	if (!strcasecmp("li", (char *)name)) {
 		[context new_item];
-        return;
-    }
+		return;
+	}
 	
-    if ( !strcasecmp( "param", (char *)name ) && ( atts != NULL ) ) {
+	if (!strcasecmp("param", (char *)name) && (atts != NULL)) {
 		// Topic properties
 		const xmlChar *type = NULL;
 		const xmlChar *value = NULL;
 		
-		for( NSUInteger i = 0; atts[ i ] != NULL ; i += 2 ) {
-			if( !strcasecmp( "name", (char *)atts[ i ] ) ) {
-				type = atts[ i + 1 ];
-			}
-			else if( !strcasecmp( "value", (char *)atts[ i ] ) ) {
-				value = atts[ i + 1 ];
+		for (NSUInteger i = 0; atts[i] != NULL; i += 2) {
+			
+			if (!strcasecmp("name", (char *)atts[i])) {
+				type = atts[i + 1];
+			} else if (!strcasecmp("value", (char *)atts[i])) {
+				value = atts[i + 1];
 			}
 		}
-		
-		if( ( type != NULL ) && ( value != NULL ) ) {
-			if( !strcasecmp( "Name", (char *)type ) || !strcasecmp( "Keyword", (char *)type )) {
+
+		if (type && value) {
+			if (!strcasecmp("Name", (char *)type) || !strcasecmp("Keyword", (char *)type)) {
 				// Name of the topic
 				NSString *str = [[NSString alloc] initWithUTF8String:(char *)value];
-				if (![[context curItem] name])
+				if (![[context curItem] name]) {
 					[[context curItem] setName:str];
+				}
 				[str release];
-			}
-			else if( !strcasecmp( "Local", (char *)type ) ) {
+				
+			} else if (!strcasecmp("Local", (char *)type)) {
 				// Path of the topic
 				NSString *str = [[NSString alloc] initWithUTF8String:(char *)value];
-				[[context curItem] setPath:str]; 
+				[[context curItem] setPath:str];
 				[str release];
 			}
 		}
-        return;
-    }
+		return;
+	}
 }
 
-static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
-{
-    if ( !strcasecmp( "ul", (char *)name ) ) {
+
+static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
+	if (!strcasecmp("ul", (char *)name)) {
 		[context pop_item];
-        return;
-    }	
+		return;
+	}
 }
+
 @end
 
 
 
 @implementation CHMSearchResult
 
-- (id) init
-{
+- (id)init {
 	if ((self = [super init])) {
-		rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	path:@"/" score:0];
+		rootItems = [[ScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
 	}
 	return self;
 }
 
-- (id)initwithTOC:(CHMTableOfContents*)toc withIndex:(CHMTableOfContents*)index
-{
+- (id)initwithTOC:(CHMTableOfContents *)toc withIndex:(CHMTableOfContents*)index {
 	if ((self = [self init])) {
 		tableOfContent = [toc retain];
 		indexContent = [index retain];
@@ -302,15 +285,13 @@ static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 	return self;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
 	[tableOfContent release];
 	[indexContent release];
 	[super dealloc];
 }
 
-- (void)addPath:(NSString*)path score:(float)score
-{
+- (void)addPath:(NSString *)path score:(CGFloat)score {
 	LinkItem * item = nil;
 	if (tableOfContent)
 		item = [tableOfContent itemForPath:path withStack:nil];
@@ -319,15 +300,15 @@ static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 	
 	if (!item)
 		return;
-	ScoredLinkItem * newitem = [[ScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
+	ScoredLinkItem *newitem = [[ScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
 	[rootItems appendChild:newitem];
 	[newitem release];
 }
 
-- (void)sort
-{
+- (void)sort {
 	[(ScoredLinkItem*)rootItems sort];
 }
+
 @end
 
 
