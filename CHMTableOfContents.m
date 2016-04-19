@@ -6,7 +6,7 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "CHMTableOfContent.h"
+#import "CHMTableOfContents.h"
 #import <libxml/HTMLparser.h>
 #import "CHMDocument.h"
 
@@ -158,7 +158,7 @@
 
 
 
-@interface CHMTableOfContent (Private)
+@interface CHMTableOfContents (Private)
 - (void)push_item;
 - (void)pop_item;
 - (void)new_item;
@@ -167,12 +167,12 @@
 @end
 
 
-@implementation CHMTableOfContent
+@implementation CHMTableOfContents
 @synthesize rootItems;
 @synthesize pageList;
 
-static void elementDidStart( CHMTableOfContent *toc, const xmlChar *name, const xmlChar **atts );
-static void elementDidEnd( CHMTableOfContent *toc, const xmlChar *name );
+static void elementDidStart( CHMTableOfContents *toc, const xmlChar *name, const xmlChar **atts );
+static void elementDidEnd( CHMTableOfContents *toc, const xmlChar *name );
 
 static htmlSAXHandler saxHandler = {
 NULL, /* internalSubset */
@@ -227,7 +227,7 @@ NULL, /* getParameterEntity */
 	return self;
 }
 
-- (id)initWithTOC:(CHMTableOfContent*)toc filterByPredicate:(NSPredicate*)predicate
+- (id)initWithTOC:(CHMTableOfContents*)toc filterByPredicate:(NSPredicate*)predicate
 {
 	if ((self = [super init])) {
 		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
@@ -370,7 +370,7 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 }
 
 # pragma mark NSXMLParser delegation
-static void elementDidStart( CHMTableOfContent *context, const xmlChar *name, const xmlChar **atts ) 
+static void elementDidStart( CHMTableOfContents *context, const xmlChar *name, const xmlChar **atts ) 
 {
 	if (!context)
 		return;
@@ -418,7 +418,7 @@ static void elementDidStart( CHMTableOfContent *context, const xmlChar *name, co
     }
 }
 
-static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
+static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 {
     if ( !strcasecmp( "ul", (char *)name ) ) {
 		[context pop_item];
@@ -439,7 +439,7 @@ static void elementDidEnd( CHMTableOfContent *context, const xmlChar *name )
 	return self;
 }
 
-- (id)initwithTOC:(CHMTableOfContent*)toc withIndex:(CHMTableOfContent*)index
+- (id)initwithTOC:(CHMTableOfContents*)toc withIndex:(CHMTableOfContents*)index
 {
 	if ((self = [self init])) {
 		tableOfContent = [toc retain];

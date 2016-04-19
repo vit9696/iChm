@@ -10,7 +10,7 @@
 #import <CHM/CHM.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "ITSSProtocol.h"
-#import "CHMTableOfContent.h"
+#import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
 #import "ICHMApplication.h"
 #import "CHMTextEncodingMenu.h"
@@ -625,8 +625,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	if (tocPath && [tocPath length] > 0)
 	{
 		NSData * tocData = [self content:tocPath];
-		CHMTableOfContent* newTOC = [[CHMTableOfContent alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContent* oldTOC = tocSource;
+		CHMTableOfContents* newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
+		CHMTableOfContents* oldTOC = tocSource;
 		tocSource = newTOC;
 		
 		if(oldTOC)
@@ -636,8 +636,8 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	if (indexPath && [indexPath length] > 0) 
 	{
 		NSData * tocData = [self content:indexPath];
-		CHMTableOfContent* newTOC = [[CHMTableOfContent alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContent* oldTOC = indexSource;
+		CHMTableOfContents* newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
+		CHMTableOfContents* oldTOC = indexSource;
 		indexSource = newTOC;
 		[indexSource sort];
 		
@@ -771,7 +771,7 @@ static inline NSString * LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL * url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:nil];
+	LinkItem* item = [(CHMTableOfContents *)[tocView dataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if(!name || [name length] == 0)
@@ -960,7 +960,7 @@ decidePolicyForNewWindowAction:(NSDictionary *)actionInformation
 	NSURL * url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem* item = [(CHMTableOfContent *)[tocView dataSource] itemForPath:path withStack:tocStack];
+	LinkItem* item = [(CHMTableOfContents *)[tocView dataSource] itemForPath:path withStack:tocStack];
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	for (LinkItem *p in enumerator) {
 		[tocView expandItem:p];

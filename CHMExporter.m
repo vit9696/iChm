@@ -6,7 +6,7 @@
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 #import "CHMExporter.h"
-#import "CHMTableOfContent.h"
+#import "CHMTableOfContents.h"
 #import "CHMDocument.h"
 
 @implementation CHMExporter

@@ -38,7 +38,7 @@
 		C390802E0EC027070018AA80 /* CHMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = C390802D0EC027070018AA80 /* CHMWebView.m */; };
 		C390817B0EC0A4EC0018AA80 /* CHMExporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C390817A0EC0A4EC0018AA80 /* CHMExporter.m */; };
 		C39A12160E607D330009C875 /* view.tif in Resources */ = {isa = PBXBuildFile; fileRef = C39A12150E607D330009C875 /* view.tif */; };
-		C3A79CC30E30438B00FF4485 /* CHMTableOfContent.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A79CC20E30438B00FF4485 /* CHMTableOfContent.m */; };
+		C3A79CC30E30438B00FF4485 /* CHMTableOfContents.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */; };
 		C3AA9B220E3EC8A200D2FB53 /* CHMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */; };
 		C3BF8BA00E4FDD7200AE3BEE /* CHMBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = C3BF8B9F0E4FDD7200AE3BEE /* CHMBookmark.m */; };
 		C3C082250E4557E700D58E19 /* TB_Sidebar.png in Resources */ = {isa = PBXBuildFile; fileRef = C3C082240E4557E700D58E19 /* TB_Sidebar.png */; };
@@ -228,8 +228,8 @@
 		C39081790EC0A4EC0018AA80 /* CHMExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMExporter.h; sourceTree = "<group>"; };
 		C390817A0EC0A4EC0018AA80 /* CHMExporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMExporter.m; sourceTree = "<group>"; };
 		C39A12150E607D330009C875 /* view.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = view.tif; sourceTree = "<group>"; };
-		C3A79CC10E30438B00FF4485 /* CHMTableOfContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTableOfContent.h; sourceTree = "<group>"; };
-		C3A79CC20E30438B00FF4485 /* CHMTableOfContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTableOfContent.m; sourceTree = "<group>"; };
+		C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTableOfContents.h; sourceTree = "<group>"; };
+		C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTableOfContents.m; sourceTree = "<group>"; };
 		C3AA9B1D0E3EC88600D2FB53 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CHMWebView.xib; sourceTree = "<group>"; };
 		C3AA9B200E3EC8A200D2FB53 /* CHMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMWebViewController.h; sourceTree = "<group>"; };
 		C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMWebViewController.m; sourceTree = "<group>"; };
@@ -371,8 +371,8 @@
 			isa = PBXGroup;
 			children = (
 				C3E9715D0E4BEAA000B7B36D /* lcid.h */,
-				C3A79CC10E30438B00FF4485 /* CHMTableOfContent.h */,
-				C3A79CC20E30438B00FF4485 /* CHMTableOfContent.m */,
+				C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */,
+				C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */,
 				C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */,
 				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
 			);
@@ -664,7 +664,7 @@
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */,
 				C3DB252F0E2DD646000E5A20 /* ICHMApplication.m in Sources */,
-				C3A79CC30E30438B00FF4485 /* CHMTableOfContent.m in Sources */,
+				C3A79CC30E30438B00FF4485 /* CHMTableOfContents.m in Sources */,
 				C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */,
 				C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */,
 				C3AA9B220E3EC8A200D2FB53 /* CHMWebViewController.m in Sources */,

@@ -11,7 +11,7 @@
 #import <WebKit/WebKit.h>
 #import <AvailabilityMacros.h>
 
-@class CHMTableOfContent;
+@class CHMTableOfContents;
 @class CHMSearchResult;
 @class LinkItem;
 @class PSMTabBarControl;
@@ -51,8 +51,8 @@ struct chmFile;
     NSString						*tocPath;
     NSString						*indexPath;
 	
-	CHMTableOfContent				*tocSource;
-	CHMTableOfContent				*indexSource;
+	CHMTableOfContents				*tocSource;
+	CHMTableOfContents				*indexSource;
 	CHMSearchResult					*searchSource;
 	
 	SKIndexRef						skIndex;

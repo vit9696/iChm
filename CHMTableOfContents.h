@@ -10,7 +10,7 @@
 @class LinkItem;
 
 
-@interface CHMTableOfContent : NSObject <NSOutlineViewDataSource> {
+@interface CHMTableOfContents : NSObject <NSOutlineViewDataSource> {
 	LinkItem *rootItems;
 	
 	NSMutableArray *itemStack;
@@ -21,7 +21,7 @@
 @property (readonly) NSArray *pageList;
 
 - (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName;
-- (id)initWithTOC:(CHMTableOfContent*)toc filterByPredicate:(NSPredicate*)predicate;
+- (id)initWithTOC:(CHMTableOfContents*)toc filterByPredicate:(NSPredicate*)predicate;
 - (LinkItem *)curItem;
 - (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray*)stack;
 - (NSInteger)rootChildrenCount;
@@ -31,12 +31,12 @@
 @end
 
 
-@interface CHMSearchResult : CHMTableOfContent <NSOutlineViewDataSource> {
-	CHMTableOfContent* tableOfContent;
-	CHMTableOfContent* indexContent;
+@interface CHMSearchResult : CHMTableOfContents <NSOutlineViewDataSource> {
+	CHMTableOfContents* tableOfContent;
+	CHMTableOfContents* indexContent;
 }
 
-- (id)initwithTOC:(CHMTableOfContent*)toc withIndex:(CHMTableOfContent*)index;
+- (id)initwithTOC:(CHMTableOfContents*)toc withIndex:(CHMTableOfContents*)index;
 - (void)addPath:(NSString*)path Score:(float)score;
 @end
 
