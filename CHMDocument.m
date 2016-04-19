@@ -173,7 +173,7 @@ static inline UInt32 readInt(NSData *data, NSUInteger offset) {
 
 static inline NSString * readString( NSData *data, unsigned long offset, NSString *encodingName ) {
     const char *stringData = (char *)[data bytes] + offset;
-	return [[NSString alloc] initWithCString:stringData encoding:nameToEncoding(encodingName)];
+	return [[[NSString alloc] initWithCString:stringData encoding:nameToEncoding(encodingName)] autorelease];
 }
 
 static inline NSString * readTrimmedString( NSData *data, unsigned long offset, NSString *encodingName ) {
