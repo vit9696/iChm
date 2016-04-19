@@ -61,7 +61,7 @@ NULL, /* getParameterEntity */
 	if ((self = [super init])) {
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
-		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		rootItems = [[LinkItem alloc] initWithName:@"root"	path:@"/"];
 		curItem = rootItems;
 		
 		if(!encodingName || [encodingName length] == 0)
@@ -75,7 +75,7 @@ NULL, /* getParameterEntity */
 			xmlFreeDoc( doc );
 		}
 		[rootItems purge];
-		[rootItems enumerateItemsWithSEL:@selector(addToPageList:) ForTarget:self];
+		[rootItems enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
 	}
 	
 	return self;
@@ -84,7 +84,7 @@ NULL, /* getParameterEntity */
 - (id)initWithTOC:(CHMTableOfContents*)toc filterByPredicate:(NSPredicate*)predicate
 {
 	if ((self = [super init])) {
-		rootItems = [[LinkItem alloc] initWithName:@"root"	Path:@"/"];
+		rootItems = [[LinkItem alloc] initWithName:@"root"	path:@"/"];
 		NSMutableArray *children = [rootItems children];
 		if (toc) {
 			LinkItem * items = [toc rootItems];
@@ -108,11 +108,11 @@ NULL, /* getParameterEntity */
 		path = [path substringFromIndex:1];
     }
 	
-	LinkItem *item = [rootItems find_by_path:path withStack:stack];
+	LinkItem *item = [rootItems itemForPath:path withStack:stack];
 	if (!item)
 	{
 		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		item = [rootItems find_by_path:encoded_path withStack:stack];
+		item = [rootItems itemForPath:encoded_path withStack:stack];
 	}
 	return item;
 }
@@ -288,7 +288,7 @@ static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 - (id) init
 {
 	if ((self = [super init])) {
-		rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	Path:@"/" Score:0];
+		rootItems = [[ScoredLinkItem alloc] initWithName:@"root"	path:@"/" score:0];
 	}
 	return self;
 }
@@ -309,7 +309,7 @@ static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 	[super dealloc];
 }
 
-- (void)addPath:(NSString*)path Score:(float)score
+- (void)addPath:(NSString*)path score:(float)score
 {
 	LinkItem * item = nil;
 	if (tableOfContent)
@@ -319,7 +319,7 @@ static void elementDidEnd( CHMTableOfContents *context, const xmlChar *name )
 	
 	if (!item)
 		return;
-	ScoredLinkItem * newitem = [[ScoredLinkItem alloc] initWithName:[item name] Path:[item path] Score:score];
+	ScoredLinkItem * newitem = [[ScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
 	[rootItems appendChild:newitem];
 	[newitem release];
 }

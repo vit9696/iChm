@@ -9,101 +9,65 @@
 #import "LinkItem.h"
 
 @implementation LinkItem
+@synthesize name;
+@synthesize path;
+@synthesize children;
 @synthesize pageID;
 
-- (id)init
-{
+@dynamic uppercaseName;
+
+- (id)init {
 	if ((self = [super init])) {
-		_children = [[NSMutableArray alloc] init];
+		children = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
 
-- (void) dealloc
-{
-	[_children release];
-	[_path release];
-	[_name release];
+- (id)initWithName:(NSString *)aName path:(NSString *)aPath {
+	if ((self = [super init])) {
+		name = [aName retain];
+		path = [aPath retain];
+	}
+	return self;
+}
+
+- (void)dealloc {
+	[children release];
+	[path release];
+	[name release];
 	[super dealloc];
 }
 
-- (id)initWithName:(NSString *)name Path:(NSString *)path
-{
-	if ((self = [super init])) {
-		_name = [name retain];
-		_path = [path retain];
-	}
-	return self;
+
+- (NSInteger)numberOfChildren {
+	return children ? [children count] : 0;
 }
 
-- (void)setName:(NSString *)name
-{
-	[name retain];
-	[_name release];
-	_name = name;
+- (LinkItem *)childAtIndex:(NSInteger)n {
+	return [children objectAtIndex:n];
 }
 
-- (void)setPath:(NSString *)path
-{
-	[path retain];
-	[_path release];
-	_path = path;
+- (NSString *)uppercaseName {
+	return [name uppercaseString];
 }
 
-- (void)setPageID:(NSUInteger)pid
-{
-	pageID = pid;
+
+- (void)appendChild:(LinkItem *)item {
+	if (children == nil) children = [[NSMutableArray alloc] init];
+	[children addObject:item];
 }
 
-- (NSInteger)numberOfChildren
-{
-	return _children ? [_children count] : 0;
-}
 
-- (LinkItem *)childAtIndex:(NSInteger)n
-{
-	return [_children objectAtIndex:n];
-}
-
-- (NSString *)name
-{
-	return _name;
-}
-
-- (NSString *)uppercaseName
-{
-	return [_name uppercaseString];
-}
-
-- (NSString *)path
-{
-	return _path;
-}
-
-- (NSMutableArray*)children
-{
-	return _children;
-}
-
-- (void)appendChild:(LinkItem *)item
-{
-	if(!_children)
-		_children = [[NSMutableArray alloc] init];
-	[_children addObject:item];
-}
-
-- (LinkItem*)find_by_path:(NSString *)path withStack:(NSMutableArray*)stack
-{
-	if ([_path isEqualToString:path])
+- (LinkItem*)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack {
+	if ([path isEqualToString:aPath])
 		return self;
 	
-	if(!_children)
+	if (!children)
 		return nil;
 	
-	for (LinkItem* item in _children) {
-		LinkItem * rslt = [item find_by_path:path withStack:stack];
-		if (rslt != nil)
-		{
+	for (LinkItem* item in children) {
+		LinkItem * rslt = [item itemForPath:aPath withStack:stack];
+		if (rslt != nil) {
 			if(stack)
 				[stack addObject:self];
 			return rslt;
@@ -113,45 +77,42 @@
 	return nil;
 }
 
-- (void)enumerateItemsWithSEL:(SEL)selector ForTarget:(id)target
-{
-	if (![_path isEqualToString:@"/"])
+- (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target {
+	if (![path isEqualToString:@"/"])
 		[target performSelector:selector withObject:self];
 		
-	for (LinkItem* item in _children)
-	{
-		[item enumerateItemsWithSEL:selector ForTarget:target];
+	for (LinkItem* item in children) {
+		[item enumerateItemsWithSelector:selector forTarget:target];
 	}
 }
 
-- (void)sort
-{
+- (void)sort {
 	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"uppercaseName" ascending:YES];
 	NSMutableArray * sda = [[NSMutableArray alloc] init];
 	[sda addObject:sd];
-	[_children sortUsingDescriptors:sda];
+	[children sortUsingDescriptors:sda];
 	[sda release];
-	[sd release];	
+	[sd release];
 }
 
-- (void)purge
-{
+- (void)purge {
 	NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
-	for (LinkItem * item in _children) {
+	for (LinkItem * item in children) {
 		if ([item name] == nil && [item path] == nil && [item numberOfChildren] == 0)
-			[set addIndex:[_children indexOfObject:item]];
+			[set addIndex:[children indexOfObject:item]];
 		else
 			[item purge];
 	}
 	
-	[_children removeObjectsAtIndexes:set];
+	[children removeObjectsAtIndexes:set];
 	[set release];
 }
 
--(NSString *)description
-{
-    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", _name, _path, _children];
+
+-(NSString *)description {
+    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", name, path, children];
 }
+
 @end
 
 
@@ -160,19 +121,17 @@
 
 @synthesize relScore;
 
-- (void)sort
-{
+- (void)sort {
 	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"relScore" ascending:NO];
 	NSMutableArray * sda = [[NSMutableArray alloc] init];
 	[sda addObject:sd];
-	[_children sortUsingDescriptors:sda];
+	[children sortUsingDescriptors:sda];
 	[sda release];
 	[sd release];
 }
 
-- (id)initWithName:(NSString *)name Path:(NSString *)path Score:(float)score
-{
-	if ((self = [super initWithName:name Path:path])) {
+- (id)initWithName:(NSString *)aName path:(NSString *)aPath score:(CGFloat)score {
+	if ((self = [super initWithName:aName path:aPath])) {
 		relScore = score;
 	}
 	return self;

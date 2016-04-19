@@ -10,37 +10,43 @@
 
 
 @interface LinkItem	: NSObject {
-	NSString *_name;
-	NSString *_path;
-	NSMutableArray *_children;
-	NSUInteger pageID;
+	NSString			*name;
+	NSString			*path;
+	NSMutableArray		*children;
+	NSUInteger			pageID;
 }
-@property (readonly) NSUInteger pageID;
 
-- (id)initWithName:(NSString *)name Path:(NSString *)path;
+
+- (id)initWithName:(NSString *)aName path:(NSString *)aPath;
+
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *path;
+@property (nonatomic, retain) NSMutableArray *children;
+@property (nonatomic, assign) NSUInteger pageID;
+
+@property (readonly, nonatomic, retain) NSString *uppercaseName;
+
+
+- (void)purge;
+
 - (NSInteger)numberOfChildren;
 - (LinkItem *)childAtIndex:(NSInteger)n;
-- (NSString *)name;
-- (NSString *)uppercaseName;
-- (NSString *)path;
-- (NSMutableArray*)children;
-- (void)purge;
-- (void)setName:(NSString *)name;
-- (void)setPath:(NSString *)path;
-- (void)setPageID:(NSUInteger)pid;
+
 - (void)appendChild:(LinkItem *)item;
-- (LinkItem*)find_by_path:(NSString *)path withStack:(NSMutableArray*)stack;
-- (void)enumerateItemsWithSEL:(SEL)selector ForTarget:(id)target;
+
+- (LinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack;
+- (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
 - (void)sort;
 @end
 
 
 @interface ScoredLinkItem : LinkItem {
-	float relScore;
+	CGFloat			relScore;
 }
 
-@property (readwrite, assign) float relScore;
+@property (nonatomic, assign) CGFloat relScore;
 
-- (id)initWithName:(NSString *)name Path:(NSString *)path Score:(float)score;
+- (id)initWithName:(NSString *)aName path:(NSString *)path score:(CGFloat)score;
+
 @end
 

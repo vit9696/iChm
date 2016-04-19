@@ -37,7 +37,7 @@
 }
 
 - (id)initwithTOC:(CHMTableOfContents*)toc withIndex:(CHMTableOfContents*)index;
-- (void)addPath:(NSString*)path Score:(float)score;
+- (void)addPath:(NSString*)path score:(float)score;
 @end
 
 

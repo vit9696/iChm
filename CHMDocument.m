@@ -1481,7 +1481,7 @@ static int forEachFile(struct chmFile *h,
             SKDocumentRef doc = (SKDocumentRef) [(id) foundDocRefs [pos] autorelease];
             NSURL * url = [(id) SKDocumentCopyURL (doc) autorelease];
 			
-			[searchSource addPath:[url path] Score:foundScores[pos]];
+			[searchSource addPath:[url path] score:foundScores[pos]];
         }
     }
 	[searchSource sort];
