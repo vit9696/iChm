@@ -1288,9 +1288,10 @@ static int forEachFile(struct chmFile *h,
 
 - (void)buildSearchIndex
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[searchIndexCondition lock];
 	chm_enumerate(chmFileHandle, CHM_ENUMERATE_FILES||CHM_ENUMERATE_NORMAL, forEachFile, (void*)self);
 	isIndexDone = YES;
