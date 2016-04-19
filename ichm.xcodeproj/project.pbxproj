@@ -15,6 +15,7 @@
 		C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; };
 		C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */ = {isa = PBXBuildFile; fileRef = C18622321C8F550C00C1DD80 /* CHM.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1C31ACF1CBDA789000F2B96 /* CHM.qlgenerator in Copy CHM.qlgenerator */ = {isa = PBXBuildFile; fileRef = C1C31AAD1CBD9876000F2B96 /* CHM.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C30F2B2F0E42135C003A17A7 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = C30F2B2E0E42135C003A17A7 /* home.png */; };
 		C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C33A4ABA0E34E92D00277D64 /* CHMDocument.m */; };
 		C33A4AE10E34EA7700277D64 /* CHMDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */; };
@@ -108,6 +109,20 @@
 			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = CHM.mdimporter;
 		};
+		C1C31AAC1CBD9876000F2B96 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D576316048677EA00EA77CD;
+			remoteInfo = quickchm;
+		};
+		C1C31AC71CBDA720000F2B96 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
+			remoteInfo = CHM.qlgenerator;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -120,6 +135,17 @@
 				C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */,
 			);
 			name = "Copy CHM.mdimporter";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1C31ACE1CBDA749000F2B96 /* Copy CHM.qlgenerator */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/QuickLook;
+			dstSubfolderSpec = 1;
+			files = (
+				C1C31ACF1CBDA789000F2B96 /* CHM.qlgenerator in Copy CHM.qlgenerator */,
+			);
+			name = "Copy CHM.qlgenerator";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */ = {
@@ -158,6 +184,7 @@
 		90C4D9C60E7DCC31006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
 		C18622161C8F41F400C1DD80 /* CHM Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Framework.xcodeproj"; path = "chmlib/osx/CHMFramework/CHM Framework.xcodeproj"; sourceTree = "<group>"; };
 		C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Spotlight Importer.xcodeproj"; path = "CHMSpotlightImporter/CHM Spotlight Importer.xcodeproj"; sourceTree = "<group>"; };
+		C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quickchm.xcodeproj; path = CHMQuickLook/quickchm.xcodeproj; sourceTree = "<group>"; };
 		C30F2B2E0E42135C003A17A7 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		C33A4AB90E34E92D00277D64 /* CHMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocument.h; sourceTree = "<group>"; };
 		C33A4ABA0E34E92D00277D64 /* CHMDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMDocument.m; sourceTree = "<group>"; };
@@ -287,6 +314,7 @@
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				C16CEFBF1C8E09F1004DD019 /* chmlib */,
 				C16CF19A1C8E0BB5004DD019 /* Spotlight */,
+				C1C31AA11CBD9853000F2B96 /* QuickLook */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
@@ -337,6 +365,32 @@
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C12CE03B1CC1798F00970809 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				C3E9715D0E4BEAA000B7B36D /* lcid.h */,
+				C3A79CC10E30438B00FF4485 /* CHMTableOfContent.h */,
+				C3A79CC20E30438B00FF4485 /* CHMTableOfContent.m */,
+				C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */,
+				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		C12CE03C1CC179B300970809 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				C3AA9B200E3EC8A200D2FB53 /* CHMWebViewController.h */,
+				C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */,
+				C36FD4230E482D3800496822 /* CHMWebView.xib */,
+				C390802C0EC027070018AA80 /* CHMWebView.h */,
+				C390802D0EC027070018AA80 /* CHMWebView.m */,
+				C3D6EE090E3D9E5C00A823A2 /* CHMOutlineView.h */,
+				C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */,
+			);
+			name = views;
 			sourceTree = "<group>";
 		};
 		C16CEFBF1C8E09F1004DD019 /* chmlib */ = {
@@ -406,22 +460,28 @@
 				C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */,
 				C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenu.h */,
 				C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenu.m */,
-				C3A79CC10E30438B00FF4485 /* CHMTableOfContent.h */,
-				C3A79CC20E30438B00FF4485 /* CHMTableOfContent.m */,
-				C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */,
-				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
-				C3D6EE090E3D9E5C00A823A2 /* CHMOutlineView.h */,
-				C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */,
-				C3AA9B200E3EC8A200D2FB53 /* CHMWebViewController.h */,
-				C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */,
-				C3E9715D0E4BEAA000B7B36D /* lcid.h */,
-				C390802C0EC027070018AA80 /* CHMWebView.h */,
-				C390802D0EC027070018AA80 /* CHMWebView.m */,
-				C36FD4230E482D3800496822 /* CHMWebView.xib */,
+				C12CE03B1CC1798F00970809 /* model */,
+				C12CE03C1CC179B300970809 /* views */,
 				C39081790EC0A4EC0018AA80 /* CHMExporter.h */,
 				C390817A0EC0A4EC0018AA80 /* CHMExporter.m */,
 			);
 			name = Document;
+			sourceTree = "<group>";
+		};
+		C1C31AA11CBD9853000F2B96 /* QuickLook */ = {
+			isa = PBXGroup;
+			children = (
+				C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */,
+			);
+			name = QuickLook;
+			sourceTree = "<group>";
+		};
+		C1C31AA91CBD9876000F2B96 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1C31AAD1CBD9876000F2B96 /* CHM.qlgenerator */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C33D3ADB0E4F1E4400F7B487 /* Bookmark Controller */ = {
@@ -460,10 +520,12 @@
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 				C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */,
 				C18622111C8E331000C1DD80 /* Copy CHM.mdimporter */,
+				C1C31ACE1CBDA749000F2B96 /* Copy CHM.qlgenerator */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C1C31AC81CBDA720000F2B96 /* PBXTargetDependency */,
 				C186223D1C8F573000C1DD80 /* PBXTargetDependency */,
 				C186221D1C8F42C700C1DD80 /* PBXTargetDependency */,
 			);
@@ -504,6 +566,10 @@
 				{
 					ProductGroup = C186222D1C8F550C00C1DD80 /* Products */;
 					ProjectRef = C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */;
+				},
+				{
+					ProductGroup = C1C31AA91CBD9876000F2B96 /* Products */;
+					ProjectRef = C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -554,6 +620,13 @@
 			fileType = wrapper.cfbundle;
 			path = CHM.mdimporter;
 			remoteRef = C18622311C8F550C00C1DD80 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1C31AAD1CBD9876000F2B96 /* CHM.qlgenerator */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CHM.qlgenerator;
+			remoteRef = C1C31AAC1CBD9876000F2B96 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -619,6 +692,11 @@
 			isa = PBXTargetDependency;
 			name = CHM.mdimporter;
 			targetProxy = C186223C1C8F573000C1DD80 /* PBXContainerItemProxy */;
+		};
+		C1C31AC81CBDA720000F2B96 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CHM.qlgenerator;
+			targetProxy = C1C31AC71CBDA720000F2B96 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

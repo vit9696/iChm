@@ -10,7 +10,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>ichm_file</string>
 			<key>CFBundleTypeName</key>
-			<string>Compiled HTML File</string>
+			<string>Compiled HTML Archive</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
@@ -59,7 +59,7 @@
 				<string>public.composite-content </string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Compiled HTML File</string>
+			<string>Compiled HTML Archive</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.microsoft.chm</string>
 			<key>UTTypeTagSpecification</key>
