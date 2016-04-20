@@ -21,47 +21,15 @@
 	<array>
 		<dict>
 			<key>name</key>
-			<string>GBK</string>
-			<key>title</key>
-			<string>Simplified Chinese  (GBK)</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>GB18030</string>
-			<key>title</key>
-			<string>Simplified Chinese  (GB18030)</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>GB2312</string>
-			<key>title</key>
-			<string>Simplified Chinese  (GB2312)</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>BIG-5</string>
-			<key>title</key>
-			<string>Tranditional Chinese  (BIG5)</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>BIG5-HKSCS</string>
-			<key>title</key>
-			<string>Tranditional Chinese  (BIG5-HKSCS)</string>
-		</dict>
-	</array>
-	<array>
-		<dict>
-			<key>name</key>
 			<string>LATIN1</string>
 			<key>title</key>
-			<string>Western  (ISO Latin 1)</string>
+			<string>Western (ISO Latin 1)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>MACROMAN</string>
 			<key>title</key>
-			<string>Western  (Mac OS Roman)</string>
+			<string>Western (Mac OS Roman)</string>
 		</dict>
 	</array>
 	<array>
@@ -69,25 +37,39 @@
 			<key>name</key>
 			<string>SHIFT-JIS</string>
 			<key>title</key>
-			<string>Japanese  (Shift-JIS)</string>
+			<string>Japanese (Shift-JIS)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>ISO-2022-JP</string>
 			<key>title</key>
-			<string>Japanese  (ISO-2022-JP)</string>
+			<string>Japanese (ISO-2022-JP)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>EUC-JP</string>
 			<key>title</key>
-			<string>Japanese  (EUC-JP)</string>
+			<string>Japanese (EUC-JP)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>SHIFT_JISX0213</string>
 			<key>title</key>
-			<string>Japanese  (SHIFT JIS X0213)</string>
+			<string>Japanese (SHIFT JIS X0213)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>BIG-5</string>
+			<key>title</key>
+			<string>Traditional Chinese (BIG5)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>BIG5-HKSCS</string>
+			<key>title</key>
+			<string>Traditional Chinese (BIG5-HKSCS)</string>
 		</dict>
 	</array>
 	<array>
@@ -95,13 +77,13 @@
 			<key>name</key>
 			<string>ARABIC</string>
 			<key>title</key>
-			<string>Arabic  (ISO 8859-6)</string>
+			<string>Arabic (ISO 8859-6)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>CP1256</string>
 			<key>title</key>
-			<string>Arabic  (Windows)</string>
+			<string>Arabic (Windows)</string>
 		</dict>
 	</array>
 	<array>
@@ -109,13 +91,13 @@
 			<key>name</key>
 			<string>HEBREW</string>
 			<key>title</key>
-			<string>Hebrew  (ISO 8859-8)</string>
+			<string>Hebrew (ISO 8859-8)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>CP1255</string>
 			<key>title</key>
-			<string>Hebrew  (Windows)</string>
+			<string>Hebrew (Windows)</string>
 		</dict>
 	</array>
 	<array>
@@ -123,13 +105,13 @@
 			<key>name</key>
 			<string>GREEK</string>
 			<key>title</key>
-			<string>Greek  (ISO 8859-7)</string>
+			<string>Greek (ISO 8859-7)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>CP1253</string>
 			<key>title</key>
-			<string>Greek  (Windows)</string>
+			<string>Greek (Windows)</string>
 		</dict>
 	</array>
 	<array>
@@ -137,37 +119,37 @@
 			<key>name</key>
 			<string>CYRILLIC</string>
 			<key>title</key>
-			<string>Cyrillic  (ISO 8859-5)</string>
+			<string>Cyrillic (ISO 8859-5)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>MACCYRILLIC</string>
 			<key>title</key>
-			<string>Cyrillic  (Mac OS)</string>
+			<string>Cyrillic (Mac OS)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>KOI8-R</string>
 			<key>title</key>
-			<string>Cyrillic  (KOI8-R)</string>
+			<string>Cyrillic (KOI8-R)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>KOI8-R</string>
 			<key>title</key>
-			<string>Cyrillic  (KOI8-R)</string>
+			<string>Cyrillic (KOI8-R)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>CP1251</string>
 			<key>title</key>
-			<string>Cyrillic  (Windows)</string>
+			<string>Cyrillic (Windows)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>KOI8-U</string>
 			<key>title</key>
-			<string>Cyrillic  (KOI8-U)</string>
+			<string>Cyrillic (KOI8-U)</string>
 		</dict>
 	</array>
 	<array>
@@ -175,7 +157,27 @@
 			<key>name</key>
 			<string>CP874</string>
 			<key>title</key>
-			<string>Thai  (Windows)</string>
+			<string>Thai (Windows)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>GBK</string>
+			<key>title</key>
+			<string>Simplified Chinese (GBK)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>GB18030</string>
+			<key>title</key>
+			<string>Simplified Chinese (GB18030)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>GB2312</string>
+			<key>title</key>
+			<string>Simplified Chinese (GB2312)</string>
 		</dict>
 	</array>
 	<array>
@@ -183,19 +185,19 @@
 			<key>name</key>
 			<string>ISO-8859-2</string>
 			<key>title</key>
-			<string>Central European  (ISO Latin 2)</string>
+			<string>Central European (ISO Latin 2)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>MACCENTRALEUROPE</string>
 			<key>title</key>
-			<string>Central European  (Mac OS)</string>
+			<string>Central European (Mac OS)</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>CP1250</string>
 			<key>title</key>
-			<string>Central European  (Windows Latin 2)</string>
+			<string>Central European (Windows Latin 2)</string>
 		</dict>
 	</array>
 </array>
