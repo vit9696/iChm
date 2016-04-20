@@ -13,7 +13,7 @@
 #import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
 #import "ICHMApplication.h"
-#import "CHMTextEncodingMenu.h"
+#import "CHMTextEncodingMenuController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
 #import "CHMExporter.h"
@@ -1557,7 +1557,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 - (NSString *)getEncodingByTag:(NSInteger)tag {
 	ICHMApplication *chmapp = [NSApp delegate];
 	
-	CHMTextEncodingMenu *menu = [[[chmapp textEncodingMenu] submenu] delegate];
+	CHMTextEncodingMenuController *menu = [[[chmapp textEncodingMenu] submenu] delegate];
 	return [menu getEncodingByTag:tag];
 }
 

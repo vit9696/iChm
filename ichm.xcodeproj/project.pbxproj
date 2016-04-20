@@ -49,7 +49,7 @@
 		C3DB24CE0E2DB849000E5A20 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3DB24CD0E2DB849000E5A20 /* WebKit.framework */; };
 		C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */; };
 		C3DB252F0E2DD646000E5A20 /* ICHMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB252E0E2DD646000E5A20 /* ICHMApplication.m */; };
-		C3ED1D870E4307F500C1B93A /* CHMTextEncodingMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenu.m */; };
+		C3ED1D870E4307F500C1B93A /* CHMTextEncodingMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */; };
 		C3ED1DA00E43106D00C1B93A /* textencoding.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3ED1D9F0E43106D00C1B93A /* textencoding.plist */; };
 /* End PBXBuildFile section */
 
@@ -251,8 +251,8 @@
 		C3DB252D0E2DD646000E5A20 /* ICHMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICHMApplication.h; sourceTree = "<group>"; };
 		C3DB252E0E2DD646000E5A20 /* ICHMApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICHMApplication.m; sourceTree = "<group>"; };
 		C3E9715D0E4BEAA000B7B36D /* lcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcid.h; sourceTree = "<group>"; };
-		C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTextEncodingMenu.h; sourceTree = "<group>"; };
-		C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTextEncodingMenu.m; sourceTree = "<group>"; };
+		C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTextEncodingMenuController.h; sourceTree = "<group>"; };
+		C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTextEncodingMenuController.m; sourceTree = "<group>"; };
 		C3ED1D9F0E43106D00C1B93A /* textencoding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = textencoding.plist; sourceTree = "<group>"; };
 		C3FF6BAD0E585DC300F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C3FF6BAE0E585DCF00F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -463,8 +463,8 @@
 				C33A4AB90E34E92D00277D64 /* CHMDocument.h */,
 				C33A4ABA0E34E92D00277D64 /* CHMDocument.m */,
 				C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */,
-				C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenu.h */,
-				C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenu.m */,
+				C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenuController.h */,
+				C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */,
 				C12CE03B1CC1798F00970809 /* model */,
 				C12CE03C1CC179B300970809 /* views */,
 				C39081790EC0A4EC0018AA80 /* CHMExporter.h */,
@@ -674,7 +674,7 @@
 				C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */,
 				C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */,
 				C3AA9B220E3EC8A200D2FB53 /* CHMWebViewController.m in Sources */,
-				C3ED1D870E4307F500C1B93A /* CHMTextEncodingMenu.m in Sources */,
+				C3ED1D870E4307F500C1B93A /* CHMTextEncodingMenuController.m in Sources */,
 				C33D3ACA0E4F05E500F7B487 /* Bookmarks.xcdatamodel in Sources */,
 				C33D3AD80E4F1E3800F7B487 /* CHMFile.m in Sources */,
 				C33D3AD90E4F1E3800F7B487 /* CHMTag.m in Sources */,

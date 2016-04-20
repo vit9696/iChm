@@ -1,5 +1,5 @@
 //
-//  CHMTextEncodingMenu.h
+//  CHMTextEncodingMenuController.h
 //  ichm
 //
 //  Created by Robin Lu on 8/1/08.
@@ -9,12 +9,12 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface CHMTextEncodingMenu : NSObject {
-	IBOutlet NSMenuItem *menu;
-	BOOL initialized;
-	NSMutableArray *encodingNames;
+@interface CHMTextEncodingMenuController : NSObject {
+	IBOutlet NSMenuItem		*menu;
+	NSMutableArray			*encodingNames;
+	BOOL					initialized;
 }
 
-- (void)initEncodingMenu;
 - (NSString*)getEncodingByTag:(NSInteger)tag;
+
 @end
