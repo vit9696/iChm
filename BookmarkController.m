@@ -15,12 +15,10 @@
 
 #define MD_DEBUG 1
 
-#if defined(MD_DEBUG)
+#if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
 #else
-static void MDLog(NSString *string, ...) {
-	(void)string;
-}
+#define MDLog(...)
 #endif
 
 

@@ -48,7 +48,7 @@ struct chmFile;
 	
     NSString						*docTitle;
     NSString						*homePath;
-    NSString						*tocPath;
+    NSString						*tableOfContentsPath;
     NSString						*indexPath;
 	
 	CHMTableOfContents				*tocSource;
@@ -77,14 +77,9 @@ struct chmFile;
 - (NSString*)currentTitle;
 - (NSURL*)composeURL:(NSString *)path;
 
-- (BOOL) exist: (NSString *)path;
-- (NSData *)content: (NSString *)path;
-- (BOOL)loadMetadata;
+- (BOOL)hasObjectAtPath:(NSString *)path;
+- (NSData *)dataForObjectAtPath:(NSString *)path;
 
-- (NSString *)findHomeForPath: (NSString *)basePath;
-- (void)highlightString:(NSString*)pattern;
-- (void)removeHighlight;
-- (void)buildSearchIndex;
 
 - (void)loadURL:(NSURL *)url;
 
@@ -99,10 +94,6 @@ struct chmFile;
 - (IBAction)gotoPrevPage:(id)sender;
 
 - (IBAction)locateTOC:(id)sender;
-
-// file preferences
-- (void)setPreference:(id)object forFile:(NSString*)filename withKey:(NSString*)key;
-- (id)getPreferenceforFile:(NSString*)filename withKey:(NSString*)key;
 
 // dump to pdf
 - (IBAction)exportToPDF:(id)sender;
@@ -121,8 +112,6 @@ struct chmFile;
 - (IBAction)popViewMenu:(id)sender;
 - (IBAction)changeToContentsView:(id)sender;
 - (IBAction)changeToIndexView:(id)sender;
-- (void)resetViewMenuState:(NSMenuItem*)sender;
-- (void)resetSidebarView;
 
 - (IBAction)zoom:(id)sender;
 - (IBAction)zoomIn:(id)sender;
@@ -131,7 +120,6 @@ struct chmFile;
 - (IBAction)toggleSidebar:(id)sender;
 - (IBAction)hideSidebar:(id)sender;
 
-- (void)addToSearchIndex:(const char*)path;
 
 // find panel
 - (IBAction)showFindPanel:(id)sender;

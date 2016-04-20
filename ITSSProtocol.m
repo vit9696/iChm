@@ -9,6 +9,18 @@
 #import "ITSSProtocol.h"
 #import "CHMDocument.h"
 
+
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+
+
+
 @implementation ITSSProtocol
 
 -(id)initWithRequest:(NSURLRequest *)request
@@ -35,7 +47,11 @@
 
 -(void)startLoading
 {
+	
     NSURL *url = [[self request] URL];
+	
+	MDLog(@"[%@ %@] url == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url);
+	
 	CHMDocument *doc = [[self request] chmDoc];
 	NSString *encoding = [[self request] encodingName];
 	
@@ -53,11 +69,11 @@
 		path = [url path];
     }
 	
-	if (![doc exist:path])
+	if (![doc hasObjectAtPath:path])
 	{
 		path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	}
-	data = [doc content:path];
+	data = [doc dataForObjectAtPath:path];
     
     if( !data ) {
 		[[self client] URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain code:0 userInfo:nil]];
