@@ -48,7 +48,7 @@
 		C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */; };
 		C3DB24CE0E2DB849000E5A20 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3DB24CD0E2DB849000E5A20 /* WebKit.framework */; };
 		C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */; };
-		C3DB252F0E2DD646000E5A20 /* ICHMApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB252E0E2DD646000E5A20 /* ICHMApplication.m */; };
+		C3DB252F0E2DD646000E5A20 /* CHMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB252E0E2DD646000E5A20 /* CHMAppController.m */; };
 		C3ED1D870E4307F500C1B93A /* CHMTextEncodingMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */; };
 		C3ED1DA00E43106D00C1B93A /* textencoding.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3ED1D9F0E43106D00C1B93A /* textencoding.plist */; };
 /* End PBXBuildFile section */
@@ -248,8 +248,8 @@
 		C3DB24CD0E2DB849000E5A20 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITSSProtocol.h; sourceTree = "<group>"; };
 		C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITSSProtocol.m; sourceTree = "<group>"; };
-		C3DB252D0E2DD646000E5A20 /* ICHMApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICHMApplication.h; sourceTree = "<group>"; };
-		C3DB252E0E2DD646000E5A20 /* ICHMApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICHMApplication.m; sourceTree = "<group>"; };
+		C3DB252D0E2DD646000E5A20 /* CHMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMAppController.h; sourceTree = "<group>"; };
+		C3DB252E0E2DD646000E5A20 /* CHMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMAppController.m; sourceTree = "<group>"; };
 		C3E9715D0E4BEAA000B7B36D /* lcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lcid.h; sourceTree = "<group>"; };
 		C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTextEncodingMenuController.h; sourceTree = "<group>"; };
 		C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTextEncodingMenuController.m; sourceTree = "<group>"; };
@@ -328,8 +328,10 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C3DB252D0E2DD646000E5A20 /* ICHMApplication.h */,
-				C3DB252E0E2DD646000E5A20 /* ICHMApplication.m */,
+				C3DB252D0E2DD646000E5A20 /* CHMAppController.h */,
+				C3DB252E0E2DD646000E5A20 /* CHMAppController.m */,
+				C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenuController.h */,
+				C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
 				C18622411C8F5F3D00C1DD80 /* Document */,
 			);
@@ -463,8 +465,6 @@
 				C33A4AB90E34E92D00277D64 /* CHMDocument.h */,
 				C33A4ABA0E34E92D00277D64 /* CHMDocument.m */,
 				C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */,
-				C3ED1D850E4307F500C1B93A /* CHMTextEncodingMenuController.h */,
-				C3ED1D860E4307F500C1B93A /* CHMTextEncodingMenuController.m */,
 				C12CE03B1CC1798F00970809 /* model */,
 				C12CE03C1CC179B300970809 /* views */,
 				C39081790EC0A4EC0018AA80 /* CHMExporter.h */,
@@ -669,7 +669,7 @@
 				C14A60191CC6C43900B868C6 /* LinkItem.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */,
-				C3DB252F0E2DD646000E5A20 /* ICHMApplication.m in Sources */,
+				C3DB252F0E2DD646000E5A20 /* CHMAppController.m in Sources */,
 				C3A79CC30E30438B00FF4485 /* CHMTableOfContents.m in Sources */,
 				C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */,
 				C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */,

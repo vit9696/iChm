@@ -12,7 +12,7 @@
 #import "ITSSProtocol.h"
 #import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
-#import "ICHMApplication.h"
+#import "CHMAppController.h"
 #import "CHMTextEncodingMenuController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
@@ -1498,7 +1498,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 #pragma mark text encoding
 - (void)setupEncodingMenu {
 	NSApplication *app = [NSApplication sharedApplication];
-	ICHMApplication *chmapp = [app delegate];
+	CHMAppController *chmapp = [app delegate];
 	
 	NSMenu *menu = [[chmapp textEncodingMenu] submenu];
 	NSArray *items = [menu itemArray];
@@ -1516,7 +1516,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 - (void)resetEncodingMenu {
 	NSApplication *app = [NSApplication sharedApplication];
-	ICHMApplication *chmapp = [app delegate];
+	CHMAppController *chmapp = [app delegate];
 	
 	NSMenu *menu = [[chmapp textEncodingMenu] submenu];
 	NSArray *items = [menu itemArray];
@@ -1544,7 +1544,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 - (NSString *)getEncodingByTag:(NSInteger)tag {
-	ICHMApplication *chmapp = [NSApp delegate];
+	CHMAppController *chmapp = [NSApp delegate];
 	
 	CHMTextEncodingMenuController *menu = [[[chmapp textEncodingMenu] submenu] delegate];
 	return [menu getEncodingByTag:tag];
@@ -1605,7 +1605,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 #pragma mark - Bookmark
 - (IBAction)showAddBookmark:(id)sender {
-	ICHMApplication *chmapp = [NSApp delegate];
+	CHMAppController *chmapp = [NSApp delegate];
 	BookmarkController *bookmarkController = [chmapp bookmarkController];
 	[bookmarkController showAddBookmark:self];
 }

@@ -1,16 +1,16 @@
 //
-//  ICHMApplication.m
+//  CHMAppController.m
 //  ichm
 //
 //  Created by Robin Lu on 7/16/08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "ICHMApplication.h"
+#import "CHMAppController.h"
 #import "ITSSProtocol.h"
 #import "BookmarkController.h"
 
-@implementation ICHMApplication
+@implementation CHMAppController
 
 @synthesize textEncodingMenu;
 

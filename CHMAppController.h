@@ -1,5 +1,5 @@
 //
-//  ICHMApplication.h
+//  CHMAppController.h
 //  ichm
 //
 //  Created by Robin Lu on 7/16/08.
@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 @class BookmarkController;
 
-@interface ICHMApplication : NSObject {
+@interface CHMAppController : NSObject {
 	IBOutlet NSMenuItem* textEncodingMenu;
 	IBOutlet BookmarkController* bookmarkController;
 }

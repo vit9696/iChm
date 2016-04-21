@@ -878,7 +878,7 @@
 				<string key="NSClassName">NSFontManager</string>
 			</object>
 			<object class="NSCustomObject" id="534400421">
-				<string key="NSClassName">ICHMApplication</string>
+				<string key="NSClassName">CHMAppController</string>
 			</object>
 			<object class="NSCustomObject" id="334241186">
 				<string key="NSClassName">SUUpdater</string>
@@ -2725,6 +2725,25 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">CHMTextEncodingMenuController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">menu</string>
+						<string key="NS.object.0">NSMenuItem</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">menu</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">menu</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../CHMTextEncodingMenuController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">CHMWebViewController</string>
 					<string key="superclassName">NSViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
@@ -2951,7 +2970,7 @@
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="958728192">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="884383464">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSCollectionView.h</string>
 					</object>
@@ -2959,7 +2978,7 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">NSCollectionViewItem</string>
 					<string key="superclassName">NSViewController</string>
-					<reference key="sourceIdentifier" ref="958728192"/>
+					<reference key="sourceIdentifier" ref="884383464"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSControl</string>
