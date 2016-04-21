@@ -12,7 +12,7 @@
 #import <AvailabilityMacros.h>
 
 @class CHMTableOfContents;
-@class CHMSearchResult;
+@class CHMSearchResults;
 @class LinkItem;
 @class PSMTabBarControl;
 @class CHMConsole;
@@ -53,7 +53,7 @@ struct chmFile;
 	
 	CHMTableOfContents				*tocSource;
 	CHMTableOfContents				*indexSource;
-	CHMSearchResult					*searchSource;
+	CHMSearchResults					*searchSource;
 	
 	SKIndexRef						skIndex;
 	NSMutableData					*searchIndexObject;

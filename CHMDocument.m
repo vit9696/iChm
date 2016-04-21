@@ -174,9 +174,8 @@ static inline NSStringEncoding nameToEncoding(NSString *name) {
 }
 
 static inline unsigned short readShort(NSData *data, NSUInteger offset) {
-	NSRange valueRange = { offset, 2 };
 	unsigned short value;
-	[data getBytes:(void *)&value range:valueRange];
+	[data getBytes:(void *)&value range:NSMakeRange(offset, 2)];
 	return NSSwapLittleShortToHost(value);
 }
 
@@ -617,16 +616,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError * *)outError {
-	// Insert code here to write your document to data of the specified type. If the given outError != NULL, ensure that you set *outError when returning nil.
-
-	// You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-
-	// For applications targeted for Panther or earlier systems, you should use the deprecated API -dataRepresentationOfType:. In this case you can also choose to override -fileWrapperRepresentationOfType: or -writeToFile:ofType: instead.
-
-	if (outError != NULL) {
-		*outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
-	}
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
+	if (outError != NULL) *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
 	return nil;
 }
 
@@ -760,7 +751,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-# pragma mark WebFrameLoadDelegate
+# pragma mark - <WebFrameLoadDelegate>
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
 	NSLog(@"[%@ %@] error == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
 }
@@ -811,7 +802,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-# pragma mark Javascript
+# pragma mark - Javascript
 - (void)loadJavascript {
 	NSString *scriptPath = [[NSBundle mainBundle] pathForResource:@"highlight" ofType:@"js"];
 	[self runJavascript:[NSString stringWithContentsOfFile:scriptPath encoding:NSUTF8StringEncoding error:NULL]];
@@ -822,7 +813,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-# pragma mark WebPolicyDelegate
+# pragma mark - <WebPolicyDelegate>
 - (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
 	
 	if ([ITSSProtocol canInitWithRequest:request]) {
@@ -855,7 +846,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-# pragma mark WebResourceLoadDelegate
+# pragma mark - <WebResourceLoadDelegate>
 - (NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
 	
 	if ([ITSSProtocol canInitWithRequest:request]) {
@@ -868,7 +859,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-# pragma mark WebUIDelegate
+# pragma mark - <WebUIDelegate>
 - (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request {
 	WebView *wv = [(CHMWebViewController *)[[self createWebViewInTab:sender] identifier] webView];
 	[[wv mainFrame] loadRequest:request];
@@ -886,7 +877,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
-# pragma mark actions
+# pragma mark - IBActions
 - (IBAction)changeTopic:(id)sender {
 	NSInteger selectedRow = [tocView selectedRow];
 	
@@ -1354,10 +1345,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	if (indexSource == nil) return;
 	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-//	searchSource = [[CHMTableOfContent alloc]
-//					initWithTOC:indexSource filterByPredicate:predicate];
-	searchSource = [[CHMSearchResult alloc]
-					initWithTOC:indexSource filterByPredicate:predicate];
+//	searchSource = [[CHMTableOfContents alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
+	searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
 	
 	[tocView deselectAll:self];
 	[tocView setDataSource:searchSource];
@@ -1392,7 +1381,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	[searchSource release];
 	
-	searchSource = [[CHMSearchResult alloc] initwithTOC:tocSource withIndex:indexSource];
+	searchSource = [[CHMSearchResults alloc] initWithTableOfContents:tocSource indexContents:indexSource];
 	
 	if (indexSource == nil && tocSource == nil) return;
 	
@@ -1572,7 +1561,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 
-#pragma mark split view delegate
+#pragma mark - <NSSplitViewDelegate>
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification {
 	if (!isSidebarRestored) {
 		return;
@@ -1584,6 +1573,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	}
 }
 
+#pragma mark -
 - (void)restoreSidebar {
 	CGFloat width = [[NSUserDefaults standardUserDefaults] floatForKey:SidebarWidthName];
 	if (width < MinSidebarWidth) {
@@ -1608,12 +1598,12 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 
-#pragma mark outlineview delegate
+#pragma mark - <NSOutlineViewDelegate>
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
 	[self changeTopic:self];
 }
 
-#pragma mark Bookmark
+#pragma mark - Bookmark
 - (IBAction)showAddBookmark:(id)sender {
 	ICHMApplication *chmapp = [NSApp delegate];
 	BookmarkController *bookmarkController = [chmapp bookmarkController];

@@ -23,29 +23,29 @@
 @property (readonly) NSArray *pageList;
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
-- (id)initWithTOC:(CHMTableOfContents*)toc filterByPredicate:(NSPredicate*)predicate;
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate*)predicate;
 
 - (LinkItem *)curItem;
 
-- (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray*)stack;
+- (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray *)stack;
 
 - (NSInteger)rootChildrenCount;
 
 - (void)sort;
 
-- (LinkItem*)getNextPage:(LinkItem*)item;
-- (LinkItem*)getPrevPage:(LinkItem*)item;
+- (LinkItem *)getNextPage:(LinkItem *)item;
+- (LinkItem *)getPrevPage:(LinkItem *)item;
 
 @end
 
 
-@interface CHMSearchResult : CHMTableOfContents <NSOutlineViewDataSource> {
-	CHMTableOfContents *tableOfContent;
-	CHMTableOfContents *indexContent;
+@interface CHMSearchResults : CHMTableOfContents <NSOutlineViewDataSource> {
+	CHMTableOfContents *tableOfContents;
+	CHMTableOfContents *indexContents;
 }
 
-- (id)initwithTOC:(CHMTableOfContents*)toc withIndex:(CHMTableOfContents*)index;
-- (void)addPath:(NSString*)path score:(CGFloat)score;
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc indexContents:(CHMTableOfContents *)index;
+- (void)addPath:(NSString *)path score:(CGFloat)score;
 @end
 
 

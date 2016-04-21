@@ -84,13 +84,12 @@
 	if ([[[path pathExtension] lowercaseString] isEqualToString:@"html"] ||
          [[[path pathExtension] lowercaseString] isEqualToString:@"htm"])
 		type = @"text/html";
-    NSURLResponse *response = [[NSURLResponse alloc] initWithURL: [[self request] URL]
+    NSURLResponse *response = [[NSURLResponse alloc] initWithURL:[[self request] URL]
 														MIMEType:type
 										   expectedContentLength:[data length]
 												textEncodingName:encoding];
-    [[self client] URLProtocol:self     
-			didReceiveResponse:response 
-			cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+	
+    [[self client] URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
     
     [[self client] URLProtocol:self didLoadData:data];
     [[self client] URLProtocolDidFinishLoading:self];

@@ -82,7 +82,7 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (id)initWithTOC:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
 	if ((self = [super init])) {
 		rootItems = [[LinkItem alloc] initWithName:@"root" path:@"/"];
 		NSMutableArray *children = [rootItems children];
@@ -268,7 +268,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 
 
-@implementation CHMSearchResult
+@implementation CHMSearchResults
 
 - (id)init {
 	if ((self = [super init])) {
@@ -277,26 +277,26 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 	return self;
 }
 
-- (id)initwithTOC:(CHMTableOfContents *)toc withIndex:(CHMTableOfContents*)index {
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc indexContents:(CHMTableOfContents *)index {
 	if ((self = [self init])) {
-		tableOfContent = [toc retain];
-		indexContent = [index retain];
+		tableOfContents = [toc retain];
+		indexContents = [index retain];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[tableOfContent release];
-	[indexContent release];
+	[tableOfContents release];
+	[indexContents release];
 	[super dealloc];
 }
 
 - (void)addPath:(NSString *)path score:(CGFloat)score {
 	LinkItem * item = nil;
-	if (tableOfContent)
-		item = [tableOfContent itemForPath:path withStack:nil];
-	if (!item && indexContent)
-		item = [indexContent itemForPath:path withStack:nil];
+	if (tableOfContents)
+		item = [tableOfContents itemForPath:path withStack:nil];
+	if (!item && indexContents)
+		item = [indexContents itemForPath:path withStack:nil];
 	
 	if (!item)
 		return;
@@ -306,7 +306,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 }
 
 - (void)sort {
-	[(ScoredLinkItem*)rootItems sort];
+	[(ScoredLinkItem *)rootItems sort];
 }
 
 @end
