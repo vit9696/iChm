@@ -19,10 +19,18 @@
 struct chmFile;
 
 
+enum {
+	CHMDocumentSearchInFile		= 1,
+	CHMDocumentSearchInIndex	= 2,
+};
+typedef NSUInteger CHMDocumentSearchMode;
+
+
+
 #ifdef MAC_OS_X_VERSION_10_11
-@interface CHMDocument : NSDocument <NSToolbarDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
 #else
-@interface CHMDocument : NSDocument <NSToolbarDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate> {
 #endif
 	
 	IBOutlet PSMTabBarControl		*tabBar;
@@ -55,7 +63,9 @@ struct chmFile;
 	
 	CHMTableOfContents				*tocSource;
 	CHMTableOfContents				*indexSource;
-	CHMSearchResults					*searchSource;
+	CHMSearchResults				*searchSource;
+	
+	CHMDocumentSearchMode			searchMode;
 	
 	SKIndexRef						skIndex;
 	NSMutableData					*searchIndexObject;
@@ -74,6 +84,9 @@ struct chmFile;
 
 @property (readonly) NSString* filePath;
 @property (readonly) NSString* docTitle;
+
+@property (nonatomic, assign) CHMDocumentSearchMode	searchMode;
+
 
 - (NSString*)currentURL;
 - (NSString*)currentTitle;
@@ -104,10 +117,8 @@ struct chmFile;
 - (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count;
 
 // search
-- (IBAction)setSearchInFile:(id)sender;
-- (IBAction)setSearchInIndex:(id)sender;
-- (IBAction)searchInFile:(id)sender;
-- (IBAction)searchInIndex:(id)sender;
+- (IBAction)changeSearchMode:(id)sender;
+- (IBAction)search:(id)sender;
 - (IBAction)focusOnSearch:(id)sender;
 
 // sidebar view

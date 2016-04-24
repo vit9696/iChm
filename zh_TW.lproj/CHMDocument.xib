@@ -26,7 +26,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="chmwindow" animationBehavior="default" id="5" userLabel="Window">
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="chmwindow" animationBehavior="default" id="5" userLabel="documentWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="97" y="469" width="819" height="559"/>
@@ -174,18 +174,16 @@
             <rect key="frame" x="0.0" y="0.0" width="266" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <searchField verticalHuggingPriority="750" id="100095">
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" id="100095">
                     <rect key="frame" x="0.0" y="20" width="194" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="全文搜索" bezelStyle="round" id="100096">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        <connections>
-                            <action selector="searchInFile:" target="-2" id="100098"/>
-                        </connections>
                     </searchFieldCell>
                     <connections>
+                        <action selector="search:" target="-2" id="d3G-Nz-2Qn"/>
                         <outlet property="searchMenuTemplate" destination="100175" id="100179"/>
                     </connections>
                 </searchField>
@@ -255,7 +253,7 @@
                 </button>
             </subviews>
         </customView>
-        <menu title="sidebar view" autoenablesItems="NO" id="100163">
+        <menu title="sidebar view" autoenablesItems="NO" id="100163" userLabel="sidebarViewMenu">
             <items>
                 <menuItem title="目錄" state="on" tag="1" id="100164">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -271,23 +269,18 @@
                 </menuItem>
             </items>
         </menu>
-        <menu title="search mod" autoenablesItems="NO" id="100175">
+        <menu title="search mod" autoenablesItems="NO" id="100175" userLabel="searchMenuTemplate">
             <items>
                 <menuItem title="全文搜索" state="on" tag="1" id="100176">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="setSearchInFile:" target="-2" id="100180"/>
+                        <action selector="changeSearchMode:" target="-2" id="aH1-gT-8Ec"/>
                     </connections>
                 </menuItem>
                 <menuItem title="索引匹配" tag="2" id="100177">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="setSearchInIndex:" target="-2" id="100181"/>
-                        <binding destination="-2" name="enabled" keyPath="indexSource" id="100187">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSIsNotNil</string>
-                            </dictionary>
-                        </binding>
+                        <action selector="changeSearchMode:" target="-2" id="NWl-hY-Ykn"/>
                     </connections>
                 </menuItem>
             </items>

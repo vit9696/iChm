@@ -128,6 +128,9 @@ static BOOL firstDocument = YES;
 @synthesize filePath;
 @synthesize docTitle;
 
+
+@synthesize searchMode;
+
 - (id)init {
 	if ((self = [super init])) {
 		
@@ -140,6 +143,8 @@ static BOOL firstDocument = YES;
 		console = [[CHMConsole alloc] init];
 		
 		isSidebarRestored = NO;
+		
+		searchMode = CHMDocumentSearchInFile;
 	}
 	return self;
 }
@@ -599,18 +604,19 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	
 	// set search type and search menu
 	NSString *type = [self getPreferenceforFile:filePath withKey:PREF_SEARCH_TYPE];
-	if (type != nil && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX]) {
-		[self setSearchInIndex:[[searchField cell] searchMenuTemplate]];
+	if (type && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX]) {
+		self.searchMode = CHMDocumentSearchInIndex;
+		[searchField setPlaceholderString:NSLocalizedString(@"Search in Index", @"")];
 	}
 	
 	// invoke search if query string provided in command line
 	if (firstDocument) {
 		NSUserDefaults *args = [NSUserDefaults standardUserDefaults];
-		NSString *searchTerm = [args stringForKey:@"search"];
-		if (searchTerm &&
-			[[searchTerm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
-			[searchField setStringValue:[searchTerm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-			[self searchInFile:self];
+		NSString *searchTerm = [[args stringForKey:@"search"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		if (searchTerm && searchTerm.length) {
+			[searchField setStringValue:searchTerm];
+			self.searchMode = CHMDocumentSearchInFile;
+			[self search:self];
 			firstDocument = NO;
 		}
 	}
@@ -1290,44 +1296,34 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 
-- (IBAction)setSearchInFile:(id)sender {
-	[searchField setAction:@selector(searchInFile:)];
-	NSSearchFieldCell *cell  = [searchField cell];
-	NSMenu *menu = [sender menu];
-	NSMenuItem *item = [menu itemWithTag:1];
-	[item setState:NSOnState];
-	[[menu itemWithTag:2] setState:NSOffState];
-	[cell setPlaceholderString:[item title]];
+- (IBAction)changeSearchMode:(id)sender {
+	NSInteger tag = [sender tag];
+	if (searchMode == tag) return;
+	self.searchMode = tag;
+	[searchField setPlaceholderString:(searchMode == CHMDocumentSearchInFile ? NSLocalizedString(@"Search in File", @"") : NSLocalizedString(@"Search in Index", @""))];
 	
-	if ([[searchField stringValue] length] > 0) {
-		[self searchInFile:self];
-	}
-	[self setPreference:PREF_VALUE_SEARCH_IN_FILE forFile:filePath withKey:PREF_SEARCH_TYPE];
+	if ([searchField stringValue].length) [self search:self];
+	
+	[self setPreference:(searchMode == CHMDocumentSearchInFile ? PREF_VALUE_SEARCH_IN_FILE : PREF_VALUE_SEARCH_IN_INDEX) forFile:filePath withKey:PREF_SEARCH_TYPE];
 }
 
 
-- (IBAction)setSearchInIndex:(id)sender {
-	[searchField setAction:@selector(searchInIndex:)];
-	NSSearchFieldCell *cell  = [searchField cell];
-	NSMenu *menu;
-	if ([sender isKindOfClass:[NSMenu class]]) {
-		menu = sender;
-	} else {
-		menu = [sender menu];
-	}
-	NSMenuItem *item = [menu itemWithTag:2];
-	[item setState:NSOnState];
-	[[menu itemWithTag:1] setState:NSOffState];
-	[cell setPlaceholderString:[item title]];
+- (IBAction)search:(id)sender {
+#if MD_DEBUG
+	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+#endif
 	
-	if ([[searchField stringValue] length] > 0) {
-		[self searchInIndex:self];
+	if (searchMode == CHMDocumentSearchInFile) {
+		
+		// waiting for the building of index
+		[searchIndexCondition lock];
+		
+		while (!isIndexDone) [searchIndexCondition wait];
+		
+		[searchIndexCondition unlock];
+		
 	}
-	[self setPreference:PREF_VALUE_SEARCH_IN_INDEX forFile:filePath withKey:PREF_SEARCH_TYPE];
-}
-
-
-- (IBAction)searchInIndex:(id)sender {
+	
 	NSString *searchString = [searchField stringValue];
 	
 	if (searchString.length == 0) {
@@ -1339,45 +1335,26 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		return;
 	}
 	
-	[searchSource release];
-	searchSource = nil;
-	
-	if (indexSource == nil) return;
-	
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-//	searchSource = [[CHMTableOfContents alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
-	searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
-	
-	[outlineView deselectAll:self];
-	[outlineView setDataSource:searchSource];
-	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
-	
-	[outlineView reloadData];
-}
-
-
-- (IBAction)searchInFile:(id)sender {
-#if MD_DEBUG
-	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-#endif
-	
-	// waiting for the building of index
-	[searchIndexCondition lock];
-	
-	while (!isIndexDone) [searchIndexCondition wait];
-	
-	[searchIndexCondition unlock];
-	
-	NSString *searchString = [searchField stringValue];
-	
-	if (searchString.length == 0) {
-		[self resetSidebarView];
-
+	if (searchMode == CHMDocumentSearchInIndex) {
+		
 		[searchSource release];
 		searchSource = nil;
-		[self removeHighlight];
+		
+		if (indexSource == nil) return;
+		
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
+//		searchSource = [[CHMTableOfContents alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
+		searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
+		
+		[outlineView deselectAll:self];
+		[outlineView setDataSource:searchSource];
+		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
+		
+		[outlineView reloadData];
 		return;
 	}
+	
+	// search in file
 	
 	[searchSource release];
 	
@@ -1441,6 +1418,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
 	[outlineView reloadData];
+	
 }
 
 
@@ -1494,6 +1472,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[[[docTabView selectedTabViewItem] identifier] hideFindPanel:sender];
 	[self removeHighlight];
 }
+
 
 #pragma mark text encoding
 - (void)setupEncodingMenu {
@@ -1561,6 +1540,23 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 
+#pragma mark - (NSMenuValidation)
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	MDLog(@"[%@ %@] menuItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), menuItem);
+	SEL action = [menuItem action];
+	NSInteger tag = [menuItem tag];
+	
+	if (action == @selector(changeSearchMode:)) {
+		[menuItem setState:searchMode == tag];
+		if (tag == CHMDocumentSearchInIndex) {
+			return (indexSource != nil);
+		}
+	}
+	return YES;
+}
+
+
 #pragma mark - <NSSplitViewDelegate>
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification {
 	if (!isSidebarRestored) {
@@ -1612,6 +1608,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 #pragma mark sidebar view changing
 - (IBAction)popViewMenu:(id)sender {
+	MDLog(@"[%@ %@] indexSource == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexSource);
+	
 	NSButton *button = (NSButton *)sender;
 	NSMenu *menu = [sender menu];
 	NSMenuItem *indexItem = [menu itemWithTag:2];

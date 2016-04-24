@@ -2,6 +2,13 @@
 ###Developer Notes:###
 To build this fork of `iChm` (and its submodules), you’ll need at least Xcode 5.1 in OS X 10.9 (Mavericks).
 
+So that you can properly `git diff` Localizable `.strings` files (as defined in `.gitattributes`), add the following to your `~/.gitconfig` file:
+
+	[diff "localizablestrings"]
+		textconv = "iconv -f utf-16 -t utf-8"
+
+See [this StackOverflow answer](http://stackoverflow.com/a/21020607/277952) for more info.
+
 ###Features###
 
 * Fully built with Cocoa. No ugly window and slow rendering.

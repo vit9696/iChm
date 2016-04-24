@@ -1,2 +1,2 @@
 *.xib binary
-*.strings set diff
+*.strings diff=localizablestrings
