@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+
 @class CHMDocument;
 
 @interface ITSSProtocol : NSURLProtocol {
 
 }
+
 @end
 
 @interface NSURLRequest (ITSSProtocol)
