@@ -13,15 +13,15 @@
                 <outlet property="exportNoticeLabel" destination="100192" id="100195"/>
                 <outlet property="exportProgressIndicator" destination="100191" id="100194"/>
                 <outlet property="exportProgressSheet" destination="100189" id="100196"/>
-                <outlet property="historyItemView" destination="100070" id="100089"/>
-                <outlet property="homeItemView" destination="100124" id="100136"/>
-                <outlet property="searchItemView" destination="100095" id="100097"/>
-                <outlet property="sidebarItemView" destination="100132" id="100137"/>
+                <outlet property="historyControl" destination="100070" id="F72-LP-IsF"/>
+                <outlet property="homeButton" destination="100124" id="jAj-wz-BSI"/>
+                <outlet property="outlineView" destination="100058" id="84d-pE-sj4"/>
+                <outlet property="searchField" destination="100095" id="ByZ-IW-sdQ"/>
                 <outlet property="sidebarViewMenu" destination="100163" id="100174"/>
                 <outlet property="splitView" destination="100043" id="100128"/>
                 <outlet property="tabBar" destination="100106" id="100113"/>
-                <outlet property="textSizeItemView" destination="100100" id="100102"/>
-                <outlet property="tocView" destination="100058" id="100140"/>
+                <outlet property="textSizeControl" destination="100100" id="W8c-WD-Nau"/>
+                <outlet property="toggleSidebarButton" destination="100132" id="gJ1-Na-39c"/>
                 <outlet property="window" destination="5" id="100078"/>
             </connections>
         </customObject>
@@ -91,7 +91,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="100162" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="100060" id="100058" customClass="CHMOutlineView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="176" height="514"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="176" height="19"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" red="0.83921570000000001" green="0.86666666999999997" blue="0.89803922000000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -149,7 +149,7 @@
                 <outlet property="delegate" destination="-2" id="100033"/>
             </connections>
         </window>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="100064" userLabel="History Toolbar">
             <rect key="frame" x="0.0" y="0.0" width="109" height="40"/>
             <autoresizingMask key="autoresizingMask"/>
@@ -174,7 +174,7 @@
             <rect key="frame" x="0.0" y="0.0" width="266" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <searchField verticalHuggingPriority="750" id="100095">
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" id="100095">
                     <rect key="frame" x="0.0" y="20" width="194" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search in File" bezelStyle="round" id="100096">

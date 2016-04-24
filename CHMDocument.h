@@ -27,13 +27,15 @@ struct chmFile;
 	
 	IBOutlet PSMTabBarControl		*tabBar;
 	IBOutlet NSTabView				*docTabView;
-	IBOutlet NSOutlineView			*tocView;
+	IBOutlet NSOutlineView			*outlineView;
 	IBOutlet NSWindow				*documentWindow;
-	IBOutlet NSSegmentedControl		*historyItemView;
-	IBOutlet NSButton				*homeItemView;
-	IBOutlet NSSegmentedControl		*textSizeItemView;
-	IBOutlet NSButton				*sidebarItemView;
-	IBOutlet NSSearchField			*searchItemView;
+	
+	IBOutlet NSSegmentedControl		*historyControl;
+	IBOutlet NSButton				*homeButton;
+	IBOutlet NSSegmentedControl		*textSizeControl;
+	IBOutlet NSButton				*toggleSidebarButton;
+	IBOutlet NSSearchField			*searchField;
+	
 	IBOutlet NSSplitView			*splitView;
 	IBOutlet NSMenuItem				*textEncodingMenu;
 	IBOutlet NSPanel				*addBookmarkPanel;

@@ -577,8 +577,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[self setupTabBar];
 	[self addNewTab:self];
 	
-	[tocView setDataSource:tocSource];
-	[tocView setAutoresizesOutlineColumn:NO];
+	[outlineView setDataSource:tocSource];
+	[outlineView setAutoresizesOutlineColumn:NO];
 	
 	if ([tocSource rootChildrenCount] == 0) {
 		[self hideSidebar:self];
@@ -600,7 +600,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	// set search type and search menu
 	NSString *type = [self getPreferenceforFile:filePath withKey:PREF_SEARCH_TYPE];
 	if (type != nil && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX]) {
-		[self setSearchInIndex:[[searchItemView cell] searchMenuTemplate]];
+		[self setSearchInIndex:[[searchField cell] searchMenuTemplate]];
 	}
 	
 	// invoke search if query string provided in command line
@@ -609,7 +609,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		NSString *searchTerm = [args stringForKey:@"search"];
 		if (searchTerm &&
 			[[searchTerm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
-			[searchItemView setStringValue:[searchTerm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+			[searchField setStringValue:[searchTerm stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
 			[self searchInFile:self];
 			firstDocument = NO;
 		}
@@ -768,7 +768,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL *url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem *item = [(CHMTableOfContents *)[tocView dataSource] itemForPath:path withStack:nil];
+	LinkItem *item = [(CHMTableOfContents *)[outlineView dataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if (!name || [name length] == 0) {
@@ -785,7 +785,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[[curWebView windowScriptObject] setValue:console forKey:@"console"];
 		[self loadJavascript];
 		
-		NSString *searchString = [searchItemView stringValue];
+		NSString *searchString = [searchField stringValue];
 		
 		if (searchString.length) {
 			[self highlightString:searchString];
@@ -879,10 +879,10 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 # pragma mark - IBActions
 - (IBAction)changeTopic:(id)sender {
-	NSInteger selectedRow = [tocView selectedRow];
+	NSInteger selectedRow = [outlineView selectedRow];
 	
 	if (selectedRow >= 0) {
-		LinkItem *topic = [tocView itemAtRow:selectedRow];
+		LinkItem *topic = [outlineView itemAtRow:selectedRow];
 		[self loadPath:[topic path]];
 	}
 }
@@ -920,8 +920,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 
 - (IBAction)gotoNextPage:(id)sender {
-	NSInteger selectedRow = [tocView selectedRow];
-	LinkItem *topic = [tocView itemAtRow:selectedRow];
+	NSInteger selectedRow = [outlineView selectedRow];
+	LinkItem *topic = [outlineView itemAtRow:selectedRow];
 	LinkItem *nextPage = [tocSource getNextPage:topic];
 	if (nextPage) {
 		[self loadPath:[nextPage path]];
@@ -929,8 +929,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 - (IBAction)gotoPrevPage:(id)sender {
-	NSInteger selectedRow = [tocView selectedRow];
-	LinkItem *topic = [tocView itemAtRow:selectedRow];
+	NSInteger selectedRow = [outlineView selectedRow];
+	LinkItem *topic = [outlineView itemAtRow:selectedRow];
 	LinkItem *prevPage = [tocSource getPrevPage:topic];
 	if (prevPage) {
 		[self loadPath:[prevPage path]];
@@ -941,18 +941,18 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSURL *url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem *item = [(CHMTableOfContents *)[tocView dataSource] itemForPath:path withStack:tocStack];
+	LinkItem *item = [(CHMTableOfContents *)[outlineView dataSource] itemForPath:path withStack:tocStack];
 	
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	
 	for (LinkItem *p in enumerator) {
-		[tocView expandItem:p];
+		[outlineView expandItem:p];
 	}
 	
-	NSInteger idx = [tocView rowForItem:item];
+	NSInteger idx = [outlineView rowForItem:item];
 	NSIndexSet *idxSet = [[NSIndexSet alloc] initWithIndex:idx];
-	[tocView selectRowIndexes:idxSet byExtendingSelection:NO];
-	[tocView scrollRowToVisible:idx];
+	[outlineView selectRowIndexes:idxSet byExtendingSelection:NO];
+	[outlineView scrollRowToVisible:idx];
 	[tocStack release];
 	[idxSet release];
 }
@@ -984,8 +984,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 - (void)after_zoom {
-	[textSizeItemView setEnabled:[curWebView canMakeTextLarger] forSegment:0];
-	[textSizeItemView setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
+	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
+	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
 	float zoomFactor = [curWebView textSizeMultiplier];
 	[[NSUserDefaults standardUserDefaults] setFloat:zoomFactor forKey:@"zoom factor"];
 }
@@ -1003,8 +1003,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 - (void)updateHistoryButton {
-	[historyItemView setEnabled:[curWebView canGoBack] forSegment:0];
-	[historyItemView setEnabled:[curWebView canGoForward] forSegment:1];
+	[historyControl setEnabled:[curWebView canGoBack] forSegment:0];
+	[historyControl setEnabled:[curWebView canGoForward] forSegment:1];
 }
 
 #pragma mark export to pdf
@@ -1174,9 +1174,9 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Zoom", @"Zoom")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Zoom", @"Zoom")];
-		[toolbarItem setView:textSizeItemView];
-		[textSizeItemView setEnabled:[curWebView canMakeTextLarger] forSegment:0];
-		[textSizeItemView setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
+		[toolbarItem setView:textSizeControl];
+		[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
+		[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
 	} else if ([itemIdent isEqual:HistoryToolbarItemIdentifier]) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 		
@@ -1184,9 +1184,9 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"History", @"History")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Navigate in History", @"Navigate in History")];
-		[toolbarItem setView:historyItemView];
-		[historyItemView setEnabled:NO forSegment:0];
-		[historyItemView setEnabled:NO forSegment:1];
+		[toolbarItem setView:historyControl];
+		[historyControl setEnabled:NO forSegment:0];
+		[historyControl setEnabled:NO forSegment:1];
 	} else if ([itemIdent isEqual:HomeToolbarItemIdentifier]) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 		
@@ -1194,7 +1194,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Home", @"Home")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Back to Home", @"Back to Home")];
-		[toolbarItem setView:homeItemView];
+		[toolbarItem setView:homeButton];
 	} else if ([itemIdent isEqual:SidebarToolbarItemIdentifier]) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 		
@@ -1202,7 +1202,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Sidebar", @"Sidebar")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Toggle Sidebar", @"Toggle Sidebar")];
-		[toolbarItem setView:sidebarItemView];
+		[toolbarItem setView:toggleSidebarButton];
 	} else if ([itemIdent isEqual:SearchToolbarItemIdentifier]) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 		
@@ -1210,7 +1210,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Search", @"Search")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Search", @"Search")];
-		[toolbarItem setView:searchItemView];
+		[toolbarItem setView:searchField];
 		
 	} else {
 		// itemIdent refered to a toolbar item that is not provide or supported by us or cocoa
@@ -1291,15 +1291,15 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 
 - (IBAction)setSearchInFile:(id)sender {
-	[searchItemView setAction:@selector(searchInFile:)];
-	NSSearchFieldCell *cell  = [searchItemView cell];
+	[searchField setAction:@selector(searchInFile:)];
+	NSSearchFieldCell *cell  = [searchField cell];
 	NSMenu *menu = [sender menu];
 	NSMenuItem *item = [menu itemWithTag:1];
 	[item setState:NSOnState];
 	[[menu itemWithTag:2] setState:NSOffState];
 	[cell setPlaceholderString:[item title]];
 	
-	if ([[searchItemView stringValue] length] > 0) {
+	if ([[searchField stringValue] length] > 0) {
 		[self searchInFile:self];
 	}
 	[self setPreference:PREF_VALUE_SEARCH_IN_FILE forFile:filePath withKey:PREF_SEARCH_TYPE];
@@ -1307,8 +1307,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 
 - (IBAction)setSearchInIndex:(id)sender {
-	[searchItemView setAction:@selector(searchInIndex:)];
-	NSSearchFieldCell *cell  = [searchItemView cell];
+	[searchField setAction:@selector(searchInIndex:)];
+	NSSearchFieldCell *cell  = [searchField cell];
 	NSMenu *menu;
 	if ([sender isKindOfClass:[NSMenu class]]) {
 		menu = sender;
@@ -1320,7 +1320,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[[menu itemWithTag:1] setState:NSOffState];
 	[cell setPlaceholderString:[item title]];
 	
-	if ([[searchItemView stringValue] length] > 0) {
+	if ([[searchField stringValue] length] > 0) {
 		[self searchInIndex:self];
 	}
 	[self setPreference:PREF_VALUE_SEARCH_IN_INDEX forFile:filePath withKey:PREF_SEARCH_TYPE];
@@ -1328,7 +1328,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 
 - (IBAction)searchInIndex:(id)sender {
-	NSString *searchString = [searchItemView stringValue];
+	NSString *searchString = [searchField stringValue];
 	
 	if (searchString.length == 0) {
 		[self resetSidebarView];
@@ -1348,11 +1348,11 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 //	searchSource = [[CHMTableOfContents alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
 	searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
 	
-	[tocView deselectAll:self];
-	[tocView setDataSource:searchSource];
-	[[[tocView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
+	[outlineView deselectAll:self];
+	[outlineView setDataSource:searchSource];
+	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
-	[tocView reloadData];
+	[outlineView reloadData];
 }
 
 
@@ -1368,7 +1368,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	[searchIndexCondition unlock];
 	
-	NSString *searchString = [searchItemView stringValue];
+	NSString *searchString = [searchField stringValue];
 	
 	if (searchString.length == 0) {
 		[self resetSidebarView];
@@ -1436,16 +1436,16 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
         }
     }
 	[searchSource sort];
-	[tocView deselectAll:self];
-	[tocView setDataSource:searchSource];
-	[[[tocView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
+	[outlineView deselectAll:self];
+	[outlineView setDataSource:searchSource];
+	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
-	[tocView reloadData];
+	[outlineView reloadData];
 }
 
 
 - (IBAction)focusOnSearch:(id)sender {
-	[documentWindow makeFirstResponder:searchItemView];
+	[documentWindow makeFirstResponder:searchField];
 }
 
 # pragma mark find panel
@@ -1539,7 +1539,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	}
 	
 	[self setupTOCSource];
-	[tocView setDataSource:tocSource];
+	[outlineView setDataSource:tocSource];
 	[self locateTOC:self];
 }
 
@@ -1585,7 +1585,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 - (IBAction)toggleSidebar:(id)sender {
-	CGFloat curWidth = [tocView frame].size.width;
+	CGFloat curWidth = [outlineView frame].size.width;
 	if (curWidth > 30) {
 		[self hideSidebar:sender];
 	} else {
@@ -1631,16 +1631,16 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 - (IBAction)changeToContentsView:(id)sender {
-	[tocView setDataSource:tocSource];
-	[[[tocView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
+	[outlineView setDataSource:tocSource];
+	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
 	[self resetViewMenuState:sender];
 	[self locateTOC:sender];
 }
 
 - (IBAction)changeToIndexView:(id)sender {
 	if (indexSource) {
-		[tocView setDataSource:indexSource];
-		[[[tocView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
+		[outlineView setDataSource:indexSource];
+		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
 		[self resetViewMenuState:sender];
 	}
 }
