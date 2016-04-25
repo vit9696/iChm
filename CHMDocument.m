@@ -92,10 +92,6 @@ static BOOL firstDocument = YES;
 - (id)getPreferenceforFile:(NSString *)filename withKey:(NSString *)key;
 
 
-// sidebar view
-- (void)resetViewMenuState:(NSMenuItem *)sender;
-- (void)resetSidebarView;
-
 - (void)addToSearchIndex:(const char *)path;
 
 
@@ -119,6 +115,8 @@ static BOOL firstDocument = YES;
 
 - (void)setupTOCSource;
 
+- (IBAction)hideSidebar:(id)sender;
+
 @end
 
 
@@ -130,6 +128,9 @@ static BOOL firstDocument = YES;
 
 
 @synthesize searchMode;
+
+@synthesize viewMode;
+
 
 - (id)init {
 	if ((self = [super init])) {
@@ -145,6 +146,7 @@ static BOOL firstDocument = YES;
 		isSidebarRestored = NO;
 		
 		searchMode = CHMDocumentSearchInFile;
+		viewMode = CHMDocumentViewTableOfContents;
 	}
 	return self;
 }
@@ -1327,7 +1329,18 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	NSString *searchString = [searchField stringValue];
 	
 	if (searchString.length == 0) {
-		[self resetSidebarView];
+		
+		if (viewMode == CHMDocumentViewTableOfContents) {
+			[outlineView setDataSource:tocSource];
+			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
+			[self locateTOC:sender];
+			
+		} else if (viewMode == CHMDocumentViewIndex) {
+			[outlineView setDataSource:indexSource];
+			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
+			
+		}
+		[outlineView reloadData];
 		
 		[searchSource release];
 		searchSource = nil;
@@ -1552,6 +1565,11 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		if (tag == CHMDocumentSearchInIndex) {
 			return (indexSource != nil);
 		}
+	} else if (action == @selector(changeViewMode:)) {
+		[menuItem setState:viewMode == tag];
+		if (tag == CHMDocumentViewIndex) {
+			return (indexSource != nil);
+		}
 	}
 	return YES;
 }
@@ -1607,50 +1625,26 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 #pragma mark sidebar view changing
-- (IBAction)popViewMenu:(id)sender {
-	MDLog(@"[%@ %@] indexSource == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexSource);
+- (IBAction)changeViewMode:(id)sender {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
-	NSButton *button = (NSButton *)sender;
-	NSMenu *menu = [sender menu];
-	NSMenuItem *indexItem = [menu itemWithTag:2];
-	if (!indexSource) {
-		[indexItem setEnabled:NO];
-	}
-	[NSMenu popUpContextMenu:menu withEvent:[NSApp currentEvent] forView:button];
-}
-
-
-- (void)resetViewMenuState:(NSMenuItem *)sender {
-	NSMenu *menu = [(NSMenuItem *) sender menu];
-	for (NSMenuItem *item in[menu itemArray]) {
-		[item setState:NSOffState];
-	}
-	[sender setState:NSOnState];
-}
-
-- (IBAction)changeToContentsView:(id)sender {
-	[outlineView setDataSource:tocSource];
-	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
-	[self resetViewMenuState:sender];
-	[self locateTOC:sender];
-}
-
-- (IBAction)changeToIndexView:(id)sender {
-	if (indexSource) {
+	NSInteger tag = [sender tag];
+	if (viewMode == tag) return;
+	self.viewMode = tag;
+	
+	if (viewMode == CHMDocumentViewTableOfContents) {
+		[outlineView setDataSource:tocSource];
+		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
+		[self locateTOC:sender];
+		
+	} else if (viewMode == CHMDocumentViewIndex) {
 		[outlineView setDataSource:indexSource];
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
-		[self resetViewMenuState:sender];
+		
 	}
+	[outlineView reloadData];
 }
 
-- (void)resetSidebarView {
-	NSMenu *menu = sidebarViewMenu;
-	for (NSMenuItem *item in[menu itemArray]) {
-		if ([item state] == NSOnState) {
-			[self performSelector:[item action] withObject:item];
-		}
-	}
-}
 
 @end
 

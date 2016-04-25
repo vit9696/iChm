@@ -26,6 +26,12 @@ enum {
 typedef NSUInteger CHMDocumentSearchMode;
 
 
+enum {
+	CHMDocumentViewTableOfContents	= 1,
+	CHMDocumentViewIndex			= 2,
+};
+typedef NSUInteger CHMDocumentViewMode;
+
 
 #ifdef MAC_OS_X_VERSION_10_11
 @interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
@@ -66,6 +72,7 @@ typedef NSUInteger CHMDocumentSearchMode;
 	CHMSearchResults				*searchSource;
 	
 	CHMDocumentSearchMode			searchMode;
+	CHMDocumentViewMode				viewMode;
 	
 	SKIndexRef						skIndex;
 	NSMutableData					*searchIndexObject;
@@ -86,6 +93,8 @@ typedef NSUInteger CHMDocumentSearchMode;
 @property (readonly) NSString* docTitle;
 
 @property (nonatomic, assign) CHMDocumentSearchMode	searchMode;
+
+@property (nonatomic, assign) CHMDocumentViewMode viewMode;
 
 
 - (NSString*)currentURL;
@@ -122,16 +131,14 @@ typedef NSUInteger CHMDocumentSearchMode;
 - (IBAction)focusOnSearch:(id)sender;
 
 // sidebar view
-- (IBAction)popViewMenu:(id)sender;
-- (IBAction)changeToContentsView:(id)sender;
-- (IBAction)changeToIndexView:(id)sender;
+- (IBAction)changeViewMode:(id)sender;
+- (IBAction)toggleSidebar:(id)sender;
+
 
 - (IBAction)zoom:(id)sender;
 - (IBAction)zoomIn:(id)sender;
 - (IBAction)zoomOut:(id)sender;
 
-- (IBAction)toggleSidebar:(id)sender;
-- (IBAction)hideSidebar:(id)sender;
 
 
 // find panel

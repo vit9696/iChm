@@ -13,6 +13,8 @@
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		C14A60191CC6C43900B868C6 /* LinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* LinkItem.m */; };
+		C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */; };
+		C15332A01CCD4CFB00C67A97 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = C153329F1CCD4CFB00C67A97 /* view.png */; };
 		C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; };
 		C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */ = {isa = PBXBuildFile; fileRef = C18622321C8F550C00C1DD80 /* CHM.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -38,7 +40,6 @@
 		C3907F690EC005B30018AA80 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3907F680EC005B30018AA80 /* ApplicationServices.framework */; };
 		C390802E0EC027070018AA80 /* CHMWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = C390802D0EC027070018AA80 /* CHMWebView.m */; };
 		C390817B0EC0A4EC0018AA80 /* CHMExporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C390817A0EC0A4EC0018AA80 /* CHMExporter.m */; };
-		C39A12160E607D330009C875 /* view.tif in Resources */ = {isa = PBXBuildFile; fileRef = C39A12150E607D330009C875 /* view.tif */; };
 		C3A79CC30E30438B00FF4485 /* CHMTableOfContents.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */; };
 		C3AA9B220E3EC8A200D2FB53 /* CHMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */; };
 		C3BF8BA00E4FDD7200AE3BEE /* CHMBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = C3BF8B9F0E4FDD7200AE3BEE /* CHMBookmark.m */; };
@@ -185,6 +186,9 @@
 		90C4D9C60E7DCC31006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
 		C14A60171CC6C43900B868C6 /* LinkItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkItem.h; sourceTree = "<group>"; };
 		C14A60181CC6C43900B868C6 /* LinkItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkItem.m; sourceTree = "<group>"; };
+		C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMImageViewPopUpButton.h; sourceTree = "<group>"; };
+		C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMImageViewPopUpButton.m; sourceTree = "<group>"; };
+		C153329F1CCD4CFB00C67A97 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
 		C18622161C8F41F400C1DD80 /* CHM Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Framework.xcodeproj"; path = "chmlib/osx/CHMFramework/CHM Framework.xcodeproj"; sourceTree = "<group>"; };
 		C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Spotlight Importer.xcodeproj"; path = "CHMSpotlightImporter/CHM Spotlight Importer.xcodeproj"; sourceTree = "<group>"; };
 		C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quickchm.xcodeproj; path = CHMQuickLook/quickchm.xcodeproj; sourceTree = "<group>"; };
@@ -230,7 +234,6 @@
 		C390802D0EC027070018AA80 /* CHMWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMWebView.m; sourceTree = "<group>"; };
 		C39081790EC0A4EC0018AA80 /* CHMExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMExporter.h; sourceTree = "<group>"; };
 		C390817A0EC0A4EC0018AA80 /* CHMExporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMExporter.m; sourceTree = "<group>"; };
-		C39A12150E607D330009C875 /* view.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = view.tif; sourceTree = "<group>"; };
 		C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMTableOfContents.h; sourceTree = "<group>"; };
 		C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTableOfContents.m; sourceTree = "<group>"; };
 		C3AA9B1D0E3EC88600D2FB53 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CHMWebView.xib; sourceTree = "<group>"; };
@@ -396,6 +399,8 @@
 				C390802D0EC027070018AA80 /* CHMWebView.m */,
 				C3D6EE090E3D9E5C00A823A2 /* CHMOutlineView.h */,
 				C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */,
+				C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */,
+				C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -504,7 +509,7 @@
 		C3C082260E4557F900D58E19 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				C39A12150E607D330009C875 /* view.tif */,
+				C153329F1CCD4CFB00C67A97 /* view.png */,
 				C33BB2040E46DA100026F435 /* ichm_file.icns */,
 				C30F2B2E0E42135C003A17A7 /* home.png */,
 				C35B99F90E39C23400A63BC3 /* redbird.icns */,
@@ -647,6 +652,7 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				C33A4AE10E34EA7700277D64 /* CHMDocument.xib in Resources */,
 				C35B99FA0E39C23400A63BC3 /* redbird.icns in Resources */,
+				C15332A01CCD4CFB00C67A97 /* view.png in Resources */,
 				C36FD4240E482D3800496822 /* CHMWebView.xib in Resources */,
 				C33DE50B0E40A651009FF1F4 /* ichm.css in Resources */,
 				C30F2B2F0E42135C003A17A7 /* home.png in Resources */,
@@ -655,7 +661,6 @@
 				C33BB2050E46DA100026F435 /* ichm_file.icns in Resources */,
 				C36FD52C0E48403F00496822 /* Localizable.strings in Resources */,
 				C3D2046B0E53EFAF00D5CA58 /* Bookmark.xib in Resources */,
-				C39A12160E607D330009C875 /* view.tif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +675,7 @@
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */,
 				C3DB252F0E2DD646000E5A20 /* CHMAppController.m in Sources */,
+				C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */,
 				C3A79CC30E30438B00FF4485 /* CHMTableOfContents.m in Sources */,
 				C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */,
 				C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */,

@@ -17,7 +17,7 @@
                 <outlet property="homeButton" destination="100124" id="OfI-ye-lhJ"/>
                 <outlet property="outlineView" destination="100058" id="1uv-at-tMa"/>
                 <outlet property="searchField" destination="100095" id="egY-JH-GuW"/>
-                <outlet property="sidebarViewMenu" destination="100163" id="100174"/>
+                <outlet property="sidebarViewMenu" destination="EUI-0D-enR" id="Hhw-00-Xhz"/>
                 <outlet property="splitView" destination="100043" id="100128"/>
                 <outlet property="tabBar" destination="100106" id="100113"/>
                 <outlet property="textSizeControl" destination="100100" id="Ipr-gt-fhk"/>
@@ -63,26 +63,6 @@
                                 <rect key="frame" x="643" y="0.0" width="176" height="559"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" id="100160">
-                                        <rect key="frame" x="-1" y="-1" width="29" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="view" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100161">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="popViewMenu:" target="-2" id="100170"/>
-                                            <outlet property="menu" destination="100163" id="100169"/>
-                                        </connections>
-                                    </button>
-                                    <button verticalHuggingPriority="750" id="100158">
-                                        <rect key="frame" x="0.0" y="-1" width="176" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100159">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
                                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="100055">
                                         <rect key="frame" x="0.0" y="28" width="176" height="531"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
@@ -90,7 +70,7 @@
                                             <rect key="frame" x="0.0" y="17" width="176" height="514"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="100162" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="100060" id="100058" customClass="CHMOutlineView">
+                                                <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="100162" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="100060" id="100058" userLabel="outlineView" customClass="CHMOutlineView">
                                                     <rect key="frame" x="0.0" y="0.0" width="176" height="19"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -132,6 +112,22 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableHeaderView>
                                     </scrollView>
+                                    <button verticalHuggingPriority="750" id="100158">
+                                        <rect key="frame" x="0.0" y="-1" width="176" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" imagePosition="only" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100159">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="mrF-LA-2HD" customClass="CHMImageViewPopUpButton">
+                                        <rect key="frame" x="0.0" y="0.0" width="30" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="view" id="JUW-F7-PAV"/>
+                                        <connections>
+                                            <outlet property="menu" destination="EUI-0D-enR" id="pGo-WS-fKY"/>
+                                        </connections>
+                                    </imageView>
                                 </subviews>
                             </customView>
                         </subviews>
@@ -148,6 +144,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="100033"/>
             </connections>
+            <point key="canvasLocation" x="468.5" y="482.5"/>
         </window>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="100064" userLabel="History Toolbar">
@@ -209,7 +206,7 @@
                 </segmentedControl>
             </subviews>
         </customView>
-        <menu id="100115">
+        <menu id="100115" userLabel="outlineViewMenu">
             <items>
                 <menuItem title="在新标签中打开" id="100116">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -253,22 +250,6 @@
                 </button>
             </subviews>
         </customView>
-        <menu title="sidebar view" autoenablesItems="NO" id="100163" userLabel="sidebarViewMenu">
-            <items>
-                <menuItem title="目录" state="on" tag="1" id="100164">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeToContentsView:" target="-2" id="100173"/>
-                    </connections>
-                </menuItem>
-                <menuItem title="索引" tag="2" id="100165">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="changeToIndexView:" target="-2" id="100172"/>
-                    </connections>
-                </menuItem>
-            </items>
-        </menu>
         <menu title="search mod" autoenablesItems="NO" id="100175" userLabel="searchMenuTemplate">
             <items>
                 <menuItem title="全文搜索" state="on" tag="1" id="100176">
@@ -285,7 +266,6 @@
                 </menuItem>
             </items>
         </menu>
-        <userDefaultsController representsSharedInstance="YES" id="100182"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="100189">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
@@ -311,6 +291,23 @@
                 </subviews>
             </view>
         </window>
+        <menu id="EUI-0D-enR" userLabel="sidebarViewMenu">
+            <items>
+                <menuItem title="目录" tag="1" id="vvy-l4-V2M">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeViewMode:" target="-2" id="fSn-wv-mVp"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="索引" tag="2" id="anV-7m-X1F">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="changeViewMode:" target="-2" id="Pxq-AF-DGC"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="699" y="882.5"/>
+        </menu>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
