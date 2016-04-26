@@ -13,7 +13,6 @@
 #import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
 #import "CHMAppController.h"
-#import "CHMTextEncodingMenuController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
 #import "CHMExporter.h"
@@ -127,6 +126,12 @@ static BOOL firstDocument = YES;
 @synthesize filePath;
 @synthesize docTitle;
 
+@synthesize encodingName;
+@synthesize encoding;
+@synthesize customEncodingName;
+@synthesize customEncoding;
+
+@dynamic currentEncodingName;
 
 @synthesize searchMode;
 
@@ -175,6 +180,9 @@ static BOOL firstDocument = YES;
 	[console release];
 	
 	[encodingName release];
+	[customEncodingName release];
+	
+	
 	[super dealloc];
 }
 
@@ -198,15 +206,16 @@ static inline uint32_t readInt(NSData *data, NSUInteger offset) {
 	return NSSwapLittleIntToHost(value);
 }
 
-static inline NSString *readString(NSData *data, NSUInteger offset, NSString *encodingName) {
+static inline NSString *readString(NSData *data, NSUInteger offset, NSStringEncoding anEncoding) {
 	const char *stringData = (char *)[data bytes] + offset;
-	return [[[NSString alloc] initWithCString:stringData encoding:nameToEncoding(encodingName)] autorelease];
+	return [[[NSString alloc] initWithCString:stringData encoding:anEncoding] autorelease];
 }
 
-static inline NSString *readTrimmedString(NSData *data, NSUInteger offset, NSString *encodingName) {
-	NSString *str = readString(data, offset, encodingName);
+static inline NSString *readTrimmedString(NSData *data, NSUInteger offset, NSStringEncoding anEncoding) {
+	NSString *str = readString(data, offset, anEncoding);
 	return [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
+
 
 static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSString *name = nil;
@@ -423,37 +432,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 
 - (BOOL)loadMetadata {
-	//--- Start with WINDOWS object ---
-	NSData *windowsData = [self dataForObjectAtPath:@"/#WINDOWS"];
-	NSData *stringsData = [self dataForObjectAtPath:@"/#STRINGS"];
-
-	if (windowsData && stringsData) {
-		const uint32_t entryCount = readInt(windowsData, 0);
-		const uint32_t entrySize = readInt(windowsData, 4);
-		
-		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex) {
-			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
-
-			if (!docTitle || ([docTitle length] == 0)) {
-				docTitle = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encodingName);
-				MDLog(@"[%@ %@] (STRINGS) docTitle == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
-			}
-			if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
-				tableOfContentsPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60), encodingName);
-				MDLog(@"[%@ %@] (STRINGS) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
-			}
-			if (!indexPath || ([indexPath length] == 0)) {
-				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64), encodingName);
-				MDLog(@"[%@ %@] (STRINGS) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
-			}
-			if (!homePath || ([homePath length] == 0)) {
-				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68), encodingName);
-				MDLog(@"[%@ %@] (STRINGS) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
-			}
-		}
-	}
+	/* before anything else, get the encoding */
 	
-	//--- Use SYSTEM object ---
 	NSData *systemData = [self dataForObjectAtPath:@"/#SYSTEM"];
 	if (systemData == nil) {
 		return NO;
@@ -463,10 +443,68 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSUInteger offset = 4;
 	
 	for (; offset < maxOffset; ) {
+		uint16_t data = readShort(systemData, offset);
+		
+		if (data == 4) {
+			uint32_t lcid = readInt(systemData, offset + 4);
+			MDLog(@"[%@ %@] (SYSTEM) LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
+			encodingName = LCIDtoEncodingName(lcid);
+			MDLog(@"[%@ %@] (SYSTEM) encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
+			
+			CFStringEncoding cfStringEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
+			
+			NSStringEncoding nsStringEncoding = CFStringConvertEncodingToNSStringEncoding(cfStringEncoding);
+			
+			NSString *locDescrp = [NSString localizedNameOfStringEncoding:nsStringEncoding];
+			MDLog(@"[%@ %@] (SYSTEM) encoding == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), locDescrp);
+			
+			encoding = nsStringEncoding;
+			
+			break;
+		}
+		offset += readShort(systemData, offset + 2) + 4;
+		
+	}
+	
+	//--- Start with WINDOWS object ---
+	NSData *windowsData = [self dataForObjectAtPath:@"/#WINDOWS"];
+	NSData *stringsData = [self dataForObjectAtPath:@"/#STRINGS"];
+	
+	if (windowsData && stringsData) {
+		const uint32_t entryCount = readInt(windowsData, 0);
+		const uint32_t entrySize = readInt(windowsData, 4);
+		
+		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex) {
+			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
+			
+			if (!docTitle || ([docTitle length] == 0)) {
+				docTitle = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encoding);
+				MDLog(@"[%@ %@] (STRINGS) docTitle == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
+			}
+			if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
+				tableOfContentsPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60), encoding);
+				MDLog(@"[%@ %@] (STRINGS) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
+			}
+			if (!indexPath || ([indexPath length] == 0)) {
+				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64), encoding);
+				MDLog(@"[%@ %@] (STRINGS) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
+			}
+			if (!homePath || ([homePath length] == 0)) {
+				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68), encoding);
+				MDLog(@"[%@ %@] (STRINGS) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
+			}
+		}
+	}
+	
+	//--- Use SYSTEM object ---
+	
+	offset = 4;
+	
+	for (; offset < maxOffset; ) {
 		switch (readShort(systemData, offset)) {
 			case 0: {
 				if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
-					tableOfContentsPath = readString(systemData, offset + 4, encodingName);
+					tableOfContentsPath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 				}
 				break;
@@ -474,7 +512,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 				
 			case 1: {
 				if (!indexPath || ([indexPath length] == 0)) {
-					indexPath = readString(systemData, offset + 4, encodingName);
+					indexPath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
 				break;
@@ -482,7 +520,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 				
 			case 2: {
 				if (!homePath || ([homePath length] == 0)) {
-					homePath = readString(systemData, offset + 4, encodingName);
+					homePath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 				}
 				break;
@@ -490,23 +528,23 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 				
 			case 3: {
 				if (!docTitle || ([docTitle length] == 0)) {
-					docTitle = readTrimmedString(systemData, offset + 4, encodingName);
+					docTitle = readTrimmedString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) docTitle == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
 				}
 				break;
 			}
 				
-			case 4: {
-				uint32_t lcid = readInt(systemData, offset + 4);
-				MDLog(@"[%@ %@] (SYSTEM) LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
-				encodingName = LCIDtoEncodingName(lcid);
-				MDLog(@"[%@ %@] (SYSTEM) encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
-				break;
-			}
+//			case 4: {
+//				uint32_t lcid = readInt(systemData, offset + 4);
+//				MDLog(@"[%@ %@] (SYSTEM) LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
+//				encodingName = LCIDtoEncodingName(lcid);
+//				MDLog(@"[%@ %@] (SYSTEM) encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
+//				break;
+//			}
 				
 			case 6: {
 				const char *data = (const char *)([systemData bytes] + offset + 4);
-				NSString *prefix = [[NSString alloc] initWithCString:data encoding:nameToEncoding(encodingName)];
+				NSString *prefix = [[NSString alloc] initWithCString:data encoding:encoding];
 				if (!tableOfContentsPath || [tableOfContentsPath length] == 0) {
 					NSString *path = [NSString stringWithFormat:@"/%@.hhc", prefix];
 					if ([self hasObjectAtPath:path]) {
@@ -532,6 +570,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			MDLog(@"[%@ %@] (SYSTEM) unhandled value == %d", NSStringFromClass([self class]), NSStringFromSelector(_cmd), readShort(systemData, offset));
 			break;
 		}
+		
 		offset += readShort(systemData, offset + 2) + 4;
 	}
 	
@@ -660,6 +699,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 }
 
+
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
 	MDLog(@"[%@ %@] url.path == %@, type == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url.path, typeName);
 	
@@ -674,11 +714,6 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	return YES;
 }
 
-
-- (void)close {
-	[self resetEncodingMenu];
-	[super close];
-}
 
 - (NSURL *)composeURL:(NSString *)path {
 	MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
@@ -1275,7 +1310,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 - (void)addToSearchIndex:(const char *)path {
 //	MDLog(@"[%@ %@] %s", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
 	
-	NSString *filepath = [NSString stringWithCString:path encoding:nameToEncoding(encodingName)];
+//	NSString *filepath = [NSString stringWithCString:path encoding:nameToEncoding(encodingName)];
+	NSString *filepath = [NSString stringWithCString:path encoding:encoding];
 	if ([filepath hasPrefix:@"/"]) {
 		filepath = [filepath substringFromIndex:1];
 	}
@@ -1288,7 +1324,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	SKDocumentRef doc = SKDocumentCreateWithURL((CFURLRef)url);
 	[(id)doc autorelease];
 	
-	NSString *contents = [[NSString alloc] initWithData:data encoding:nameToEncoding(encodingName)];
+//	NSString *contents = [[NSString alloc] initWithData:data encoding:nameToEncoding(encodingName)];
+	NSString *contents = [[NSString alloc] initWithData:data encoding:encoding];
 	
 	// if the encoding being set is invalid, try following encoding.
 	if (contents == nil && data.length) {
@@ -1492,46 +1529,41 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 
 #pragma mark text encoding
-- (void)setupEncodingMenu {
-	NSApplication *app = [NSApplication sharedApplication];
-	CHMAppController *chmapp = [app delegate];
-	
-	NSMenu *menu = [[chmapp textEncodingMenu] submenu];
-	NSArray *items = [menu itemArray];
-	for (NSMenuItem *item in items) {
-		if ([item tag] == customizedEncodingTag) {
-			[item setState:NSOnState];
-		} else {
-			[item setState:NSOffState];
-		}
-		[item setTarget:self];
-		[item setAction:@selector(changeEncoding:)];
-		[item setEnabled:YES];
-	}
-}
-
-- (void)resetEncodingMenu {
-	NSApplication *app = [NSApplication sharedApplication];
-	CHMAppController *chmapp = [app delegate];
-	
-	NSMenu *menu = [[chmapp textEncodingMenu] submenu];
-	NSArray *items = [menu itemArray];
-	for (NSMenuItem *item in items) {
-		if ([item tag] == 0) {
-			[item setState:NSOnState];
-		} else {
-			[item setState:NSOffState];
-		}
-		[item setTarget:nil];
-		[item setAction:NULL];
-		[item setEnabled:NO];
-	}
-}
 
 - (IBAction)changeEncoding:(id)sender {
-	customizedEncodingTag = [sender tag];
-	for (WebView *wv in webViews) {
-		[wv setCustomTextEncodingName:[self currentEncodingName]];
+	MDLog(@"[%@ %@] sender == %@, tag == %ld", NSStringFromClass([self class]), NSStringFromSelector(_cmd), sender, (long)[sender tag]);
+	
+	NSInteger tag = [sender tag];
+	id representedObject = [sender representedObject];
+	
+	if (tag == 0 && customEncoding) {
+		// go back to default encoding
+		customEncoding = 0;
+		self.customEncodingName = nil;
+		
+		
+	} else if ((tag && customEncoding == 0)		     // set a custom encoding
+			   || (tag && tag != customEncoding)) {  // set a different custom encoding
+		
+		customEncoding = tag;
+		
+		if ([representedObject isKindOfClass:[NSString class]]) {
+			self.customEncodingName = (NSString *)representedObject;
+			
+		} else {
+			self.customEncodingName = [(NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(customEncoding)) autorelease];
+			
+		}
+		
+		MDLog(@"[%@ %@] customEncoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSString localizedNameOfStringEncoding:customEncoding]);
+		MDLog(@"[%@ %@] customEncodingName == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), customEncodingName);
+		
+	} else {
+		return;
+	}
+	
+	for (WebView *webView in webViews) {
+		[webView setCustomTextEncodingName:[self currentEncodingName]];
 	}
 	
 	[self setupTOCSource];
@@ -1539,21 +1571,12 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[self locateTOC:self];
 }
 
-- (NSString *)getEncodingByTag:(NSInteger)tag {
-	CHMAppController *chmapp = [NSApp delegate];
-	
-	CHMTextEncodingMenuController *menu = [[[chmapp textEncodingMenu] submenu] delegate];
-	return [menu getEncodingByTag:tag];
-}
 
 - (NSString *)currentEncodingName {
-	NSString *ename = [self getEncodingByTag:customizedEncodingTag];
-	if (!ename) {
-		ename = encodingName;
+	if (customEncoding) {
+		return customEncodingName;
 	}
-	MDLog(@"[%@ %@] encodingName == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), ename);
-	
-	return ename;
+	return encodingName;
 }
 
 
@@ -1574,6 +1597,9 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		if (tag == CHMDocumentViewIndex) {
 			return (indexSource != nil);
 		}
+	} else if (action == @selector(changeEncoding:)) {
+		[menuItem setState:customEncoding == tag];
+		
 	}
 	return YES;
 }

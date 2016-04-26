@@ -51,8 +51,6 @@ typedef NSUInteger CHMDocumentViewMode;
 	IBOutlet NSSearchField			*searchField;
 	
 	IBOutlet NSSplitView			*splitView;
-	IBOutlet NSMenuItem				*textEncodingMenu;
-	IBOutlet NSPanel				*addBookmarkPanel;
 	IBOutlet NSMenu					*sidebarViewMenu;
 	
 	IBOutlet NSWindow				*exportProgressSheet;
@@ -85,12 +83,24 @@ typedef NSUInteger CHMDocumentViewMode;
 	WebView							*curWebView;
 	CHMConsole						*console;
 	
-	NSInteger						customizedEncodingTag;
+	NSStringEncoding				encoding;
 	NSString						*encodingName;
+	
+	NSStringEncoding				customEncoding;
+	NSString						*customEncodingName;
+	
 }
 
-@property (readonly) NSString* filePath;
-@property (readonly) NSString* docTitle;
+@property (readonly) NSString *filePath;
+@property (readonly) NSString *docTitle;
+
+@property (readonly, assign) NSStringEncoding encoding;
+@property (readonly, retain) NSString *encodingName;
+
+@property (assign) NSStringEncoding customEncoding;
+@property (retain) NSString *customEncodingName;
+
+@property (nonatomic, readonly, retain) NSString *currentEncodingName;
 
 @property (nonatomic, assign) CHMDocumentSearchMode	searchMode;
 
@@ -157,10 +167,8 @@ typedef NSUInteger CHMDocumentViewMode;
 - (IBAction)closeTab:(id)sender;
 
 //text encoding
-- (void)setupEncodingMenu;
-- (void)resetEncodingMenu;
 - (IBAction)changeEncoding:(id)sender;
-- (NSString*)getEncodingByTag:(NSInteger)tag;
-- (NSString*)currentEncodingName;
 
 @end
+
+

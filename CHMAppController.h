@@ -7,17 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
 @class BookmarkController;
 
-@interface CHMAppController : NSObject {
-	IBOutlet NSMenuItem* textEncodingMenu;
-	IBOutlet BookmarkController* bookmarkController;
-}
 
-@property (readonly) NSMenuItem* textEncodingMenu;
+@interface CHMAppController : NSObject <NSApplicationDelegate> {
+	IBOutlet NSMenu					*textEncodingMenu;
+	IBOutlet BookmarkController		*bookmarkController;
+	
+}
 
 - (IBAction)donate:(id)sender;
 - (IBAction)homepage:(id)sender;
 
-- (BookmarkController*) bookmarkController;
+- (BookmarkController *)bookmarkController;
+
 @end
