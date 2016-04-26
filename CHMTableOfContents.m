@@ -83,6 +83,7 @@ static htmlSAXHandler saxHandler = {
 		
 		htmlDocPtr doc = htmlSAXParseDoc((xmlChar *)[data bytes], [encodingName UTF8String], &saxHandler, self);
 		[itemStack release];
+		itemStack = nil;
 		
 		if (doc) {
 			xmlFreeDoc(doc);
@@ -109,8 +110,11 @@ static htmlSAXHandler saxHandler = {
 	return self;
 }
 
+
 - (void)dealloc {
 	[rootItems release];
+	[itemStack release];
+	[pageList release];
 	[super dealloc];
 }
 

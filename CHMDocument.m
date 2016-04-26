@@ -161,15 +161,20 @@ static BOOL firstDocument = YES;
 	[homePath release];
 	[tableOfContentsPath release];
 	[indexPath release];
+	
 	[tocSource release];
+	[indexSource release];
 	[searchSource release];
 	
 	if (skIndex) SKIndexClose(skIndex);
 	
 	[searchIndexObject release];
 	[searchIndexCondition release];
-
+	
 	[webViews release];
+	[console release];
+	
+	[encodingName release];
 	[super dealloc];
 }
 
