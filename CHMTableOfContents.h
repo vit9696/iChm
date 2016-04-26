@@ -7,19 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
-@class LinkItem;
+@class CHMLinkItem;
 
 
 @interface CHMTableOfContents : NSObject {
-	LinkItem			*rootItems;
+	CHMLinkItem			*rootItems;
 	NSMutableArray		*pageList;
 	
 	NSMutableArray		*itemStack;
-	LinkItem			*curItem;
+	CHMLinkItem			*curItem;
 	
 }
 
-@property (readonly) LinkItem *rootItems;
+@property (readonly) CHMLinkItem *rootItems;
 @property (readonly) NSArray *pageList;
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
@@ -27,12 +27,12 @@
 - (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate;
 
 
-- (LinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack;
+- (CHMLinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack;
 
 - (void)sort;
 
-- (LinkItem *)pageAfterPage:(LinkItem *)item;
-- (LinkItem *)pageBeforePage:(LinkItem *)item;
+- (CHMLinkItem *)pageAfterPage:(CHMLinkItem *)item;
+- (CHMLinkItem *)pageBeforePage:(CHMLinkItem *)item;
 
 @end
 

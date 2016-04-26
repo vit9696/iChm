@@ -16,7 +16,7 @@
 #import "CHMWebView.h"
 #import "CHMExporter.h"
 #import "lcid.h"
-#import "LinkItem.h"
+#import "CHMLinkItem.h"
 
 
 #define MD_DEBUG 1
@@ -817,7 +817,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL *url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem *item = [[self currentDataSource] itemForPath:path withStack:nil];
+	CHMLinkItem *item = [[self currentDataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if (!name || [name length] == 0) {
@@ -931,7 +931,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSInteger selectedRow = [outlineView selectedRow];
 	
 	if (selectedRow >= 0) {
-		LinkItem *topic = [outlineView itemAtRow:selectedRow];
+		CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
 		[self loadPath:[topic path]];
 	}
 }
@@ -970,8 +970,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 - (IBAction)gotoNextPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
-	LinkItem *topic = [outlineView itemAtRow:selectedRow];
-	LinkItem *nextPage = [tocSource pageAfterPage:topic];
+	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
+	CHMLinkItem *nextPage = [tocSource pageAfterPage:topic];
 	if (nextPage) {
 		[self loadPath:[nextPage path]];
 	}
@@ -979,8 +979,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 - (IBAction)gotoPrevPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
-	LinkItem *topic = [outlineView itemAtRow:selectedRow];
-	LinkItem *prevPage = [tocSource pageBeforePage:topic];
+	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
+	CHMLinkItem *prevPage = [tocSource pageBeforePage:topic];
 	if (prevPage) {
 		[self loadPath:[prevPage path]];
 	}
@@ -990,11 +990,11 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSURL *url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem *item = [[self currentDataSource] itemForPath:path withStack:tocStack];
+	CHMLinkItem *item = [[self currentDataSource] itemForPath:path withStack:tocStack];
 
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	
-	for (LinkItem *p in enumerator) {
+	for (CHMLinkItem *p in enumerator) {
 		[outlineView expandItem:p];
 	}
 	
@@ -1667,7 +1667,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 #pragma mark - <NSOutlineViewDataSource>
 - (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem:(id)item {
 	if (item == nil) item = [self currentDataSource].rootItems;
-    return [(LinkItem *)item numberOfChildren];
+    return [(CHMLinkItem *)item numberOfChildren];
 }
 
 
@@ -1677,11 +1677,11 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 - (id)outlineView:(NSOutlineView *)anOutlineView child:(NSInteger)theIndex ofItem:(id)item {
 	if (item == nil) item = [self currentDataSource].rootItems;
-    return [(LinkItem *)item childAtIndex:theIndex];
+    return [(CHMLinkItem *)item childAtIndex:theIndex];
 }
 
 - (id)outlineView:(NSOutlineView *)anOutlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-    return [(LinkItem *)item name];
+    return [(CHMLinkItem *)item name];
 }
 
 

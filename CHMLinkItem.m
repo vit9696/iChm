@@ -1,14 +1,14 @@
 //
-//  LinkItem.m
+//  CHMLinkItem.m
 //  ichm
 //
 //  Created by Mark Douma on 4/19/2016.
 //  Copyright © 2016 Mark Douma LLC. All rights reserved.
 //
 
-#import "LinkItem.h"
+#import "CHMLinkItem.h"
 
-@implementation LinkItem
+@implementation CHMLinkItem
 @synthesize name;
 @synthesize path;
 @synthesize children;
@@ -43,7 +43,7 @@
 	return children.count;
 }
 
-- (LinkItem *)childAtIndex:(NSInteger)n {
+- (CHMLinkItem *)childAtIndex:(NSInteger)n {
 	return [children objectAtIndex:n];
 }
 
@@ -52,21 +52,21 @@
 }
 
 
-- (void)appendChild:(LinkItem *)item {
+- (void)appendChild:(CHMLinkItem *)item {
 	if (children == nil) children = [[NSMutableArray alloc] init];
 	[children addObject:item];
 }
 
 
-- (LinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack {
+- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack {
 	if ([path isEqualToString:aPath])
 		return self;
 	
 	if (!children)
 		return nil;
 	
-	for (LinkItem* item in children) {
-		LinkItem * rslt = [item itemForPath:aPath withStack:stack];
+	for (CHMLinkItem* item in children) {
+		CHMLinkItem * rslt = [item itemForPath:aPath withStack:stack];
 		if (rslt != nil) {
 			if(stack)
 				[stack addObject:self];
@@ -81,7 +81,7 @@
 	if (![path isEqualToString:@"/"])
 		[target performSelector:selector withObject:self];
 		
-	for (LinkItem* item in children) {
+	for (CHMLinkItem* item in children) {
 		[item enumerateItemsWithSelector:selector forTarget:target];
 	}
 }
@@ -98,7 +98,7 @@
 - (void)purge {
 	NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
 	NSUInteger i = 0;
-	for (LinkItem *item in children) {
+	for (CHMLinkItem *item in children) {
 		if (item.name == nil && item.path == nil && item.numberOfChildren == 0)
 			[set addIndex:i];
 		else
@@ -127,7 +127,7 @@
 
 
 
-@implementation ScoredLinkItem
+@implementation CHMScoredLinkItem
 
 @synthesize relScore;
 

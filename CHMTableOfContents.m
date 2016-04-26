@@ -8,7 +8,7 @@
 
 #import "CHMTableOfContents.h"
 #import <libxml/HTMLparser.h>
-#import "LinkItem.h"
+#import "CHMLinkItem.h"
 
 
 #define MD_DEBUG 0
@@ -27,9 +27,9 @@
 - (void)pop_item;
 - (void)new_item;
 
-- (LinkItem *)curItem;
+- (CHMLinkItem *)curItem;
 
-- (void)addToPageList:(LinkItem *)item;
+- (void)addToPageList:(CHMLinkItem *)item;
 @end
 
 
@@ -74,7 +74,7 @@ static htmlSAXHandler saxHandler = {
 	if ((self = [super init])) {
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
-		rootItems = [[LinkItem alloc] initWithName:@"root" path:@"/"];
+		rootItems = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
 		curItem = rootItems;
 		
 		if (!encodingName || [encodingName length] == 0) {
@@ -98,10 +98,10 @@ static htmlSAXHandler saxHandler = {
 
 - (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
 	if ((self = [super init])) {
-		rootItems = [[LinkItem alloc] initWithName:@"root" path:@"/"];
+		rootItems = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
 		NSMutableArray *children = [rootItems children];
 		if (toc) {
-			LinkItem *items = [toc rootItems];
+			CHMLinkItem *items = [toc rootItems];
 			NSArray *src_children = [items children];
 			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
 			[children addObjectsFromArray:results];
@@ -118,11 +118,11 @@ static htmlSAXHandler saxHandler = {
 	[super dealloc];
 }
 
-- (LinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack {
+- (CHMLinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack {
 	if ([path hasPrefix:@"/"]) {
 		path = [path substringFromIndex:1];
 	}
-	LinkItem *item = [rootItems itemForPath:path withStack:stack];
+	CHMLinkItem *item = [rootItems itemForPath:path withStack:stack];
 	if (!item) {
 		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		item = [rootItems itemForPath:encoded_path withStack:stack];
@@ -135,7 +135,7 @@ static htmlSAXHandler saxHandler = {
 	[rootItems sort];
 }
 
-- (LinkItem *)pageAfterPage:(LinkItem *)item {
+- (CHMLinkItem *)pageAfterPage:(CHMLinkItem *)item {
 	NSUInteger idx = [item pageID] + 1;
 	if (idx == [pageList count]) {
 		return nil;
@@ -143,7 +143,7 @@ static htmlSAXHandler saxHandler = {
 	return [pageList objectAtIndex:idx];
 }
 
-- (LinkItem *)pageBeforePage:(LinkItem *)item {
+- (CHMLinkItem *)pageBeforePage:(CHMLinkItem *)item {
 	NSUInteger idx = [item pageID] - 1;
 	if (idx == -1) {
 		return nil;
@@ -152,7 +152,7 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (LinkItem *)curItem {
+- (CHMLinkItem *)curItem {
 	return curItem;
 }
 
@@ -164,8 +164,8 @@ static htmlSAXHandler saxHandler = {
     if ([itemStack count] == 0) {
         [self push_item];
     }
-	LinkItem *parent = [itemStack lastObject];
-	curItem = [[LinkItem alloc] init];
+	CHMLinkItem *parent = [itemStack lastObject];
+	curItem = [[CHMLinkItem alloc] init];
 	[parent appendChild:curItem];
 }
 
@@ -176,10 +176,10 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (void)addToPageList:(LinkItem *)item {
+- (void)addToPageList:(CHMLinkItem *)item {
 	if ([item path] == nil) return;
 	
-	LinkItem *latest = [pageList lastObject];
+	CHMLinkItem *latest = [pageList lastObject];
 	
 	if (latest == nil) {
 		[pageList addObject:item];
@@ -270,7 +270,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 - (id)init {
 	if ((self = [super init])) {
-		rootItems = [[ScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
+		rootItems = [[CHMScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
 	}
 	return self;
 }
@@ -290,7 +290,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 }
 
 - (void)addPath:(NSString *)path score:(CGFloat)score {
-	LinkItem * item = nil;
+	CHMLinkItem * item = nil;
 	if (tableOfContents)
 		item = [tableOfContents itemForPath:path withStack:nil];
 	if (!item && indexContents)
@@ -298,13 +298,13 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 	
 	if (!item)
 		return;
-	ScoredLinkItem *newitem = [[ScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
+	CHMScoredLinkItem *newitem = [[CHMScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
 	[rootItems appendChild:newitem];
 	[newitem release];
 }
 
 - (void)sort {
-	[(ScoredLinkItem *)rootItems sort];
+	[(CHMScoredLinkItem *)rootItems sort];
 }
 
 @end

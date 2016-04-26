@@ -65,7 +65,7 @@
 		[document endExportProgressSheet:nil];
 		return;
 	}
-	LinkItem *page = [pageList objectAtIndex:curPageId];
+	CHMLinkItem *page = [pageList objectAtIndex:curPageId];
 	
 	NSURL *url = [document composeURL:[page path]];
 	NSURLRequest *req = [NSURLRequest requestWithURL:url];

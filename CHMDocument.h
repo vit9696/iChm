@@ -15,7 +15,7 @@
 
 @class CHMTableOfContents;
 @class CHMSearchResults;
-@class LinkItem;
+@class CHMLinkItem;
 @class CHMConsole;
 struct chmFile;
 

@@ -1,5 +1,5 @@
 //
-//  LinkItem.h
+//  CHMLinkItem.h
 //  ichm
 //
 //  Created by Mark Douma on 4/19/2016.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface LinkItem	: NSObject {
+@interface CHMLinkItem	: NSObject {
 	NSString			*name;
 	NSString			*path;
 	NSMutableArray		*children;
@@ -30,17 +30,17 @@
 - (void)purge;
 
 - (NSUInteger)numberOfChildren;
-- (LinkItem *)childAtIndex:(NSInteger)n;
+- (CHMLinkItem *)childAtIndex:(NSInteger)n;
 
-- (void)appendChild:(LinkItem *)item;
+- (void)appendChild:(CHMLinkItem *)item;
 
-- (LinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack;
+- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack;
 - (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
 - (void)sort;
 @end
 
 
-@interface ScoredLinkItem : LinkItem {
+@interface CHMScoredLinkItem : CHMLinkItem {
 	CGFloat			relScore;
 }
 

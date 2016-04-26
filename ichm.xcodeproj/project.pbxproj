@@ -12,7 +12,7 @@
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
-		C14A60191CC6C43900B868C6 /* LinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* LinkItem.m */; };
+		C14A60191CC6C43900B868C6 /* CHMLinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* CHMLinkItem.m */; };
 		C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */; };
 		C15332A01CCD4CFB00C67A97 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = C153329F1CCD4CFB00C67A97 /* view.png */; };
 		C18399691CD00820009FDCDE /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18399641CD00747009FDCDE /* PSMTabBarControl.framework */; };
@@ -204,8 +204,8 @@
 		90C4D9C40E7DCC17006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
 		90C4D9C50E7DCC23006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		90C4D9C60E7DCC31006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
-		C14A60171CC6C43900B868C6 /* LinkItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkItem.h; sourceTree = "<group>"; };
-		C14A60181CC6C43900B868C6 /* LinkItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkItem.m; sourceTree = "<group>"; };
+		C14A60171CC6C43900B868C6 /* CHMLinkItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMLinkItem.h; sourceTree = "<group>"; };
+		C14A60181CC6C43900B868C6 /* CHMLinkItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMLinkItem.m; sourceTree = "<group>"; };
 		C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMImageViewPopUpButton.h; sourceTree = "<group>"; };
 		C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMImageViewPopUpButton.m; sourceTree = "<group>"; };
 		C153329F1CCD4CFB00C67A97 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
@@ -399,8 +399,8 @@
 				C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */,
 				C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */,
 				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
-				C14A60171CC6C43900B868C6 /* LinkItem.h */,
-				C14A60181CC6C43900B868C6 /* LinkItem.m */,
+				C14A60171CC6C43900B868C6 /* CHMLinkItem.h */,
+				C14A60181CC6C43900B868C6 /* CHMLinkItem.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -723,7 +723,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C14A60191CC6C43900B868C6 /* LinkItem.m in Sources */,
+				C14A60191CC6C43900B868C6 /* CHMLinkItem.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				C3DB252A0E2DD49F000E5A20 /* ITSSProtocol.m in Sources */,
 				C3DB252F0E2DD646000E5A20 /* CHMAppController.m in Sources */,
