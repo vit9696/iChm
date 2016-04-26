@@ -29,7 +29,7 @@
 
 - (void)purge;
 
-- (NSInteger)numberOfChildren;
+- (NSUInteger)numberOfChildren;
 - (LinkItem *)childAtIndex:(NSInteger)n;
 
 - (void)appendChild:(LinkItem *)item;

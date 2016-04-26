@@ -18,6 +18,7 @@
 #import "CHMWebView.h"
 #import "CHMExporter.h"
 #import "lcid.h"
+#import "LinkItem.h"
 
 
 #define MD_DEBUG 1
@@ -587,7 +588,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[outlineView setDataSource:tocSource];
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
-	if ([tocSource rootChildrenCount] == 0) {
+	if (tocSource.rootItems.numberOfChildren == 0) {
 		[self hideSidebar:self];
 	}
 	
@@ -930,7 +931,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 - (IBAction)gotoNextPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	LinkItem *topic = [outlineView itemAtRow:selectedRow];
-	LinkItem *nextPage = [tocSource getNextPage:topic];
+	LinkItem *nextPage = [tocSource pageAfterPage:topic];
 	if (nextPage) {
 		[self loadPath:[nextPage path]];
 	}
@@ -939,7 +940,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 - (IBAction)gotoPrevPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	LinkItem *topic = [outlineView itemAtRow:selectedRow];
-	LinkItem *prevPage = [tocSource getPrevPage:topic];
+	LinkItem *prevPage = [tocSource pageBeforePage:topic];
 	if (prevPage) {
 		[self loadPath:[prevPage path]];
 	}

@@ -8,8 +8,18 @@
 
 #import "CHMTableOfContents.h"
 #import <libxml/HTMLparser.h>
-#import "CHMDocument.h"
 #import "LinkItem.h"
+
+
+#define MD_DEBUG 0
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+
 
 
 @interface CHMTableOfContents (Private)
@@ -17,11 +27,14 @@
 - (void)pop_item;
 - (void)new_item;
 
+- (LinkItem *)curItem;
+
 - (void)addToPageList:(LinkItem *)item;
 @end
 
 
 @implementation CHMTableOfContents
+
 @synthesize rootItems;
 @synthesize pageList;
 
@@ -114,15 +127,11 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (NSInteger)rootChildrenCount {
-	return [rootItems numberOfChildren];
-}
-
 - (void)sort {
 	[rootItems sort];
 }
 
-- (LinkItem *)getNextPage:(LinkItem *)item {
+- (LinkItem *)pageAfterPage:(LinkItem *)item {
 	NSUInteger idx = [item pageID] + 1;
 	if (idx == [pageList count]) {
 		return nil;
@@ -130,7 +139,7 @@ static htmlSAXHandler saxHandler = {
 	return [pageList objectAtIndex:idx];
 }
 
-- (LinkItem *)getPrevPage:(LinkItem *)item {
+- (LinkItem *)pageBeforePage:(LinkItem *)item {
 	NSUInteger idx = [item pageID] - 1;
 	if (idx == -1) {
 		return nil;
@@ -263,6 +272,15 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 		return;
 	}
 }
+
+
+- (NSString *)description {
+	NSMutableString *description = [NSMutableString stringWithFormat:@"%@\r", [super description]];
+	[description appendFormat:@"     rootItems == %@", rootItems];
+	
+	return description;
+}
+
 
 @end
 

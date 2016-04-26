@@ -39,8 +39,8 @@
 }
 
 
-- (NSInteger)numberOfChildren {
-	return children ? [children count] : 0;
+- (NSUInteger)numberOfChildren {
+	return children.count;
 }
 
 - (LinkItem *)childAtIndex:(NSInteger)n {
@@ -58,7 +58,7 @@
 }
 
 
-- (LinkItem*)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack {
+- (LinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack {
 	if ([path isEqualToString:aPath])
 		return self;
 	
@@ -97,11 +97,14 @@
 
 - (void)purge {
 	NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
-	for (LinkItem * item in children) {
-		if ([item name] == nil && [item path] == nil && [item numberOfChildren] == 0)
-			[set addIndex:[children indexOfObject:item]];
+	NSUInteger i = 0;
+	for (LinkItem *item in children) {
+		if (item.name == nil && item.path == nil && item.numberOfChildren == 0)
+			[set addIndex:i];
 		else
 			[item purge];
+		
+		i++;
 	}
 	
 	[children removeObjectsAtIndexes:set];
@@ -110,7 +113,14 @@
 
 
 -(NSString *)description {
-    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", name, path, children];
+//    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", name, path, children];
+	NSMutableString *description = [NSMutableString stringWithFormat:@"<%@> %@\r", NSStringFromClass([self class]), self.name];
+	[description appendFormat:@"          path == %@\r\r", path];
+	if (children.count)[description appendFormat:@"          children (%lu) == %@\r\r", (unsigned long)children.count, children];
+	
+	[description replaceOccurrencesOfString:@"\\n" withString:@"\r" options:0 range:NSMakeRange(0, description.length)];
+	[description replaceOccurrencesOfString:@"\\\"" withString:@"          " options:0 range:NSMakeRange(0, description.length)];
+	return description;
 }
 
 @end

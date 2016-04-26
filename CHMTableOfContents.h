@@ -12,9 +12,9 @@
 
 @interface CHMTableOfContents : NSObject <NSOutlineViewDataSource> {
 	LinkItem			*rootItems;
+	NSMutableArray		*pageList;
 	
 	NSMutableArray		*itemStack;
-	NSMutableArray		*pageList;
 	LinkItem			*curItem;
 	
 }
@@ -23,18 +23,16 @@
 @property (readonly) NSArray *pageList;
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
-- (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate*)predicate;
 
-- (LinkItem *)curItem;
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate;
 
-- (LinkItem *)itemForPath:(NSString*)path withStack:(NSMutableArray *)stack;
 
-- (NSInteger)rootChildrenCount;
+- (LinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack;
 
 - (void)sort;
 
-- (LinkItem *)getNextPage:(LinkItem *)item;
-- (LinkItem *)getPrevPage:(LinkItem *)item;
+- (LinkItem *)pageAfterPage:(LinkItem *)item;
+- (LinkItem *)pageBeforePage:(LinkItem *)item;
 
 @end
 
