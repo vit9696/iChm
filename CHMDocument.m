@@ -1017,22 +1017,20 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 #pragma mark export to pdf
 - (IBAction)exportToPDF:(id)sender {
-	NSSavePanel *sp;
-	int runResult;
 	
 	/* create or get the shared instance of NSSavePanel */
-	sp = [NSSavePanel savePanel];
-	[sp setTitle:NSLocalizedString(@"Save as PDF", @"Save as PDF")];
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setTitle:NSLocalizedString(@"Save as PDF", @"Save as PDF")];
 	
-	[sp setRequiredFileType:@"pdf"];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObjects:@"pdf", nil]];
 	
 	/* display the NSSavePanel */
-	runResult = [sp runModalForDirectory:nil file:[[filePath lastPathComponent] stringByDeletingPathExtension]];
+	NSInteger runResult = [savePanel runModalForDirectory:nil file:[[filePath lastPathComponent] stringByDeletingPathExtension]];
 	
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
-		NSString *filename = [sp filename];
-		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:filename WithPageList:[tocSource pageList]];
+		NSURL *URL = [savePanel URL];
+		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[tocSource pageList]];
 		[exporter export];
 		[exporter release];
 		[self showExportProgressSheet:self];

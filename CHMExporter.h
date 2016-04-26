@@ -23,13 +23,14 @@
 	NSUInteger			curPageId;
 	NSInteger			pageCount;
 	WebView				*webView;
-	CGRect				pageRecct;
+	CGRect				pageRect;
 	CGContextRef		ctx;
 	NSArray				*pageList;
 	NSPrintInfo			*printInfo;
 	NSString			*tmpFileName;
 }
 
-- (id)initWithCHMDocument:(CHMDocument*)doc toFileName:(NSString*)filename WithPageList:(NSArray*)list;
+- (id)initWithCHMDocument:(CHMDocument *)doc toFileName:(NSString *)filename pageList:(NSArray *)list;
 - (void)export;
+
 @end
