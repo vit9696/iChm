@@ -15,6 +15,8 @@
 		C14A60191CC6C43900B868C6 /* LinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* LinkItem.m */; };
 		C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */; };
 		C15332A01CCD4CFB00C67A97 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = C153329F1CCD4CFB00C67A97 /* view.png */; };
+		C18399691CD00820009FDCDE /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18399641CD00747009FDCDE /* PSMTabBarControl.framework */; };
+		C183996A1CD0083A009FDCDE /* PSMTabBarControl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C18399641CD00747009FDCDE /* PSMTabBarControl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; };
 		C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */ = {isa = PBXBuildFile; fileRef = C18622321C8F550C00C1DD80 /* CHM.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -30,10 +32,8 @@
 		C33DE50B0E40A651009FF1F4 /* ichm.css in Resources */ = {isa = PBXBuildFile; fileRef = C33DE50A0E40A651009FF1F4 /* ichm.css */; };
 		C33DE67D0E40C40A009FF1F4 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = C33DE67B0E40C40A009FF1F4 /* highlight.js */; };
 		C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
-		C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
+		C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C35B99FA0E39C23400A63BC3 /* redbird.icns in Resources */ = {isa = PBXBuildFile; fileRef = C35B99F90E39C23400A63BC3 /* redbird.icns */; };
-		C35B9BCE0E39E38500A63BC3 /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */; };
-		C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */; };
 		C36FD4240E482D3800496822 /* CHMWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C36FD4230E482D3800496822 /* CHMWebView.xib */; };
 		C36FD52C0E48403F00496822 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C36FD52B0E48403F00496822 /* Localizable.strings */; };
 		C3907F3D0EC005430018AA80 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3907F3C0EC005430018AA80 /* Quartz.framework */; };
@@ -81,6 +81,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = C1083F2E1C934FB100129D9C;
 			remoteInfo = chm_http;
+		};
+		C18399631CD00747009FDCDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 53DF68FD067E5B5A0090B5B0;
+			remoteInfo = PSMTabBarControlFramework;
+		};
+		C18399651CD00747009FDCDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8BD4395A1185147D00DB4AC3;
+			remoteInfo = PSMTabBarControlDemo;
+		};
+		C18399671CD007F9009FDCDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 53DF68FC067E5B5A0090B5B0;
+			remoteInfo = PSMTabBarControlFramework;
 		};
 		C186221A1C8F41F400C1DD80 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -157,7 +178,7 @@
 			files = (
 				C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */,
 				C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */,
-				C35B9BDF0E39E48D00A63BC3 /* PSMTabBarControl.framework in Copy Frameworks */,
+				C183996A1CD0083A009FDCDE /* PSMTabBarControl.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -188,6 +209,7 @@
 		C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMImageViewPopUpButton.h; sourceTree = "<group>"; };
 		C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMImageViewPopUpButton.m; sourceTree = "<group>"; };
 		C153329F1CCD4CFB00C67A97 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
+		C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PSMTabBarControl.xcodeproj; path = PSMTabBarControl/PSMTabBarControl.xcodeproj; sourceTree = "<group>"; };
 		C18622161C8F41F400C1DD80 /* CHM Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Framework.xcodeproj"; path = "chmlib/osx/CHMFramework/CHM Framework.xcodeproj"; sourceTree = "<group>"; };
 		C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Spotlight Importer.xcodeproj"; path = "CHMSpotlightImporter/CHM Spotlight Importer.xcodeproj"; sourceTree = "<group>"; };
 		C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quickchm.xcodeproj; path = CHMQuickLook/quickchm.xcodeproj; sourceTree = "<group>"; };
@@ -209,7 +231,6 @@
 		C33DE6DC0E40CA96009FF1F4 /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		C346DF060E530E8B00A76373 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C35B99F90E39C23400A63BC3 /* redbird.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = redbird.icns; sourceTree = "<group>"; };
-		C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = Frameworks/PSMTabBarControl.framework; sourceTree = SOURCE_ROOT; };
 		C36FD41A0E4829B400496822 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C36FD41D0E482AFA00496822 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C36FD4520E48368C00496822 /* German */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -270,7 +291,7 @@
 				C3907F3D0EC005430018AA80 /* Quartz.framework in Frameworks */,
 				C3907F690EC005B30018AA80 /* ApplicationServices.framework in Frameworks */,
 				C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */,
-				C35B9BCE0E39E38500A63BC3 /* PSMTabBarControl.framework in Frameworks */,
+				C18399691CD00820009FDCDE /* PSMTabBarControl.framework in Frameworks */,
 				C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,7 +303,6 @@
 			isa = PBXGroup;
 			children = (
 				C346DF060E530E8B00A76373 /* Sparkle.framework */,
-				C35B9BCD0E39E38500A63BC3 /* PSMTabBarControl.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -318,6 +338,7 @@
 				C16CEFBF1C8E09F1004DD019 /* chmlib */,
 				C16CF19A1C8E0BB5004DD019 /* Spotlight */,
 				C1C31AA11CBD9853000F2B96 /* QuickLook */,
+				C18399581CD00717009FDCDE /* PSMTabBarControl */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
@@ -414,6 +435,23 @@
 				C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */,
 			);
 			name = Spotlight;
+			sourceTree = "<group>";
+		};
+		C18399581CD00717009FDCDE /* PSMTabBarControl */ = {
+			isa = PBXGroup;
+			children = (
+				C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */,
+			);
+			name = PSMTabBarControl;
+			sourceTree = "<group>";
+		};
+		C183995E1CD00747009FDCDE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C18399641CD00747009FDCDE /* PSMTabBarControl.framework */,
+				C18399661CD00747009FDCDE /* PSMTabBarControlDemo.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C18622171C8F41F400C1DD80 /* Products */ = {
@@ -530,6 +568,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C18399681CD007F9009FDCDE /* PBXTargetDependency */,
 				C1C31AC81CBDA720000F2B96 /* PBXTargetDependency */,
 				C186223D1C8F573000C1DD80 /* PBXTargetDependency */,
 				C186221D1C8F42C700C1DD80 /* PBXTargetDependency */,
@@ -573,6 +612,10 @@
 					ProjectRef = C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */;
 				},
 				{
+					ProductGroup = C183995E1CD00747009FDCDE /* Products */;
+					ProjectRef = C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */;
+				},
+				{
 					ProductGroup = C1C31AA91CBD9876000F2B96 /* Products */;
 					ProjectRef = C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */;
 				},
@@ -611,6 +654,20 @@
 			fileType = "compiled.mach-o.executable";
 			path = chm_http;
 			remoteRef = C17B9C341CB18C06002DD0D2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C18399641CD00747009FDCDE /* PSMTabBarControl.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PSMTabBarControl.framework;
+			remoteRef = C18399631CD00747009FDCDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C18399661CD00747009FDCDE /* PSMTabBarControlDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = PSMTabBarControlDemo.app;
+			remoteRef = C18399651CD00747009FDCDE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C186221B1C8F41F400C1DD80 /* CHM.framework */ = {
@@ -689,6 +746,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C18399681CD007F9009FDCDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PSMTabBarControlFramework;
+			targetProxy = C18399671CD007F9009FDCDE /* PBXContainerItemProxy */;
+		};
 		C186221D1C8F42C700C1DD80 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CHM.framework;

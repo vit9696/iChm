@@ -8,7 +8,6 @@
 
 #import "CHMDocument.h"
 #import <CHM/CHM.h>
-#import <PSMTabBarControl/PSMTabBarControl.h>
 #import "ITSSProtocol.h"
 #import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
