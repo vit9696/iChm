@@ -1,5 +1,5 @@
 //
-//  CHMTableOfContent.m
+//  CHMTableOfContents.m
 //  ichm
 //
 //  Created by Robin Lu on 7/18/08.
@@ -22,7 +22,8 @@
 
 
 
-@interface CHMTableOfContents (Private)
+@interface CHMTableOfContents ()
+
 - (void)push_item;
 - (void)pop_item;
 - (void)new_item;
@@ -35,7 +36,7 @@
 
 @implementation CHMTableOfContents
 
-@synthesize rootItems;
+@synthesize items;
 @synthesize pageList;
 
 static void elementDidStart(CHMTableOfContents *toc, const xmlChar *name, const xmlChar **atts);
@@ -74,8 +75,8 @@ static htmlSAXHandler saxHandler = {
 	if ((self = [super init])) {
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
-		rootItems = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
-		curItem = rootItems;
+		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
+		curItem = items;
 		
 		if (!encodingName || [encodingName length] == 0) {
 			encodingName = @"iso_8859_1";
@@ -88,8 +89,8 @@ static htmlSAXHandler saxHandler = {
 		if (doc) {
 			xmlFreeDoc(doc);
 		}
-		[rootItems purge];
-		[rootItems enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
+		[items purge];
+		[items enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
 	}
 	
 	return self;
@@ -98,11 +99,11 @@ static htmlSAXHandler saxHandler = {
 
 - (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
 	if ((self = [super init])) {
-		rootItems = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
-		NSMutableArray *children = [rootItems children];
+		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
+		NSMutableArray *children = [items children];
 		if (toc) {
-			CHMLinkItem *items = [toc rootItems];
-			NSArray *src_children = [items children];
+			CHMLinkItem *theItems = [toc items];
+			NSArray *src_children = [theItems children];
 			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
 			[children addObjectsFromArray:results];
 		}
@@ -112,7 +113,7 @@ static htmlSAXHandler saxHandler = {
 
 
 - (void)dealloc {
-	[rootItems release];
+	[items release];
 	[itemStack release];
 	[pageList release];
 	[super dealloc];
@@ -122,17 +123,17 @@ static htmlSAXHandler saxHandler = {
 	if ([path hasPrefix:@"/"]) {
 		path = [path substringFromIndex:1];
 	}
-	CHMLinkItem *item = [rootItems itemForPath:path withStack:stack];
+	CHMLinkItem *item = [items itemForPath:path withStack:stack];
 	if (!item) {
 		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		item = [rootItems itemForPath:encoded_path withStack:stack];
+		item = [items itemForPath:encoded_path withStack:stack];
 	}
 	return item;
 }
 
 
 - (void)sort {
-	[rootItems sort];
+	[items sort];
 }
 
 - (CHMLinkItem *)pageAfterPage:(CHMLinkItem *)item {
@@ -256,7 +257,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 - (NSString *)description {
 	NSMutableString *description = [NSMutableString stringWithFormat:@"%@\r", [super description]];
-	[description appendFormat:@"     rootItems == %@", rootItems];
+	[description appendFormat:@"     items == %@", items];
 	
 	return description;
 }
@@ -270,22 +271,22 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 - (id)init {
 	if ((self = [super init])) {
-		rootItems = [[CHMScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
+		items = [[CHMScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
 	}
 	return self;
 }
 
-- (id)initWithTableOfContents:(CHMTableOfContents *)toc indexContents:(CHMTableOfContents *)index {
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc index:(CHMTableOfContents *)anIndex {
 	if ((self = [self init])) {
 		tableOfContents = [toc retain];
-		indexContents = [index retain];
+		index = [anIndex retain];
 	}
 	return self;
 }
 
 - (void)dealloc {
 	[tableOfContents release];
-	[indexContents release];
+	[index release];
 	[super dealloc];
 }
 
@@ -293,18 +294,18 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 	CHMLinkItem * item = nil;
 	if (tableOfContents)
 		item = [tableOfContents itemForPath:path withStack:nil];
-	if (!item && indexContents)
-		item = [indexContents itemForPath:path withStack:nil];
+	if (!item && index)
+		item = [index itemForPath:path withStack:nil];
 	
 	if (!item)
 		return;
 	CHMScoredLinkItem *newitem = [[CHMScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
-	[rootItems appendChild:newitem];
+	[items appendChild:newitem];
 	[newitem release];
 }
 
 - (void)sort {
-	[(CHMScoredLinkItem *)rootItems sort];
+	[(CHMScoredLinkItem *)items sort];
 }
 
 @end

@@ -168,9 +168,9 @@ static BOOL firstDocument = YES;
 	[tableOfContentsPath release];
 	[indexPath release];
 	
-	[tocSource release];
-	[indexSource release];
-	[searchSource release];
+	[tableOfContents release];
+	[index release];
+	[searchResults release];
 	
 	if (skIndex) SKIndexClose(skIndex);
 	
@@ -632,7 +632,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
-	if (tocSource.rootItems.numberOfChildren == 0) {
+	if (tableOfContents.items.numberOfChildren == 0) {
 		[self hideSidebar:self];
 	}
 	
@@ -679,8 +679,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	if (tableOfContentsPath && tableOfContentsPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:tableOfContentsPath];
 		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContents *oldTOC = tocSource;
-		tocSource = newTOC;
+		CHMTableOfContents *oldTOC = tableOfContents;
+		tableOfContents = newTOC;
 		
 		if (oldTOC) {
 			[oldTOC release];
@@ -689,9 +689,9 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	if (indexPath && indexPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:indexPath];
 		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContents *oldTOC = indexSource;
-		indexSource = newTOC;
-		[indexSource sort];
+		CHMTableOfContents *oldTOC = index;
+		index = newTOC;
+		[index sort];
 		
 		if (oldTOC) {
 			[oldTOC release];
@@ -971,7 +971,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 - (IBAction)gotoNextPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-	CHMLinkItem *nextPage = [tocSource pageAfterPage:topic];
+	CHMLinkItem *nextPage = [tableOfContents pageAfterPage:topic];
 	if (nextPage) {
 		[self loadPath:[nextPage path]];
 	}
@@ -980,7 +980,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 - (IBAction)gotoPrevPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-	CHMLinkItem *prevPage = [tocSource pageBeforePage:topic];
+	CHMLinkItem *prevPage = [tableOfContents pageBeforePage:topic];
 	if (prevPage) {
 		[self loadPath:[prevPage path]];
 	}
@@ -1071,7 +1071,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
 		NSURL *URL = [savePanel URL];
-		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[tocSource pageList]];
+		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[tableOfContents pageList]];
 		[exporter export];
 		[exporter release];
 		[self showExportProgressSheet:self];
@@ -1372,8 +1372,8 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		
 		isSearching = NO;
 		
-		[searchSource release];
-		searchSource = nil;
+		[searchResults release];
+		searchResults = nil;
 		
 		[outlineView reloadData];
 		
@@ -1394,14 +1394,14 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	if (searchMode == CHMDocumentSearchInIndex) {
 		
-		[searchSource release];
-		searchSource = nil;
+		[searchResults release];
+		searchResults = nil;
 		
-		if (indexSource == nil) return;
+		if (index == nil) return;
 		
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-//		searchSource = [[CHMTableOfContents alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
-		searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
+//		searchResults = [[CHMTableOfContents alloc] initWithTableOfContents:index filterByPredicate:predicate];
+		searchResults = [[CHMSearchResults alloc] initWithTableOfContents:index filterByPredicate:predicate];
 		
 		[outlineView deselectAll:self];
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
@@ -1412,11 +1412,11 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	// search in file
 	
-	[searchSource release];
+	[searchResults release];
 	
-	searchSource = [[CHMSearchResults alloc] initWithTableOfContents:tocSource indexContents:indexSource];
+	searchResults = [[CHMSearchResults alloc] initWithTableOfContents:tableOfContents index:index];
 	
-	if (indexSource == nil && tocSource == nil) return;
+	if (index == nil && tableOfContents == nil) return;
 	
 	SKSearchOptions options = kSKSearchOptionDefault;
 	SKIndexFlush(skIndex);
@@ -1465,10 +1465,10 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 			
             NSURL *url = [(id)SKDocumentCopyURL(doc) autorelease];
 			
-			[searchSource addPath:[url path] score:foundScores[pos]];
+			[searchResults addPath:[url path] score:foundScores[pos]];
         }
     }
-	[searchSource sort];
+	[searchResults sort];
 	[outlineView deselectAll:self];
 	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
@@ -1591,12 +1591,12 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	if (action == @selector(changeSearchMode:)) {
 		[menuItem setState:searchMode == tag];
 		if (tag == CHMDocumentSearchInIndex) {
-			return (indexSource != nil);
+			return (index != nil);
 		}
 	} else if (action == @selector(changeViewMode:)) {
 		[menuItem setState:viewMode == tag];
 		if (tag == CHMDocumentViewIndex) {
-			return (indexSource != nil);
+			return (index != nil);
 		}
 	} else if (action == @selector(changeEncoding:)) {
 		[menuItem setState:customEncoding == tag];
@@ -1652,12 +1652,12 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 - (CHMTableOfContents *)currentDataSource {
 	if (isSearching) {
-		return searchSource;
+		return searchResults;
 	} else {
 		if (viewMode == CHMDocumentViewTableOfContents) {
-			return tocSource;
+			return tableOfContents;
 		} else if (viewMode == CHMDocumentViewIndex) {
-			return indexSource;
+			return index;
 		}
 	}
 	return nil;
@@ -1666,7 +1666,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 #pragma mark - <NSOutlineViewDataSource>
 - (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem:(id)item {
-	if (item == nil) item = [self currentDataSource].rootItems;
+	if (item == nil) item = [self currentDataSource].items;
     return [(CHMLinkItem *)item numberOfChildren];
 }
 
@@ -1676,7 +1676,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 - (id)outlineView:(NSOutlineView *)anOutlineView child:(NSInteger)theIndex ofItem:(id)item {
-	if (item == nil) item = [self currentDataSource].rootItems;
+	if (item == nil) item = [self currentDataSource].items;
     return [(CHMLinkItem *)item childAtIndex:theIndex];
 }
 

@@ -66,9 +66,9 @@ typedef NSUInteger CHMDocumentViewMode;
     NSString						*tableOfContentsPath;
     NSString						*indexPath;
 	
-	CHMTableOfContents				*tocSource;
-	CHMTableOfContents				*indexSource;
-	CHMSearchResults				*searchSource;
+	CHMTableOfContents				*tableOfContents;
+	CHMTableOfContents				*index;
+	CHMSearchResults				*searchResults;
 	
 	CHMDocumentSearchMode			searchMode;
 	CHMDocumentViewMode				viewMode;

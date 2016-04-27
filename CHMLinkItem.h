@@ -34,7 +34,7 @@
 
 - (void)appendChild:(CHMLinkItem *)item;
 
-- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray*)stack;
+- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack;
 - (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
 - (void)sort;
 @end

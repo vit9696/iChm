@@ -1,5 +1,5 @@
 //
-//  CHMTableOfContent.h
+//  CHMTableOfContents.h
 //  ichm
 //
 //  Created by Robin Lu on 7/18/08.
@@ -11,7 +11,7 @@
 
 
 @interface CHMTableOfContents : NSObject {
-	CHMLinkItem			*rootItems;
+	CHMLinkItem			*items;
 	NSMutableArray		*pageList;
 	
 	NSMutableArray		*itemStack;
@@ -19,7 +19,7 @@
 	
 }
 
-@property (readonly) CHMLinkItem *rootItems;
+@property (readonly) CHMLinkItem *items;
 @property (readonly) NSArray *pageList;
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
@@ -39,10 +39,10 @@
 
 @interface CHMSearchResults : CHMTableOfContents {
 	CHMTableOfContents *tableOfContents;
-	CHMTableOfContents *indexContents;
+	CHMTableOfContents *index;
 }
 
-- (id)initWithTableOfContents:(CHMTableOfContents *)toc indexContents:(CHMTableOfContents *)index;
+- (id)initWithTableOfContents:(CHMTableOfContents *)toc index:(CHMTableOfContents *)anIndex;
 - (void)addPath:(NSString *)path score:(CGFloat)score;
 @end
 
