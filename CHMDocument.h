@@ -34,9 +34,9 @@ typedef NSUInteger CHMDocumentViewMode;
 
 
 #ifdef MAC_OS_X_VERSION_10_11
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
 #else
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource> {
 #endif
 	
 	IBOutlet PSMTabBarControl		*tabBar;
@@ -71,6 +71,7 @@ typedef NSUInteger CHMDocumentViewMode;
 	
 	CHMDocumentSearchMode			searchMode;
 	CHMDocumentViewMode				viewMode;
+	BOOL							isSearching;
 	
 	SKIndexRef						skIndex;
 	NSMutableData					*searchIndexObject;

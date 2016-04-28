@@ -117,6 +117,8 @@ static BOOL firstDocument = YES;
 
 - (IBAction)hideSidebar:(id)sender;
 
+- (CHMTableOfContents *)currentDataSource;
+
 @end
 
 
@@ -629,7 +631,6 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[self setupTabBar];
 	[self addNewTab:self];
 	
-	[outlineView setDataSource:tocSource];
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
 	if (tocSource.rootItems.numberOfChildren == 0) {
@@ -817,7 +818,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	// set label for tab bar
 	NSURL *url = [[[frame dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
-	LinkItem *item = [(CHMTableOfContents *)[outlineView dataSource] itemForPath:path withStack:nil];
+	LinkItem *item = [[self currentDataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
 	NSString *name = [item name];
 	if (!name || [name length] == 0) {
@@ -990,8 +991,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSURL *url = [[[[curWebView mainFrame] dataSource] request] URL];
 	NSString *path = [self extractPathFromURL:url];
 	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	LinkItem *item = [(CHMTableOfContents *)[outlineView dataSource] itemForPath:path withStack:tocStack];
-	
+	LinkItem *item = [[self currentDataSource] itemForPath:path withStack:tocStack];
+
 	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
 	
 	for (LinkItem *p in enumerator) {
@@ -1355,7 +1356,6 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 #if MD_DEBUG
 	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 #endif
-	
 	if (searchMode == CHMDocumentSearchInFile) {
 		
 		// waiting for the building of index
@@ -1371,23 +1371,27 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	if (searchString.length == 0) {
 		
+		isSearching = NO;
+		
+		[searchSource release];
+		searchSource = nil;
+		
+		[outlineView reloadData];
+		
 		if (viewMode == CHMDocumentViewTableOfContents) {
-			[outlineView setDataSource:tocSource];
 			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
 			[self locateTOC:sender];
 			
 		} else if (viewMode == CHMDocumentViewIndex) {
-			[outlineView setDataSource:indexSource];
 			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
 			
 		}
-		[outlineView reloadData];
 		
-		[searchSource release];
-		searchSource = nil;
 		[self removeHighlight];
 		return;
 	}
+	
+	isSearching = YES;
 	
 	if (searchMode == CHMDocumentSearchInIndex) {
 		
@@ -1401,7 +1405,6 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		searchSource = [[CHMSearchResults alloc] initWithTableOfContents:indexSource filterByPredicate:predicate];
 		
 		[outlineView deselectAll:self];
-		[outlineView setDataSource:searchSource];
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 		
 		[outlineView reloadData];
@@ -1468,7 +1471,6 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
     }
 	[searchSource sort];
 	[outlineView deselectAll:self];
-	[outlineView setDataSource:searchSource];
 	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
 	[outlineView reloadData];
@@ -1567,7 +1569,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	}
 	
 	[self setupTOCSource];
-	[outlineView setDataSource:tocSource];
+	[outlineView reloadData];
 	[self locateTOC:self];
 }
 
@@ -1647,6 +1649,45 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[self changeTopic:self];
 }
 
+#pragma mark -
+
+- (CHMTableOfContents *)currentDataSource {
+	if (isSearching) {
+		return searchSource;
+	} else {
+		if (viewMode == CHMDocumentViewTableOfContents) {
+			return tocSource;
+		} else if (viewMode == CHMDocumentViewIndex) {
+			return indexSource;
+		}
+	}
+	return nil;
+}
+
+
+#pragma mark - <NSOutlineViewDataSource>
+- (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem:(id)item {
+	if (item == nil) item = [self currentDataSource].rootItems;
+    return [(LinkItem *)item numberOfChildren];
+}
+
+
+- (BOOL)outlineView:(NSOutlineView *)anOutlineView isItemExpandable:(id)item {
+    return [item numberOfChildren] > 0;
+}
+
+- (id)outlineView:(NSOutlineView *)anOutlineView child:(NSInteger)theIndex ofItem:(id)item {
+	if (item == nil) item = [self currentDataSource].rootItems;
+    return [(LinkItem *)item childAtIndex:theIndex];
+}
+
+- (id)outlineView:(NSOutlineView *)anOutlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
+    return [(LinkItem *)item name];
+}
+
+
+
+#pragma mark <NSOutlineViewDataSource>
 #pragma mark - Bookmark
 - (IBAction)showAddBookmark:(id)sender {
 	CHMAppController *chmapp = [NSApp delegate];
@@ -1662,17 +1703,16 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	if (viewMode == tag) return;
 	self.viewMode = tag;
 	
+	[outlineView reloadData];
+	
 	if (viewMode == CHMDocumentViewTableOfContents) {
-		[outlineView setDataSource:tocSource];
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
 		[self locateTOC:sender];
 		
 	} else if (viewMode == CHMDocumentViewIndex) {
-		[outlineView setDataSource:indexSource];
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
 		
 	}
-	[outlineView reloadData];
 }
 
 

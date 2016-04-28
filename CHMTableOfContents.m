@@ -152,30 +152,6 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-#pragma mark - <NSOutlineViewDataSource>
-- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
-	if (item == nil) item = rootItems;
-    return [item numberOfChildren];
-}
-
-
-- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
-    return [item numberOfChildren] > 0;
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)theIndex ofItem:(id)item {
-	if (item == nil) item = rootItems;
-    return [(LinkItem *)item childAtIndex:theIndex];
-}
-
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
-    return [item name];
-}
-
-#pragma mark <NSOutlineViewDataSource>
-#pragma mark -
-
-
 - (LinkItem *)curItem {
 	return curItem;
 }

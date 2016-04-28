@@ -92,6 +92,7 @@
                                                         </tableColumn>
                                                     </tableColumns>
                                                     <connections>
+                                                        <outlet property="dataSource" destination="-2" id="h7a-eZ-8y3"/>
                                                         <outlet property="delegate" destination="-2" id="100130"/>
                                                         <outlet property="menu" destination="100115" id="100120"/>
                                                     </connections>

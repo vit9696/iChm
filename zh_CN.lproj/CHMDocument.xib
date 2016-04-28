@@ -92,6 +92,7 @@
                                                         </tableColumn>
                                                     </tableColumns>
                                                     <connections>
+                                                        <outlet property="dataSource" destination="-2" id="oat-BB-NUS"/>
                                                         <outlet property="delegate" destination="-2" id="100130"/>
                                                         <outlet property="menu" destination="100115" id="100120"/>
                                                     </connections>
@@ -144,7 +145,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="100033"/>
             </connections>
-            <point key="canvasLocation" x="468.5" y="482.5"/>
+            <point key="canvasLocation" x="520.5" y="441.5"/>
         </window>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="100064" userLabel="History Toolbar">
@@ -185,6 +186,7 @@
                     </connections>
                 </searchField>
             </subviews>
+            <point key="canvasLocation" x="244" y="934"/>
         </customView>
         <customView id="100099" userLabel="Zoom">
             <rect key="frame" x="0.0" y="0.0" width="97" height="40"/>
@@ -215,6 +217,7 @@
                     </connections>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="291" y="826.5"/>
         </menu>
         <customView id="100123" userLabel="Home">
             <rect key="frame" x="0.0" y="0.0" width="98" height="43"/>

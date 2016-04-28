@@ -10,7 +10,7 @@
 @class LinkItem;
 
 
-@interface CHMTableOfContents : NSObject <NSOutlineViewDataSource> {
+@interface CHMTableOfContents : NSObject {
 	LinkItem			*rootItems;
 	NSMutableArray		*pageList;
 	
@@ -37,7 +37,7 @@
 @end
 
 
-@interface CHMSearchResults : CHMTableOfContents <NSOutlineViewDataSource> {
+@interface CHMSearchResults : CHMTableOfContents {
 	CHMTableOfContents *tableOfContents;
 	CHMTableOfContents *indexContents;
 }
