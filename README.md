@@ -1,4 +1,6 @@
 # iChm is a chm file reader for Mac OS X #
+###Developer Notes:###
+To build this fork of `iChm` (and its submodules), you’ll need at least Xcode 5.1 in OS X 10.9 (Mavericks).
 
 ###Features###
 

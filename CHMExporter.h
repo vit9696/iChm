@@ -8,20 +8,26 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <AvailabilityMacros.h>
 
 @class CHMDocument;
 
 
+#ifdef MAC_OS_X_VERSION_10_11
 @interface CHMExporter : NSObject <WebFrameLoadDelegate> {
-	CHMDocument *document;
-	NSUInteger curPageId;
-	NSInteger pageCount;
-	WebView *webView;
-	CGRect pageRecct;
-	CGContextRef ctx;
-	NSArray *pageList;
-	NSPrintInfo * printInfo;
-	NSString *tmpFileName;
+#else
+@interface CHMExporter : NSObject {
+#endif
+	
+	CHMDocument			*document;
+	NSUInteger			curPageId;
+	NSInteger			pageCount;
+	WebView				*webView;
+	CGRect				pageRecct;
+	CGContextRef		ctx;
+	NSArray				*pageList;
+	NSPrintInfo			*printInfo;
+	NSString			*tmpFileName;
 }
 
 - (id)initWithCHMDocument:(CHMDocument*)doc toFileName:(NSString*)filename WithPageList:(NSArray*)list;

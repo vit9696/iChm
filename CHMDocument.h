@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
+#import <AvailabilityMacros.h>
 
 @class CHMTableOfContent;
 @class CHMSearchResult;
@@ -17,7 +18,13 @@
 @class CHMConsole;
 struct chmFile;
 
+
+#ifdef MAC_OS_X_VERSION_10_11
 @interface CHMDocument : NSDocument <NSToolbarDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+#else
+@interface CHMDocument : NSDocument <NSToolbarDelegate> {
+#endif
+	
 	IBOutlet PSMTabBarControl		*tabBar;
 	IBOutlet NSTabView				*docTabView;
 	IBOutlet NSOutlineView			*tocView;
