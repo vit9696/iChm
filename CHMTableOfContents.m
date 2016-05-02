@@ -11,7 +11,7 @@
 #import "CHMLinkItem.h"
 
 
-#define MD_DEBUG 0
+#define MD_DEBUG 1
 
 #if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
@@ -23,6 +23,7 @@
 
 
 @interface CHMTableOfContents ()
+
 
 - (void)push_item;
 - (void)pop_item;
@@ -71,10 +72,14 @@ static htmlSAXHandler saxHandler = {
 };
 
 
-- (id)initWithData:(NSData *)data encodingName:(NSString*)encodingName {
+- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	if ((self = [super init])) {
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
+		itemsAndPaths = [[NSMutableDictionary alloc] init];
+		
 		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
 		curItem = items;
 		
@@ -91,6 +96,14 @@ static htmlSAXHandler saxHandler = {
 		}
 		[items purge];
 		[items enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
+		
+		for (CHMLinkItem *item in pageList) {
+			NSString *path = item.path;
+			if (path) [itemsAndPaths setObject:item forKey:path];
+		}
+		
+//		MDLog(@"[%@ %@] itemsAndPaths == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), itemsAndPaths);
+		
 	}
 	
 	return self;
@@ -98,6 +111,7 @@ static htmlSAXHandler saxHandler = {
 
 
 - (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	if ((self = [super init])) {
 		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
 		NSMutableArray *children = [items children];
@@ -116,6 +130,7 @@ static htmlSAXHandler saxHandler = {
 	[items release];
 	[itemStack release];
 	[pageList release];
+	[itemsAndPaths release];
 	[super dealloc];
 }
 
@@ -127,6 +142,23 @@ static htmlSAXHandler saxHandler = {
 	if (!item) {
 		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 		item = [items itemForPath:encoded_path withStack:stack];
+	}
+	return item;
+}
+
+- (CHMLinkItem *)itemAtPath:(NSString *)aPath {
+	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+	
+	if ([aPath hasPrefix:@"/"]) aPath = [aPath substringFromIndex:1];
+	
+	CHMLinkItem *item = [itemsAndPaths objectForKey:aPath];
+	
+	if (item == nil) {
+		NSString *encodedPath = [aPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		
+		NSLog(@"[%@ %@] no item found at \"%@\", trying at \"%@\" instead...", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath, encodedPath);
+		
+		item = [itemsAndPaths objectForKey:encodedPath];
 	}
 	return item;
 }

@@ -11,11 +11,12 @@
 
 
 @interface CHMTableOfContents : NSObject {
-	CHMLinkItem			*items;
-	NSMutableArray		*pageList;
+	CHMLinkItem				*items;
+	NSMutableArray			*pageList;
+	NSMutableDictionary		*itemsAndPaths;
 	
-	NSMutableArray		*itemStack;
-	CHMLinkItem			*curItem;
+	NSMutableArray			*itemStack;
+	CHMLinkItem				*curItem;
 	
 }
 
@@ -26,6 +27,7 @@
 
 - (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate;
 
+- (CHMLinkItem *)itemAtPath:(NSString *)aPath;
 
 - (CHMLinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack;
 
