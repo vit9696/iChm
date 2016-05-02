@@ -8,11 +8,30 @@
 
 #import "CHMLinkItem.h"
 
+
+#define MD_DEBUG 1
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+
+
+@interface CHMLinkItem ()
+
+@property (nonatomic, assign) CHMLinkItem *parent;
+
+@end
+
+
 @implementation CHMLinkItem
 @synthesize name;
 @synthesize path;
 @synthesize children;
 @synthesize pageID;
+@synthesize parent;
 
 @dynamic uppercaseName;
 
@@ -43,7 +62,7 @@
 	return children.count;
 }
 
-- (CHMLinkItem *)childAtIndex:(NSInteger)n {
+- (CHMLinkItem *)childAtIndex:(NSUInteger)n {
 	return [children objectAtIndex:n];
 }
 
@@ -55,6 +74,7 @@
 - (void)appendChild:(CHMLinkItem *)item {
 	if (children == nil) children = [[NSMutableArray alloc] init];
 	[children addObject:item];
+	item.parent = self;
 }
 
 
@@ -77,6 +97,19 @@
 	return nil;
 }
 
+- (NSArray *)ancestors {
+	if (parent == nil) return nil;
+	NSMutableArray *ancestors = [NSMutableArray array];
+	[ancestors addObject:parent];
+	NSArray *parentsAncestors = [parent ancestors];
+	
+	if (parentsAncestors.count) {
+		[ancestors insertObjects:parentsAncestors atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, parentsAncestors.count)]];
+	}
+	return ancestors;
+}
+
+
 - (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target {
 	if (![path isEqualToString:@"/"])
 		[target performSelector:selector withObject:self];
@@ -87,12 +120,13 @@
 }
 
 - (void)sort {
-	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"uppercaseName" ascending:YES];
-	NSMutableArray * sda = [[NSMutableArray alloc] init];
-	[sda addObject:sd];
-	[children sortUsingDescriptors:sda];
-	[sda release];
-	[sd release];
+	static NSArray *sortDescriptors = nil;
+	
+	if (sortDescriptors == nil) {
+		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"uppercaseName" ascending:YES] autorelease];
+		sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+	}
+	[children sortUsingDescriptors:sortDescriptors];
 }
 
 - (void)purge {
@@ -116,7 +150,8 @@
 //    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", name, path, children];
 	NSMutableString *description = [NSMutableString stringWithFormat:@"<%@> %@\r", NSStringFromClass([self class]), self.name];
 	[description appendFormat:@"          path == %@\r\r", path];
-	if (children.count)[description appendFormat:@"          children (%lu) == %@\r\r", (unsigned long)children.count, children];
+	if (children.count) [description appendFormat:@"          children (%lu)\r\r", (unsigned long)children.count];
+//	if (children.count) [description appendFormat:@"          children (%lu) == %@\r\r", (unsigned long)children.count, children];
 	
 	[description replaceOccurrencesOfString:@"\\n" withString:@"\r" options:0 range:NSMakeRange(0, description.length)];
 	[description replaceOccurrencesOfString:@"\\\"" withString:@"          " options:0 range:NSMakeRange(0, description.length)];

@@ -14,6 +14,9 @@
 	NSString			*path;
 	NSMutableArray		*children;
 	NSUInteger			pageID;
+	
+	CHMLinkItem			*parent;		// non-retained
+	
 }
 
 
@@ -24,17 +27,21 @@
 @property (nonatomic, retain) NSMutableArray *children;
 @property (nonatomic, assign) NSUInteger pageID;
 
+@property (readonly, nonatomic, assign) CHMLinkItem *parent;
+
 @property (readonly, nonatomic, retain) NSString *uppercaseName;
 
 
 - (void)purge;
 
 - (NSUInteger)numberOfChildren;
-- (CHMLinkItem *)childAtIndex:(NSInteger)n;
+- (CHMLinkItem *)childAtIndex:(NSUInteger)n;
 
 - (void)appendChild:(CHMLinkItem *)item;
 
 - (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack;
+- (NSArray *)ancestors;
+
 - (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
 - (void)sort;
 @end
