@@ -9,106 +9,140 @@
 #import "CHMTableOfContents.h"
 #import "CHMDocument.h"
 #import "ITSSProtocol.h"
+#import "CHMLinkItem.h"
+
+
+#define MD_DEBUG 0
+
+#if MD_DEBUG
+#define MDLog(...) NSLog(__VA_ARGS__)
+#else
+#define MDLog(...)
+#endif
+
+
+@interface CHMExporter ()
+
+- (void)exportNextPage;
+
+@end
 
 
 @implementation CHMExporter
 
+@synthesize delegate;
 
-- (id)initWithCHMDocument:(CHMDocument*)doc toFileName:(NSString*)filename pageList:(NSArray*)list {
+
+- (id)initWithDocument:(CHMDocument *)document destinationURL:(NSURL *)destinationURL pageList:(NSArray *)list {
 	
 	if ((self = [super init])) {
-		document = [doc retain];
 		pageList = list;
 		
-		pageCount = 0;
-		curPageId = 0;
+		cumulativeExportedPDFPageCount = 0;
+		currentPageListItemIndex = 0;
+		
 		webView = [[WebView alloc] init];
 		[webView setPolicyDelegate:document];
 		[webView setFrameLoadDelegate:self];
 		[webView setResourceLoadDelegate:document];
 		
-		NSURL *fileURL = [NSURL fileURLWithPath:filename];
-		
 		NSPrintInfo *sharedInfo = [document printInfo];
 		NSMutableDictionary *printInfoDict = [NSMutableDictionary dictionaryWithDictionary:[sharedInfo dictionary]];
 		[printInfoDict setObject:NSPrintSaveJob forKey:NSPrintJobDisposition];
 		
-		tmpFileName = [[NSString stringWithFormat:@"%@/ichm-export.pdf", NSTemporaryDirectory()] retain];
+		NSString *tempDirPathTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:@"com.markdouma.iChm.export.XXXXXXXX"];
 		
-		[printInfoDict setObject:tmpFileName forKey:NSPrintSavePath];
+		char *tempDirPath = mkdtemp((char *)[tempDirPathTemplate fileSystemRepresentation]);
+		
+		if (tempDirPath) tempDirPathTemplate = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempDirPath length:strlen(tempDirPath)];
+		
+		tempDirURL = [[NSURL fileURLWithPath:tempDirPathTemplate] retain];
+		tempFileURL = [[tempDirURL URLByAppendingPathComponent:@"ichm-export.pdf"] retain];
+		
+		[printInfoDict setObject:tempFileURL forKey:NSPrintJobSavingURL];
 		
 		printInfo = [[NSPrintInfo alloc] initWithDictionary:printInfoDict];
-		[printInfo setHorizontalPagination: NSAutoPagination];
-		[printInfo setVerticalPagination: NSAutoPagination];
+		[printInfo setHorizontalPagination:NSAutoPagination];
+		[printInfo setVerticalPagination:NSAutoPagination];
 		[printInfo setVerticallyCentered:NO];
 		
 		NSSize pageSize = [printInfo paperSize];
 		pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
-		ctx = CGPDFContextCreateWithURL((CFURLRef)fileURL, &pageRect, NULL);
-		[self retain];
+		ctx = CGPDFContextCreateWithURL((CFURLRef)destinationURL, &pageRect, NULL);
 	}
 	return self;
 }
 
 
 - (void)dealloc {
+	delegate = nil;
 	CGPDFContextClose(ctx);
-	[tmpFileName release];
 	[printInfo release];
 	[webView release];
-	[document release];
+	[tempDirURL release];
+	[tempFileURL release];
 	[super dealloc];
 }
 
 
-- (void)export {
-	if (curPageId == [pageList count]) {
-		[self release];
-		[document endExportProgressSheet:nil];
-		return;
+- (void)cleanup {
+	NSError *error = nil;
+	if (![[NSFileManager defaultManager] removeItemAtURL:tempDirURL error:&error]) {
+		NSLog(@"[%@ %@] *** ERROR: failed to remove item at \%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tempDirURL.path);
 	}
-	CHMLinkItem *page = [pageList objectAtIndex:curPageId];
-	
-	NSURL *url = [NSURL chm__itssURLWithPath:[page path]];
-	NSURLRequest *req = [NSURLRequest requestWithURL:url];
-	[[webView mainFrame] loadRequest:req];
-	
-	double rate = 100.0 * curPageId / [pageList count];
-	[document exportedProgressRate:rate PageCount:pageCount];
+}
+
+- (void)beginExport {
+	[delegate exporterDidBeginExporting:self];
+	[self exportNextPage];
 }
 
 
-#pragma mark WebFrameLoadDelegate
+- (void)exportNextPage {
+	if (currentPageListItemIndex == pageList.count) {
+		[self cleanup];
+		[delegate exporterDidFinishExporting:self];
+		return;
+	}
+	
+	CHMLinkItem *item = [pageList objectAtIndex:currentPageListItemIndex];
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL chm__itssURLWithPath:item.path]];
+	[[webView mainFrame] loadRequest:request];
+	[delegate exporter:self didExportPage:cumulativeExportedPDFPageCount percentageComplete:100.0 * currentPageListItemIndex / pageList.count];
+}
+
+
+#pragma mark - <WebFrameLoadDelegate>
 - (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-	curPageId += 1;
-	[self export];
+	currentPageListItemIndex++;
+	[self exportNextPage];
 }
 
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-	curPageId += 1;
-	[self export];
+	currentPageListItemIndex++;
+	[self exportNextPage];
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
 	NSView *docView = [[[webView mainFrame] frameView] documentView];
 	NSPrintOperation *op = [NSPrintOperation printOperationWithView:docView printInfo:printInfo];
-	[op setShowPanels:NO];
+	[op setShowsPrintPanel:NO];
+	[op setShowsProgressPanel:NO];
 	[op runOperation];
 	
-	NSURL *url = [NSURL fileURLWithPath:tmpFileName];
-	CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithURL((CFURLRef)url);
+	CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithURL((CFURLRef)tempFileURL);
 	size_t count = CGPDFDocumentGetNumberOfPages(pdfDoc);
 	for (size_t i = 0; i < count; ++i) {
 		CGPDFPageRef page = CGPDFDocumentGetPage(pdfDoc, i + 1);
 		CGContextBeginPage(ctx, &pageRect);
 		CGContextDrawPDFPage(ctx, page);
 		CGContextEndPage(ctx);
-		++pageCount;
+		++cumulativeExportedPDFPageCount;
 	}
 	CGPDFDocumentRelease(pdfDoc);
 	
-	curPageId += 1;
-	[self export];
+	currentPageListItemIndex++;
+	[self exportNextPage];
 }
 
 @end

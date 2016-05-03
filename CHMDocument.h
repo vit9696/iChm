@@ -12,6 +12,7 @@
 #import <AvailabilityMacros.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
 #import "CHMDocumentFile.h"
+#import "CHMExporter.h"
 
 
 @class CHMLinkItem;
@@ -27,9 +28,9 @@ typedef NSUInteger CHMDocumentViewMode;
 
 
 #ifdef MAC_OS_X_VERSION_10_11
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate, CHMExporterDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
 #else
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate, CHMExporterDelegate> {
 #endif
 	
 	IBOutlet PSMTabBarControl		*tabBar;
@@ -69,6 +70,8 @@ typedef NSUInteger CHMDocumentViewMode;
 	
 	CHMLinkItem						*currentItem;
 	
+	CHMExporter						*exporter;
+	
 }
 
 @property (readonly) NSString *filePath;
@@ -101,9 +104,6 @@ typedef NSUInteger CHMDocumentViewMode;
 
 // dump to pdf
 - (IBAction)exportToPDF:(id)sender;
-- (IBAction)showExportProgressSheet:(id)sender;
-- (IBAction)endExportProgressSheet:(id)sender;
-- (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count;
 
 // search
 - (IBAction)changeSearchMode:(id)sender;

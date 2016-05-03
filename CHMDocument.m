@@ -13,7 +13,6 @@
 #import "CHMAppController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
-#import "CHMExporter.h"
 #import "CHMLinkItem.h"
 #import "CHMSearchResult.h"
 
@@ -157,6 +156,8 @@ static BOOL firstDocument = YES;
 	
 	[searchResults release];
 	
+	exporter.delegate = nil;
+	[exporter release];
 	[super dealloc];
 }
 
@@ -177,6 +178,8 @@ static BOOL firstDocument = YES;
 	
 	[self setupTabBar];
 	[self addNewTab:self];
+	
+	[exportProgressIndicator setUsesThreadedAnimation:YES];
 	
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
@@ -581,32 +584,41 @@ static BOOL firstDocument = YES;
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
 		NSURL *URL = [savePanel URL];
-		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[documentFile.tableOfContents pageList]];
-		[exporter export];
-		[exporter release];
-		[self showExportProgressSheet:self];
+		exporter = [[CHMExporter alloc] initWithDocument:self destinationURL:URL pageList:documentFile.tableOfContents.pageList];
+		exporter.delegate = self;
+		[exporter beginExport];
 	}
 }
 
-- (IBAction)showExportProgressSheet:(id)sender {
+
+#pragma mark - <CHMExporterDelegate>
+- (void)exporterDidBeginExporting:(CHMExporter *)anExporter {
+//	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	[exportProgressIndicator setIndeterminate:NO];
+	[exportNoticeLabel setStringValue:NSLocalizedString(@"Save as PDF", @"Save as PDF")];
 	[NSApp beginSheet:exportProgressSheet modalForWindow:documentWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
-	[exportProgressIndicator setIndeterminate:FALSE];
 }
 
-- (IBAction)endExportProgressSheet:(id)sender {
-	[NSApp endSheet:exportProgressSheet];
-	[exportProgressSheet orderOut:sender];
-}
 
-- (void)exportedProgressRate:(double)rate PageCount:(NSInteger)count {
+- (void)exporter:(CHMExporter *)anExporter didExportPage:(NSUInteger)page percentageComplete:(CGFloat)percentageComplete {
 	NSString *title = NSLocalizedString(@"Save as PDF", @"Save as PDF");
-	NSString *label = [NSString stringWithFormat:@"%@ : %ld %@", title, (long)count, NSLocalizedString(@"pages", @"pages")];
+	NSString *label = [NSString stringWithFormat:@"%@ : %lu %@", title, (unsigned long)page, NSLocalizedString(@"pages", @"pages")];
 	[exportNoticeLabel setStringValue:label];
-	[exportProgressIndicator setDoubleValue:rate];
+	[exportProgressIndicator setDoubleValue:percentageComplete];
 }
 
 
-# pragma mark - TabVew
+- (void)exporterDidFinishExporting:(CHMExporter *)anExporter {
+	[NSApp endSheet:exportProgressSheet];
+	[exportProgressSheet orderOut:nil];
+	exporter.delegate = nil;
+	[exporter autorelease];
+	exporter = nil;
+}
+#pragma mark <CHMExporterDelegate>
+
+
+#pragma mark - TabVew
 - (void)setupTabBar {
 	[tabBar setTabView:docTabView];
 	[tabBar setPartnerView:docTabView];

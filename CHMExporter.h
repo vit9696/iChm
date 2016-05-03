@@ -11,6 +11,17 @@
 #import <AvailabilityMacros.h>
 
 @class CHMDocument;
+@class CHMExporter;
+
+
+@protocol CHMExporterDelegate <NSObject>
+
+- (void)exporterDidBeginExporting:(CHMExporter *)anExporter;
+- (void)exporter:(CHMExporter *)anExporter didExportPage:(NSUInteger)page percentageComplete:(CGFloat)percentageComplete;
+- (void)exporterDidFinishExporting:(CHMExporter *)anExporter;
+
+@end
+
 
 
 #ifdef MAC_OS_X_VERSION_10_11
@@ -19,18 +30,29 @@
 @interface CHMExporter : NSObject {
 #endif
 	
-	CHMDocument			*document;
-	NSUInteger			curPageId;
-	NSInteger			pageCount;
-	WebView				*webView;
-	CGRect				pageRect;
-	CGContextRef		ctx;
-	NSArray				*pageList;
-	NSPrintInfo			*printInfo;
-	NSString			*tmpFileName;
+	id <CHMExporterDelegate>	delegate;	// non-retained
+	
+	NSArray						*pageList;
+	NSUInteger					currentPageListItemIndex;
+	
+	NSUInteger					cumulativeExportedPDFPageCount;
+	
+	WebView						*webView;
+	CGRect						pageRect;
+	CGContextRef				ctx;
+	NSPrintInfo					*printInfo;
+	
+	NSURL						*tempDirURL;
+	NSURL						*tempFileURL;
+	
 }
 
-- (id)initWithCHMDocument:(CHMDocument *)doc toFileName:(NSString *)filename pageList:(NSArray *)list;
-- (void)export;
+- (id)initWithDocument:(CHMDocument *)document destinationURL:(NSURL *)destinationURL pageList:(NSArray *)list;
+
+@property (nonatomic, assign) id <CHMExporterDelegate> delegate;
+
+- (void)beginExport;
 
 @end
+
+
