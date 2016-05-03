@@ -11,7 +11,7 @@
 #import "CHMLinkItem.h"
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
@@ -110,22 +110,6 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (id)initWithTableOfContents:(CHMTableOfContents *)toc filterByPredicate:(NSPredicate *)predicate {
-	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-	if ((self = [super init])) {
-		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
-		NSMutableArray *children = [items children];
-		if (toc) {
-			CHMLinkItem *theItems = [toc items];
-			NSArray *src_children = [theItems children];
-			NSArray *results = [src_children filteredArrayUsingPredicate:predicate];
-			[children addObjectsFromArray:results];
-		}
-	}
-	return self;
-}
-
-
 - (void)dealloc {
 	[items release];
 	[itemStack release];
@@ -134,17 +118,6 @@ static htmlSAXHandler saxHandler = {
 	[super dealloc];
 }
 
-- (CHMLinkItem *)itemForPath:(NSString *)path withStack:(NSMutableArray *)stack {
-	if ([path hasPrefix:@"/"]) {
-		path = [path substringFromIndex:1];
-	}
-	CHMLinkItem *item = [items itemForPath:path withStack:stack];
-	if (!item) {
-		NSString *encoded_path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		item = [items itemForPath:encoded_path withStack:stack];
-	}
-	return item;
-}
 
 - (CHMLinkItem *)itemAtPath:(NSString *)aPath {
 	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
@@ -296,50 +269,4 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 
 @end
-
-
-
-@implementation CHMSearchResults
-
-- (id)init {
-	if ((self = [super init])) {
-		items = [[CHMScoredLinkItem alloc] initWithName:@"root" path:@"/" score:0];
-	}
-	return self;
-}
-
-- (id)initWithTableOfContents:(CHMTableOfContents *)toc index:(CHMTableOfContents *)anIndex {
-	if ((self = [self init])) {
-		tableOfContents = [toc retain];
-		index = [anIndex retain];
-	}
-	return self;
-}
-
-- (void)dealloc {
-	[tableOfContents release];
-	[index release];
-	[super dealloc];
-}
-
-- (void)addPath:(NSString *)path score:(CGFloat)score {
-	CHMLinkItem * item = nil;
-	if (tableOfContents)
-		item = [tableOfContents itemForPath:path withStack:nil];
-	if (!item && index)
-		item = [index itemForPath:path withStack:nil];
-	
-	if (!item)
-		return;
-	CHMScoredLinkItem *newitem = [[CHMScoredLinkItem alloc] initWithName:[item name] path:[item path] score:score];
-	[items appendChild:newitem];
-	[newitem release];
-}
-
-- (void)sort {
-	[(CHMScoredLinkItem *)items sort];
-}
-
-@end
-
 

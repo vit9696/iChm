@@ -8,6 +8,8 @@
 #import "CHMExporter.h"
 #import "CHMTableOfContents.h"
 #import "CHMDocument.h"
+#import "ITSSProtocol.h"
+
 
 @implementation CHMExporter
 
@@ -67,7 +69,7 @@
 	}
 	CHMLinkItem *page = [pageList objectAtIndex:curPageId];
 	
-	NSURL *url = [document composeURL:[page path]];
+	NSURL *url = [NSURL chm__itssURLWithPath:[page path]];
 	NSURLRequest *req = [NSURLRequest requestWithURL:url];
 	[[webView mainFrame] loadRequest:req];
 	

@@ -7,7 +7,6 @@
 //
 
 #import "CHMDocument.h"
-#import <CHM/CHM.h>
 #import "ITSSProtocol.h"
 #import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
@@ -15,8 +14,8 @@
 #import "BookmarkController.h"
 #import "CHMWebView.h"
 #import "CHMExporter.h"
-#import "lcid.h"
 #import "CHMLinkItem.h"
+#import "CHMSearchResult.h"
 
 
 #define MD_DEBUG 1
@@ -78,29 +77,19 @@ static BOOL firstDocument = YES;
 @end
 
 
-@interface CHMDocument (Private)
+@interface CHMDocument ()
 
-- (BOOL)loadMetadata;
-- (void)buildSearchIndex;
 - (void)removeHighlight;
 - (void)highlightString:(NSString *)pattern;
-- (NSString *)findHomeForPath:(NSString *)basePath;
 
 // file preferences
 - (void)setPreference:(id)object forFile:(NSString *)filename withKey:(NSString *)key;
 - (id)getPreferenceforFile:(NSString *)filename withKey:(NSString *)key;
 
 
-- (void)addToSearchIndex:(const char *)path;
-
-
 - (void)setupToolbar;
 - (void)updateHistoryButton;
-- (void)loadPath:(NSString *)path;
 
-- (NSString *)extractPathFromURL:(NSURL *)url;
-
-- (void)prepareSearchIndex;
 
 - (void)setupTabBar;
 - (void)loadJavascript;
@@ -112,11 +101,13 @@ static BOOL firstDocument = YES;
 
 - (NSTabViewItem *)createWebViewInTab:(id)sender;
 
-- (void)setupTOCSource;
-
 - (IBAction)hideSidebar:(id)sender;
 
 - (CHMTableOfContents *)currentDataSource;
+
+- (void)loadItem:(CHMLinkItem *)anItem;
+
+- (IBAction)revealCurrentItemInOutlineView:(id)sender;
 
 @end
 
@@ -125,18 +116,11 @@ static BOOL firstDocument = YES;
 @implementation CHMDocument
 
 @synthesize filePath;
-@synthesize docTitle;
-
-@synthesize encodingName;
-@synthesize encoding;
-@synthesize customEncodingName;
-@synthesize customEncoding;
-
-@dynamic currentEncodingName;
-
 @synthesize searchMode;
-
 @synthesize viewMode;
+@synthesize documentFile;
+@synthesize currentItem;
+
 
 
 - (id)init {
@@ -144,478 +128,40 @@ static BOOL firstDocument = YES;
 		
 		// Add your subclass-specific initialization here.
 		// If an error occurs here, send a [self release] message and return nil.
-		isIndexDone = NO;
-		searchIndexCondition = [[NSCondition alloc] init];
 		
 		webViews = [[NSMutableArray alloc] init];
 		console = [[CHMConsole alloc] init];
 		
 		isSidebarRestored = NO;
 		
-		searchMode = CHMDocumentSearchInFile;
+		searchMode = CHMDocumentFileSearchInFile;
 		viewMode = CHMDocumentViewTableOfContents;
+		
+		searchResults = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
 
 - (void)dealloc {
-	if (chmFileHandle) {
-		chm_close(chmFileHandle);
-	}
+	MDLog(@"\"%@\" - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[filePath release];
-	[docTitle release];
-	[homePath release];
-	[tableOfContentsPath release];
-	[indexPath release];
-	
-	[tableOfContents release];
-	[index release];
-	[searchResults release];
-	
-	if (skIndex) SKIndexClose(skIndex);
-	
-	[searchIndexObject release];
-	[searchIndexCondition release];
 	
 	[webViews release];
 	[console release];
 	
-	[encodingName release];
-	[customEncodingName release];
+	documentFile.searchDelegate = nil;
+	[documentFile release];
 	
+	[currentItem release];
+	
+	[searchResults release];
 	
 	[super dealloc];
 }
 
-#pragma mark Basic CHM reading operations
-static inline NSStringEncoding nameToEncoding(NSString *name) {
-	if(!name || [name length] == 0)
-		return NSUTF8StringEncoding;
-	
-	return CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)name));
-}
 
-static inline unsigned short readShort(NSData *data, NSUInteger offset) {
-	unsigned short value;
-	[data getBytes:(void *)&value range:NSMakeRange(offset, 2)];
-	return NSSwapLittleShortToHost(value);
-}
-
-static inline uint32_t readInt(NSData *data, NSUInteger offset) {
-	uint32_t value = 0;
-	[data getBytes:&value range:NSMakeRange(offset, 4)];
-	return NSSwapLittleIntToHost(value);
-}
-
-static inline NSString *readString(NSData *data, NSUInteger offset, NSStringEncoding anEncoding) {
-	const char *stringData = (char *)[data bytes] + offset;
-	return [[[NSString alloc] initWithCString:stringData encoding:anEncoding] autorelease];
-}
-
-static inline NSString *readTrimmedString(NSData *data, NSUInteger offset, NSStringEncoding anEncoding) {
-	NSString *str = readString(data, offset, anEncoding);
-	return [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
-
-
-static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
-	NSString *name = nil;
-	switch (lcid) {
-		case LCID_CS: //1250
-		case LCID_HR: //1250
-		case LCID_HU: //1250
-		case LCID_PL: //1250
-		case LCID_RO: //1250
-		case LCID_SK: //1250
-		case LCID_SL: //1250
-		case LCID_SQ: //1250
-		case LCID_SR_SP: //1250
-			name = @"CP1250";
-			break;
-		case LCID_AZ_CY: //1251
-		case LCID_BE: //1251
-		case LCID_BG: //1251
-		case LCID_MS_MY: //1251
-		case LCID_RU: //1251
-		case LCID_SB: //1251
-		case LCID_SR_SP2: //1251
-		case LCID_TT: //1251
-		case LCID_UK: //1251
-		case LCID_UZ_UZ2: //1251
-		case LCID_YI: //1251
-			name = @"CP1251";
-			break;
-		case LCID_AF: //1252
-		case LCID_CA: //1252
-		case LCID_DA: //1252
-		case LCID_DE_AT: //1252
-		case LCID_DE_CH: //1252
-		case LCID_DE_DE: //1252
-		case LCID_DE_LI: //1252
-		case LCID_DE_LU: //1252
-		case LCID_EN_AU: //1252
-		case LCID_EN_BZ: //1252
-		case LCID_EN_CA: //1252
-		case LCID_EN_CB: //1252
-		case LCID_EN_GB: //1252
-		case LCID_EN_IE: //1252
-		case LCID_EN_JM: //1252
-		case LCID_EN_NZ: //1252
-		case LCID_EN_PH: //1252
-		case LCID_EN_TT: //1252
-		case LCID_EN_US: //1252
-		case LCID_EN_ZA: //1252
-		case LCID_ES_AR: //1252
-		case LCID_ES_BO: //1252
-		case LCID_ES_CL: //1252
-		case LCID_ES_CO: //1252
-		case LCID_ES_CR: //1252
-		case LCID_ES_DO: //1252
-		case LCID_ES_EC: //1252
-		case LCID_ES_ES: //1252
-		case LCID_ES_GT: //1252
-		case LCID_ES_HN: //1252
-		case LCID_ES_MX: //1252
-		case LCID_ES_NI: //1252
-		case LCID_ES_PA: //1252
-		case LCID_ES_PE: //1252
-		case LCID_ES_PR: //1252
-		case LCID_ES_PY: //1252
-		case LCID_ES_SV: //1252
-		case LCID_ES_UY: //1252
-		case LCID_ES_VE: //1252
-		case LCID_EU: //1252
-		case LCID_FI: //1252
-		case LCID_FO: //1252
-		case LCID_FR_BE: //1252
-		case LCID_FR_CA: //1252
-		case LCID_FR_CH: //1252
-		case LCID_FR_FR: //1252
-		case LCID_FR_LU: //1252
-		case LCID_GD: //1252
-		case LCID_HI: //1252
-		case LCID_ID: //1252
-		case LCID_IS: //1252
-		case LCID_IT_CH: //1252
-		case LCID_IT_IT: //1252
-		case LCID_MS_BN: //1252
-		case LCID_NL_BE: //1252
-		case LCID_NL_NL: //1252
-		case LCID_NO_NO: //1252
-		case LCID_NO_NO2: //1252
-		case LCID_PT_BR: //1252
-		case LCID_PT_PT: //1252
-		case LCID_SV_FI: //1252
-		case LCID_SV_SE: //1252
-		case LCID_SW: //1252
-			name = @"CP1252";
-			break;
-		case LCID_EL: //1253
-			name = @"CP1253";
-			break;
-		case LCID_AZ_LA: //1254
-		case LCID_TR: //1254
-		case LCID_UZ_UZ: //1254
-			name = @"CP1254";
-			break;
-		case LCID_HE: //1255
-			name = @"CP1255";
-			break;
-		case LCID_AR_AE: //1256
-		case LCID_AR_BH: //1256
-		case LCID_AR_DZ: //1256
-		case LCID_AR_EG: //1256
-		case LCID_AR_IQ: //1256
-		case LCID_AR_JO: //1256
-		case LCID_AR_KW: //1256
-		case LCID_AR_LB: //1256
-		case LCID_AR_LY: //1256
-		case LCID_AR_MA: //1256
-		case LCID_AR_OM: //1256
-		case LCID_AR_QA: //1256
-		case LCID_AR_SA: //1256
-		case LCID_AR_SY: //1256
-		case LCID_AR_TN: //1256
-		case LCID_AR_YE: //1256
-		case LCID_FA: //1256
-		case LCID_UR: //1256
-			name = @"CP1256";
-			break;
-		case LCID_ET: //1257
-		case LCID_LT: //1257
-		case LCID_LV: //1257
-			name = @"CP1257";
-			break;
-		case LCID_VI: //1258
-			name = @"CP1258";
-			break;
-		case LCID_TH: //874
-			name = @"CP874";
-			break;
-		case LCID_JA: //932
-			name = @"CP932";
-			break;
-		case LCID_ZH_CN: //936
-		case LCID_ZH_SG: //936
-			name = @"CP936";
-			break;
-		case LCID_KO: //949
-			name = @"CP949";
-			break;
-		case LCID_ZH_HK: //950
-		case LCID_ZH_MO: //950
-		case LCID_ZH_TW: //950
-			name = @"CP950";
-			break;			
-		case LCID_GD_IE: //??
-		case LCID_MK: //??
-		case LCID_RM: //??
-		case LCID_RO_MO: //??
-		case LCID_RU_MO: //??
-		case LCID_ST: //??
-		case LCID_TN: //??
-		case LCID_TS: //??
-		case LCID_XH: //??
-		case LCID_ZU: //??
-		case LCID_HY: //0
-		case LCID_MR: //0
-		case LCID_MT: //0
-		case LCID_SA: //0
-		case LCID_TA: //0
-		default:
-			break;
-	}
-	return name;
-}
-
-# pragma mark chmlib
-- (BOOL)hasObjectAtPath:(NSString *)path {
-	struct chmUnitInfo info;
-	if (chmFileHandle) {
-		return chm_resolve_object(chmFileHandle, [path UTF8String], &info) == CHM_RESOLVE_SUCCESS;
-	}
-	return NO;
-}
-
-- (NSData *)dataForObjectAtPath:(NSString *)path {
-	if (!path) {
-		return nil;
-	}
-	if ([path hasPrefix:@"/"]) {
-		if ([path hasPrefix:@"///"]) {
-			path = [path substringFromIndex:2];
-		}
-	} else {
-		path = [NSString stringWithFormat:@"/%@", path];
-	}
-	struct chmUnitInfo info;
-	void *buffer = nil;
-	
-	@synchronized(self) {
-		if (chm_resolve_object(chmFileHandle, [path UTF8String], &info) == CHM_RESOLVE_SUCCESS) {
-			buffer = malloc(info.length);
-
-			if (buffer) {
-				if (!chm_retrieve_object(chmFileHandle, &info, buffer, 0, info.length)) {
-					NSLog(@"Failed to load %qu bytes for %@", (long long)info.length, path);
-					free(buffer);
-					buffer = nil;
-				}
-			}
-		}
-	}
-	
-	if (buffer) {
-		return [NSData dataWithBytesNoCopy:buffer length:info.length];
-	}
-	return nil;
-}
-
-
-- (BOOL)loadMetadata {
-	/* before anything else, get the encoding */
-	
-	NSData *systemData = [self dataForObjectAtPath:@"/#SYSTEM"];
-	if (systemData == nil) {
-		return NO;
-	}
-	
-	NSUInteger maxOffset = [systemData length];
-	NSUInteger offset = 4;
-	
-	for (; offset < maxOffset; ) {
-		uint16_t data = readShort(systemData, offset);
-		
-		if (data == 4) {
-			uint32_t lcid = readInt(systemData, offset + 4);
-			MDLog(@"[%@ %@] (SYSTEM) LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
-			encodingName = LCIDtoEncodingName(lcid);
-			MDLog(@"[%@ %@] (SYSTEM) encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
-			
-			CFStringEncoding cfStringEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
-			
-			NSStringEncoding nsStringEncoding = CFStringConvertEncodingToNSStringEncoding(cfStringEncoding);
-			
-			NSString *locDescrp = [NSString localizedNameOfStringEncoding:nsStringEncoding];
-			MDLog(@"[%@ %@] (SYSTEM) encoding == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), locDescrp);
-			
-			encoding = nsStringEncoding;
-			
-			break;
-		}
-		offset += readShort(systemData, offset + 2) + 4;
-		
-	}
-	
-	//--- Start with WINDOWS object ---
-	NSData *windowsData = [self dataForObjectAtPath:@"/#WINDOWS"];
-	NSData *stringsData = [self dataForObjectAtPath:@"/#STRINGS"];
-	
-	if (windowsData && stringsData) {
-		const uint32_t entryCount = readInt(windowsData, 0);
-		const uint32_t entrySize = readInt(windowsData, 4);
-		
-		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex) {
-			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
-			
-			if (!docTitle || ([docTitle length] == 0)) {
-				docTitle = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encoding);
-				MDLog(@"[%@ %@] (STRINGS) docTitle == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
-			}
-			if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
-				tableOfContentsPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60), encoding);
-				MDLog(@"[%@ %@] (STRINGS) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
-			}
-			if (!indexPath || ([indexPath length] == 0)) {
-				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64), encoding);
-				MDLog(@"[%@ %@] (STRINGS) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
-			}
-			if (!homePath || ([homePath length] == 0)) {
-				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68), encoding);
-				MDLog(@"[%@ %@] (STRINGS) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
-			}
-		}
-	}
-	
-	//--- Use SYSTEM object ---
-	
-	offset = 4;
-	
-	for (; offset < maxOffset; ) {
-		switch (readShort(systemData, offset)) {
-			case 0: {
-				if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
-					tableOfContentsPath = readString(systemData, offset + 4, encoding);
-					MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
-				}
-				break;
-			}
-				
-			case 1: {
-				if (!indexPath || ([indexPath length] == 0)) {
-					indexPath = readString(systemData, offset + 4, encoding);
-					MDLog(@"[%@ %@] (SYSTEM) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
-				}
-				break;
-			}
-				
-			case 2: {
-				if (!homePath || ([homePath length] == 0)) {
-					homePath = readString(systemData, offset + 4, encoding);
-					MDLog(@"[%@ %@] (SYSTEM) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
-				}
-				break;
-			}
-				
-			case 3: {
-				if (!docTitle || ([docTitle length] == 0)) {
-					docTitle = readTrimmedString(systemData, offset + 4, encoding);
-					MDLog(@"[%@ %@] (SYSTEM) docTitle == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), docTitle);
-				}
-				break;
-			}
-				
-//			case 4: {
-//				uint32_t lcid = readInt(systemData, offset + 4);
-//				MDLog(@"[%@ %@] (SYSTEM) LCID == %u", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned)lcid);
-//				encodingName = LCIDtoEncodingName(lcid);
-//				MDLog(@"[%@ %@] (SYSTEM) encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
-//				break;
-//			}
-				
-			case 6: {
-				const char *data = (const char *)([systemData bytes] + offset + 4);
-				NSString *prefix = [[NSString alloc] initWithCString:data encoding:encoding];
-				if (!tableOfContentsPath || [tableOfContentsPath length] == 0) {
-					NSString *path = [NSString stringWithFormat:@"/%@.hhc", prefix];
-					if ([self hasObjectAtPath:path]) {
-						tableOfContentsPath = path;
-					}
-				}
-				if (!indexPath || [indexPath length] == 0) {
-					NSString *path = [NSString stringWithFormat:@"/%@.hhk", prefix];
-					if ([self hasObjectAtPath:path]) {
-						indexPath = path;
-					}
-				}
-				MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
-				[prefix release];
-				break;
-			}
-				
-		case 9:
-			break;
-		case 16:
-			break;
-		default:
-			MDLog(@"[%@ %@] (SYSTEM) unhandled value == %d", NSStringFromClass([self class]), NSStringFromSelector(_cmd), readShort(systemData, offset));
-			break;
-		}
-		
-		offset += readShort(systemData, offset + 2) + 4;
-	}
-	
-	// Check for empty string titles
-	if ([docTitle length] == 0) {
-		docTitle = nil;
-	} else {
-		[docTitle retain];
-	}
-	
-	// Check for lack of index page
-	if (!homePath) {
-		homePath = [self findHomeForPath:@"/"];
-		MDLog(@"[%@ %@] Implicit homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
-	}
-	[homePath retain];
-	[tableOfContentsPath retain];
-	[indexPath retain];
-	
-	return YES;
-}
-
-
-- (NSString *)findHomeForPath:(NSString *)basePath {
-	NSString *testPath;
-
-	NSString *separator = [basePath hasSuffix:@"/"] ? @"" : @"/";
-	testPath = [NSString stringWithFormat:@"%@%@index.htm", basePath, separator];
-	if ([self hasObjectAtPath:testPath]) {
-		return testPath;
-	}
-	testPath = [NSString stringWithFormat:@"%@%@default.html", basePath, separator];
-	if ([self hasObjectAtPath:testPath]) {
-		return testPath;
-	}
-	testPath = [NSString stringWithFormat:@"%@%@default.htm", basePath, separator];
-	if ([self hasObjectAtPath:testPath]) {
-		return testPath;
-	}
-	return [NSString stringWithFormat:@"%@%@index.html", basePath, separator];
-}
-
-
-# pragma mark NSDocument
+# pragma mark - NSDocument
 - (NSString *)windowNibName {
 	// Override returning the nib file name of the document
 	// If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
@@ -624,6 +170,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
+	MDLog(@"\"%@\" - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	
 	[super windowControllerDidLoadNib:aController];
 	[aController.window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 	
@@ -632,7 +180,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
-	if (tableOfContents.items.numberOfChildren == 0) {
+	if (documentFile.tableOfContents.items.numberOfChildren == 0) {
 		[self hideSidebar:self];
 	}
 	
@@ -644,16 +192,15 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	if (nil == lastPath) {
 		[self goHome:self];
 	} else {
-		[self loadPath:lastPath];
+		CHMLinkItem *lastItem = [documentFile itemAtPath:lastPath];
+		(lastItem ? [self loadItem:lastItem] : [self goHome:self]);
 	}
-	
-	[self prepareSearchIndex];
 	
 	// set search type and search menu
 	NSString *type = [self getPreferenceforFile:filePath withKey:PREF_SEARCH_TYPE];
 	if (type && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX]) {
-		self.searchMode = CHMDocumentSearchInIndex;
-		[searchField setPlaceholderString:NSLocalizedString(@"Search in Index", @"")];
+		self.searchMode = CHMDocumentFileSearchInIndex;
+		[[searchField cell] setPlaceholderString:NSLocalizedString(@"Search in Index", @"")];
 	}
 	
 	// invoke search if query string provided in command line
@@ -662,7 +209,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		NSString *searchTerm = [[args stringForKey:@"search"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		if (searchTerm && searchTerm.length) {
 			[searchField setStringValue:searchTerm];
-			self.searchMode = CHMDocumentSearchInFile;
+			self.searchMode = CHMDocumentFileSearchInFile;
 			[self search:self];
 			firstDocument = NO;
 		}
@@ -670,33 +217,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-	if (outError != NULL) *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
+	if (outError) *outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
 	return nil;
-}
-
-
-- (void)setupTOCSource {
-	if (tableOfContentsPath && tableOfContentsPath.length) {
-		NSData *tocData = [self dataForObjectAtPath:tableOfContentsPath];
-		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContents *oldTOC = tableOfContents;
-		tableOfContents = newTOC;
-		
-		if (oldTOC) {
-			[oldTOC release];
-		}
-	}
-	if (indexPath && indexPath.length) {
-		NSData *tocData = [self dataForObjectAtPath:indexPath];
-		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		CHMTableOfContents *oldTOC = index;
-		index = newTOC;
-		[index sort];
-		
-		if (oldTOC) {
-			[oldTOC release];
-		}
-	}
 }
 
 
@@ -706,43 +228,29 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[filePath release];
 	filePath = [[url path] retain];
 	
-	chmFileHandle = chm_open([filePath fileSystemRepresentation]);
-	if (!chmFileHandle) return NO;
+	documentFile = [[CHMDocumentFile alloc] initWithContentsOfFile:filePath error:outError];
 	
-	[self loadMetadata];
-	[self setupTOCSource];
-	return YES;
+	documentFile.searchDelegate = self;
+	
+	return (documentFile != nil);
 }
 
 
-- (NSURL *)composeURL:(NSString *)path {
-	MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
+- (void)loadURL:(NSURL *)URL {
+	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
 	
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", path]];
-	if (!url) {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	}
-	return url;
-}
-
-- (NSString *)extractPathFromURL:(NSURL *)url {
-	return [[[url absoluteString] substringFromIndex:11] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-}
-
-- (void)loadPath:(NSString *)path {
-	MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
-	
-	NSURL *url = [self composeURL:path];
-	[self loadURL:url];
-}
-
-- (void)loadURL:(NSURL *)url {
-	MDLog(@"[%@ %@] url == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url);
-	
-	if (url) {
-		NSURLRequest *req = [NSURLRequest requestWithURL:url];
+	if (URL) {
+		NSURLRequest *req = [NSURLRequest requestWithURL:URL];
 		[[curWebView mainFrame] loadRequest:req];
 	}
+}
+
+- (void)loadItem:(CHMLinkItem *)anItem {
+	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
+	
+	self.currentItem = anItem;
+	NSURL *url = [NSURL chm__itssURLWithPath:anItem.path];
+	[self loadURL:url];
 }
 
 
@@ -784,7 +292,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	return [fileInfo objectForKey:key];
 }
 
-#pragma mark Properties
+#pragma mark - Properties
 - (NSString *)currentURL {
 	if (curWebView) {
 		return [curWebView mainFrameURL];
@@ -809,26 +317,31 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSLog(@"[%@ %@] error == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
 }
 
+- (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
+	if (frame == [sender mainFrame]) {
+		MDLog(@"[%@ %@] title == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), title);
+	}
+}
+
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+//	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	MDLog(@"[%@ %@] (frame == [sender mainFrame]) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (frame == [sender mainFrame] ? @"YES" : @"NO"));
+	
+	NSURL *URL = [[[frame dataSource] request] URL];
+	
+	CHMLinkItem *newCurrentItem = [documentFile itemAtPath:URL.path];
+	
+	if (newCurrentItem) self.currentItem = newCurrentItem;
+	
 	[self updateHistoryButton];
-	[self locateTOC:sender];
+	[self revealCurrentItemInOutlineView:nil];
 	
-	// set label for tab bar
-	NSURL *url = [[[frame dataSource] request] URL];
-	NSString *path = [self extractPathFromURL:url];
-	CHMLinkItem *item = [[self currentDataSource] itemForPath:path withStack:nil];
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
-	NSString *name = [item name];
-	if (!name || [name length] == 0) {
-		name = [curWebView mainFrameTitle];
-	}
+	NSString *name = currentItem.name;
+	if (name.length == 0) name = [curWebView mainFrameTitle];
 	
-	if (name && [name length] > 0) {
-		[tabItem setLabel:name];
-	} else {
-		[tabItem setLabel:NSLocalizedString(@"(Untitled)", @"(Untitled)")];
-	}
+	[tabItem setLabel:(name.length ? name : NSLocalizedString(@"(Untitled)", @"(Untitled)"))];
 	
 	if (frame == [sender mainFrame]) {
 		[[curWebView windowScriptObject] setValue:console forKey:@"console"];
@@ -843,7 +356,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 	
 	// setup last path
-	NSString *trimedPath = [NSString stringWithString:[url path]];
+	NSString *trimedPath = [NSString stringWithString:[URL path]];
 	while ([trimedPath hasPrefix:@"/"]) {
 		trimedPath = [trimedPath substringFromIndex:1];
 	}
@@ -886,6 +399,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 
 - (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request newFrameName:(NSString *)frameName decisionListener:(id<WebPolicyDecisionListener>)listener {
+	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
 	if ([ITSSProtocol canInitWithRequest:request]) {
 		[listener use];
@@ -897,11 +411,12 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 
 # pragma mark - <WebResourceLoadDelegate>
 - (NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
+//	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
 	if ([ITSSProtocol canInitWithRequest:request]) {
 		NSMutableURLRequest *specialURLRequest = [[request mutableCopy] autorelease];
-		[specialURLRequest setChmDoc:self];
-		[specialURLRequest setEncodingName:[self currentEncodingName]];
+		[specialURLRequest setDocumentFile:documentFile];
+		[specialURLRequest setEncodingName:documentFile.currentEncodingName];
 		return specialURLRequest;
 	} else {
 		return request;
@@ -932,7 +447,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	
 	if (selectedRow >= 0) {
 		CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-		[self loadPath:[topic path]];
+		[self loadItem:topic];
 	}
 }
 
@@ -950,7 +465,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 - (IBAction)goHome:(id)sender {
-	[self loadPath:homePath];
+	[self loadItem:[documentFile itemAtPath:documentFile.homePath]];
 }
 
 - (IBAction)goHistory:(id)sender {
@@ -971,39 +486,34 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 - (IBAction)gotoNextPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-	CHMLinkItem *nextPage = [tableOfContents pageAfterPage:topic];
-	if (nextPage) {
-		[self loadPath:[nextPage path]];
-	}
+	CHMLinkItem *nextPage = [documentFile.tableOfContents pageAfterPage:topic];
+	if (nextPage) [self loadItem:nextPage];
 }
 
 - (IBAction)gotoPrevPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-	CHMLinkItem *prevPage = [tableOfContents pageBeforePage:topic];
-	if (prevPage) {
-		[self loadPath:[prevPage path]];
-	}
+	CHMLinkItem *prevPage = [documentFile.tableOfContents pageBeforePage:topic];
+	if (prevPage) [self loadItem:prevPage];
 }
 
-- (IBAction)locateTOC:(id)sender {
-	NSURL *url = [[[[curWebView mainFrame] dataSource] request] URL];
-	NSString *path = [self extractPathFromURL:url];
-	NSMutableArray *tocStack = [[NSMutableArray alloc] init];
-	CHMLinkItem *item = [[self currentDataSource] itemForPath:path withStack:tocStack];
-
-	NSEnumerator *enumerator = [tocStack reverseObjectEnumerator];
+- (IBAction)revealCurrentItemInOutlineView:(id)sender {
+	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
-	for (CHMLinkItem *p in enumerator) {
-		[outlineView expandItem:p];
+	if (!isSearching) {
+		NSArray *ancestors = [currentItem ancestors];
+		
+		for (CHMLinkItem *parent in ancestors) {
+			[outlineView expandItem:parent];
+		}
 	}
 	
-	NSInteger idx = [outlineView rowForItem:item];
-	NSIndexSet *idxSet = [[NSIndexSet alloc] initWithIndex:idx];
-	[outlineView selectRowIndexes:idxSet byExtendingSelection:NO];
-	[outlineView scrollRowToVisible:idx];
-	[tocStack release];
-	[idxSet release];
+	NSInteger currentItemIndex = [outlineView rowForItem:currentItem];
+	
+	if (currentItemIndex == -1) return;
+	
+	[outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentItemIndex] byExtendingSelection:NO];
+	[outlineView scrollRowToVisible:currentItemIndex];
 }
 
 
@@ -1056,7 +566,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[historyControl setEnabled:[curWebView canGoForward] forSegment:1];
 }
 
-#pragma mark export to pdf
+#pragma mark - export to pdf
 - (IBAction)exportToPDF:(id)sender {
 	
 	/* create or get the shared instance of NSSavePanel */
@@ -1071,7 +581,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
 		NSURL *URL = [savePanel URL];
-		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[tableOfContents pageList]];
+		CHMExporter *exporter = [[CHMExporter alloc] initWithCHMDocument:self toFileName:URL.path pageList:[documentFile.tableOfContents pageList]];
 		[exporter export];
 		[exporter release];
 		[self showExportProgressSheet:self];
@@ -1096,7 +606,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-# pragma mark TabVew
+# pragma mark - TabVew
 - (void)setupTabBar {
 	[tabBar setTabView:docTabView];
 	[tabBar setPartnerView:docTabView];
@@ -1188,7 +698,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	[docTabView selectPreviousTabViewItem:sender];
 }
 
-# pragma mark Toolbar
+# pragma mark - Toolbar
 - (void)setupToolbar {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:ICHMToolbarIdentifier] autorelease];
 	
@@ -1268,86 +778,28 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-# pragma mark Search
-- (void)prepareSearchIndex {
+#pragma mark - <CHMDocumentFileSearchDelegate>
+
+
+- (void)documentFile:(CHMDocumentFile *)aDocumentFile didUpdateSearchResults:(NSArray *)aSearchResults {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-	
-	[searchIndexObject release];
-	searchIndexObject = [[NSMutableData dataWithCapacity: 2^22] retain];
-	
-	if (skIndex) {
-		SKIndexClose(skIndex);
-		skIndex = NULL;
-	}
-	
-	skIndex = SKIndexCreateWithMutableData((CFMutableDataRef)searchIndexObject, NULL, kSKIndexInverted, (CFDictionaryRef)NULL);
-	[NSThread detachNewThreadSelector:@selector(buildSearchIndex) toTarget:self withObject:nil];
-}
-
-static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context) {
-	if (ui->path[0] != '/' || strstr(ui->path, "/../") != NULL || ui->path[strlen(ui->path)-1] == '/')
-        return CHM_ENUMERATOR_CONTINUE;
-
-	CHMDocument *doc = (CHMDocument *)context;
-	[doc addToSearchIndex:ui->path];
-	return CHM_ENUMERATOR_CONTINUE;
-}
-
-- (void)buildSearchIndex {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-	
-	[searchIndexCondition lock];
-	chm_enumerate(chmFileHandle, CHM_ENUMERATE_FILES || CHM_ENUMERATE_NORMAL, forEachFile, (void *)self);
-	isIndexDone = YES;
-	[searchIndexCondition signal];
-	[searchIndexCondition unlock];
-	
-	[pool release];
-}
-
-- (void)addToSearchIndex:(const char *)path {
-//	MDLog(@"[%@ %@] %s", NSStringFromClass([self class]), NSStringFromSelector(_cmd), path);
-	
-//	NSString *filepath = [NSString stringWithCString:path encoding:nameToEncoding(encodingName)];
-	NSString *filepath = [NSString stringWithCString:path encoding:encoding];
-	if ([filepath hasPrefix:@"/"]) {
-		filepath = [filepath substringFromIndex:1];
-	}
-	NSData *data = [self dataForObjectAtPath:filepath];
-	NSURL *url = [self composeURL:filepath];
-	
-	if (!url) {
-		return;
-	}
-	SKDocumentRef doc = SKDocumentCreateWithURL((CFURLRef)url);
-	[(id)doc autorelease];
-	
-//	NSString *contents = [[NSString alloc] initWithData:data encoding:nameToEncoding(encodingName)];
-	NSString *contents = [[NSString alloc] initWithData:data encoding:encoding];
-	
-	// if the encoding being set is invalid, try following encoding.
-	if (contents == nil && data.length) {
-		contents = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	}
-	if (contents == nil && data.length) {
-		contents = [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
-	}
-	SKIndexAddDocumentWithText(skIndex, doc, (CFStringRef)contents, (Boolean)true);
-	[contents release];
+	[searchResults setArray:aSearchResults];
+	[outlineView reloadData];
 }
 
 
+#pragma mark <CHMDocumentFileSearchDelegate>
+#pragma mark - Search
 - (IBAction)changeSearchMode:(id)sender {
 	NSInteger tag = [sender tag];
 	if (searchMode == tag) return;
 	self.searchMode = tag;
-	[searchField setPlaceholderString:(searchMode == CHMDocumentSearchInFile ? NSLocalizedString(@"Search in File", @"") : NSLocalizedString(@"Search in Index", @""))];
+	[[searchField cell] setPlaceholderString:(searchMode == CHMDocumentFileSearchInFile ? NSLocalizedString(@"Search in File", @"") : NSLocalizedString(@"Search in Index", @""))];
+	
+	[self setPreference:(searchMode == CHMDocumentFileSearchInFile ? PREF_VALUE_SEARCH_IN_FILE : PREF_VALUE_SEARCH_IN_INDEX) forFile:filePath withKey:PREF_SEARCH_TYPE];
 	
 	if ([searchField stringValue].length) [self search:self];
 	
-	[self setPreference:(searchMode == CHMDocumentSearchInFile ? PREF_VALUE_SEARCH_IN_FILE : PREF_VALUE_SEARCH_IN_INDEX) forFile:filePath withKey:PREF_SEARCH_TYPE];
 }
 
 
@@ -1355,16 +807,6 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 #if MD_DEBUG
 	NSLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 #endif
-	if (searchMode == CHMDocumentSearchInFile) {
-		
-		// waiting for the building of index
-		[searchIndexCondition lock];
-		
-		while (!isIndexDone) [searchIndexCondition wait];
-		
-		[searchIndexCondition unlock];
-		
-	}
 	
 	NSString *searchString = [searchField stringValue];
 	
@@ -1372,14 +814,13 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		
 		isSearching = NO;
 		
-		[searchResults release];
-		searchResults = nil;
+		[searchResults removeAllObjects];
 		
 		[outlineView reloadData];
 		
 		if (viewMode == CHMDocumentViewTableOfContents) {
 			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
-			[self locateTOC:sender];
+			[self revealCurrentItemInOutlineView:nil];
 			
 		} else if (viewMode == CHMDocumentViewIndex) {
 			[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];
@@ -1392,87 +833,13 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	isSearching = YES;
 	
-	if (searchMode == CHMDocumentSearchInIndex) {
-		
-		[searchResults release];
-		searchResults = nil;
-		
-		if (index == nil) return;
-		
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-//		searchResults = [[CHMTableOfContents alloc] initWithTableOfContents:index filterByPredicate:predicate];
-		searchResults = [[CHMSearchResults alloc] initWithTableOfContents:index filterByPredicate:predicate];
-		
-		[outlineView deselectAll:self];
-		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
-		
-		[outlineView reloadData];
-		return;
-	}
+	[searchResults removeAllObjects];
 	
-	// search in file
-	
-	[searchResults release];
-	
-	searchResults = [[CHMSearchResults alloc] initWithTableOfContents:tableOfContents index:index];
-	
-	if (index == nil && tableOfContents == nil) return;
-	
-	SKSearchOptions options = kSKSearchOptionDefault;
-	SKIndexFlush(skIndex);
-	SKSearchRef search = SKSearchCreate(skIndex, (CFStringRef)searchString, options);
-    [(id)search autorelease];
-	
-	Boolean more = true;
-    uint32_t totalCount = 0;
-	uint32_t kSearchMax = 10;
-	
-    while (more) {
-        SKDocumentID		foundDocIDs[kSearchMax];
-        float				foundScores[kSearchMax];
-        SKDocumentRef		foundDocRefs[kSearchMax];
-		
-        float *scores;
-		
-		scores = foundScores;
-		
-        CFIndex foundCount = 0;
-        CFIndex pos;
-		
-		more = SKSearchFindMatches(search,
-								  kSearchMax,
-								  foundDocIDs,
-								  scores,
-								  1, // maximum time before func returns, in seconds
-								  &foundCount
-								  );
-		
-        totalCount += foundCount;
-		
-		//..........................................................................
-		// get document locations for matches and display results.
-		//     alternatively, you can collect results over iterations of this loop
-		//     for display later.
-		
-		SKIndexCopyDocumentRefsForDocumentIDs((SKIndexRef)skIndex,
-											  (CFIndex)foundCount,
-											  (SKDocumentID *)foundDocIDs,
-											  (SKDocumentRef *)foundDocRefs);
-		
-        for (pos = 0; pos < foundCount; pos++) {
-			
-            SKDocumentRef doc = (SKDocumentRef)[(id)foundDocRefs[pos] autorelease];
-			
-            NSURL *url = [(id)SKDocumentCopyURL(doc) autorelease];
-			
-			[searchResults addPath:[url path] score:foundScores[pos]];
-        }
-    }
-	[searchResults sort];
-	[outlineView deselectAll:self];
 	[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Search", @"Search")];
 	
-	[outlineView reloadData];
+	[outlineView deselectAll:nil];
+	
+	[documentFile searchForString:searchString usingMode:searchMode];
 	
 }
 
@@ -1481,7 +848,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	[documentWindow makeFirstResponder:searchField];
 }
 
-# pragma mark find panel
+# pragma mark - find panel
 - (IBAction)showFindPanel:(id)sender {
 	CHMWebViewController *chmWebView = (CHMWebViewController *)[[docTabView selectedTabViewItem] identifier];
 	return [chmWebView showFindPanel:sender];
@@ -1529,7 +896,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 }
 
 
-#pragma mark text encoding
+#pragma mark - text encoding
 
 - (IBAction)changeEncoding:(id)sender {
 	MDLog(@"[%@ %@] sender == %@, tag == %ld", NSStringFromClass([self class]), NSStringFromSelector(_cmd), sender, (long)[sender tag]);
@@ -1537,47 +904,42 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	NSInteger tag = [sender tag];
 	id representedObject = [sender representedObject];
 	
-	if (tag == 0 && customEncoding) {
+	// get the path of the currentItem
+	NSString *previousCurrentItemPath = [[currentItem.path retain] autorelease];
+	
+	if (tag == 0 && documentFile.customEncoding) {
 		// go back to default encoding
-		customEncoding = 0;
-		self.customEncodingName = nil;
+		[documentFile setCustomEncoding:CHMDocumentFileDefaultStringEncoding customEncodingName:nil];
 		
+	} else if ((tag && documentFile.customEncoding == 0)		    // set a custom encoding
+			   || (tag && tag != documentFile.customEncoding)) {	// set a different custom encoding
 		
-	} else if ((tag && customEncoding == 0)		     // set a custom encoding
-			   || (tag && tag != customEncoding)) {  // set a different custom encoding
-		
-		customEncoding = tag;
+		NSString *customEncodingName = nil;
 		
 		if ([representedObject isKindOfClass:[NSString class]]) {
-			self.customEncodingName = (NSString *)representedObject;
+			customEncodingName = (NSString *)representedObject;
 			
 		} else {
-			self.customEncodingName = [(NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(customEncoding)) autorelease];
+			customEncodingName = (NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(tag));
 			
 		}
+		[documentFile setCustomEncoding:tag customEncodingName:customEncodingName];
 		
-		MDLog(@"[%@ %@] customEncoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSString localizedNameOfStringEncoding:customEncoding]);
+		MDLog(@"[%@ %@] customEncoding == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [NSString localizedNameOfStringEncoding:tag]);
 		MDLog(@"[%@ %@] customEncodingName == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), customEncodingName);
 		
 	} else {
 		return;
 	}
+	// Setting a new encoding will recreate the table of contents and CHMLinkItem tree, so our currentItem is no longer valid; replace it with the new one at the same path.
+	self.currentItem = [documentFile itemAtPath:previousCurrentItemPath];
 	
 	for (WebView *webView in webViews) {
-		[webView setCustomTextEncodingName:[self currentEncodingName]];
+		[webView setCustomTextEncodingName:documentFile.currentEncodingName];
 	}
 	
-	[self setupTOCSource];
 	[outlineView reloadData];
-	[self locateTOC:self];
-}
-
-
-- (NSString *)currentEncodingName {
-	if (customEncoding) {
-		return customEncodingName;
-	}
-	return encodingName;
+	[self revealCurrentItemInOutlineView:nil];
 }
 
 
@@ -1590,17 +952,22 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	if (action == @selector(changeSearchMode:)) {
 		[menuItem setState:searchMode == tag];
-		if (tag == CHMDocumentSearchInIndex) {
-			return (index != nil);
+		if (tag == CHMDocumentFileSearchInIndex) {
+			return (documentFile.index != nil);
 		}
 	} else if (action == @selector(changeViewMode:)) {
 		[menuItem setState:viewMode == tag];
 		if (tag == CHMDocumentViewIndex) {
-			return (index != nil);
+			return (documentFile.index != nil);
 		}
 	} else if (action == @selector(changeEncoding:)) {
-		[menuItem setState:customEncoding == tag];
+		[menuItem setState:documentFile.customEncoding == tag];
 		
+	} else if (action == @selector(zoomIn:)) {
+		return [curWebView canMakeTextLarger];
+		
+	} else if (action == @selector(zoomOut:)) {
+		return [curWebView canMakeTextSmaller];
 	}
 	return YES;
 }
@@ -1651,14 +1018,10 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 #pragma mark -
 
 - (CHMTableOfContents *)currentDataSource {
-	if (isSearching) {
-		return searchResults;
-	} else {
-		if (viewMode == CHMDocumentViewTableOfContents) {
-			return tableOfContents;
-		} else if (viewMode == CHMDocumentViewIndex) {
-			return index;
-		}
+	if (viewMode == CHMDocumentViewTableOfContents) {
+		return documentFile.tableOfContents;
+	} else if (viewMode == CHMDocumentViewIndex) {
+		return documentFile.index;
 	}
 	return nil;
 }
@@ -1666,16 +1029,34 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 #pragma mark - <NSOutlineViewDataSource>
 - (NSInteger)outlineView:(NSOutlineView *)anOutlineView numberOfChildrenOfItem:(id)item {
-	if (item == nil) item = [self currentDataSource].items;
+	if (item == nil) {
+		if (isSearching) {
+			return searchResults.count;
+		} else {
+			item = [self currentDataSource].items;
+		}
+	}
     return [(CHMLinkItem *)item numberOfChildren];
 }
 
 
 - (BOOL)outlineView:(NSOutlineView *)anOutlineView isItemExpandable:(id)item {
-    return [item numberOfChildren] > 0;
+//	MDLog(@"[%@ %@] item == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), item);
+	
+	if (isSearching) {
+		return NO;
+	}
+    return [(CHMLinkItem *)item numberOfChildren] > 0;
 }
 
 - (id)outlineView:(NSOutlineView *)anOutlineView child:(NSInteger)theIndex ofItem:(id)item {
+	if (isSearching) {
+		if (item == nil) {
+			CHMSearchResult *searchResult = [searchResults objectAtIndex:theIndex];
+			return searchResult.item;
+		}
+		return nil;
+	}
 	if (item == nil) item = [self currentDataSource].items;
     return [(CHMLinkItem *)item childAtIndex:theIndex];
 }
@@ -1706,7 +1087,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	
 	if (viewMode == CHMDocumentViewTableOfContents) {
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Contents", @"Contents")];
-		[self locateTOC:sender];
+		[self revealCurrentItemInOutlineView:nil];
 		
 	} else if (viewMode == CHMDocumentViewIndex) {
 		[[[outlineView outlineTableColumn] headerCell] setStringValue:NSLocalizedString(@"Index", @"Index")];

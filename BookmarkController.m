@@ -11,6 +11,7 @@
 #import "CHMFile.h"
 #import "CHMBookmark.h"
 #import "CHMTag.h"
+#import "CHMDocumentFile.h"
 
 
 #define MD_DEBUG 1
@@ -154,7 +155,7 @@
 				   insertNewObjectForEntityForName:@"File"
 				   inManagedObjectContext:context];
 		[chmFile setPath:[doc filePath]];
-		[chmFile setTitle:[doc docTitle]];
+		[chmFile setTitle:doc.documentFile.title];
 		[context save:&error];
 		if ( ![context save:&error] )
 			NSLog(@"Cannot fetch file info: %@", error);

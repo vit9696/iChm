@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class CHMDocument;
+@class CHMDocumentFile;
 
 @interface ITSSProtocol : NSURLProtocol {
 
@@ -17,12 +17,21 @@
 @end
 
 @interface NSURLRequest (ITSSProtocol)
-- (CHMDocument *)chmDoc;
+- (CHMDocumentFile *)documentFile;
 - (NSString *)encodingName;
 @end
 
 @interface NSMutableURLRequest (ITSSProtocol)
-- (void)setChmDoc:(CHMDocument *)doc;
+- (void)setDocumentFile:(CHMDocumentFile *)aDocumentFile;
 - (void)setEncodingName:(NSString *)name;
+@end
+
+
+@interface NSURL (ITSSProtocol)
+
+// create a composed URL (itss://chm/*) for an item at the specified path:
++ (NSURL *)chm__itssURLWithPath:(NSString *)aPath;
+
+
 @end
 

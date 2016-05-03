@@ -37,7 +37,7 @@
 
 - (id)init {
 	if ((self = [super init])) {
-		children = [[NSMutableArray alloc] init];
+		
 	}
 	return self;
 }
@@ -77,25 +77,6 @@
 	item.parent = self;
 }
 
-
-- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack {
-	if ([path isEqualToString:aPath])
-		return self;
-	
-	if (!children)
-		return nil;
-	
-	for (CHMLinkItem* item in children) {
-		CHMLinkItem * rslt = [item itemForPath:aPath withStack:stack];
-		if (rslt != nil) {
-			if(stack)
-				[stack addObject:self];
-			return rslt;
-		}
-	}
-	
-	return nil;
-}
 
 - (NSArray *)ancestors {
 	if (parent == nil) return nil;
@@ -156,30 +137,6 @@
 	[description replaceOccurrencesOfString:@"\\n" withString:@"\r" options:0 range:NSMakeRange(0, description.length)];
 	[description replaceOccurrencesOfString:@"\\\"" withString:@"          " options:0 range:NSMakeRange(0, description.length)];
 	return description;
-}
-
-@end
-
-
-
-@implementation CHMScoredLinkItem
-
-@synthesize relScore;
-
-- (void)sort {
-	NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"relScore" ascending:NO];
-	NSMutableArray * sda = [[NSMutableArray alloc] init];
-	[sda addObject:sd];
-	[children sortUsingDescriptors:sda];
-	[sda release];
-	[sd release];
-}
-
-- (id)initWithName:(NSString *)aName path:(NSString *)aPath score:(CGFloat)score {
-	if ((self = [super initWithName:aName path:aPath])) {
-		relScore = score;
-	}
-	return self;
 }
 
 @end

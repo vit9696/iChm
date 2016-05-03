@@ -7,10 +7,10 @@
 //
 
 #import "ITSSProtocol.h"
-#import "CHMDocument.h"
+#import "CHMDocumentFile.h"
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
@@ -41,30 +41,30 @@
 
 - (void)startLoading {
 	
-	NSURL *url = [[self request] URL];
+	NSURL *URL = [[self request] URL];
 	
-	MDLog(@"[%@ %@] url == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), url);
+	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
 	
-	CHMDocument *document = [[self request] chmDoc];
+	CHMDocumentFile *documentFile = [[self request] documentFile];
 	NSString *encodingName = [[self request] encodingName];
 	
-	if (document == nil) {
+	if (documentFile == nil) {
 		[[self client] URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain code:0 userInfo:nil]];
 		return;
 	}
 	
 	NSString *path;
 	
-	if ([url parameterString]) {
-		path = [NSString stringWithFormat:@"%@;%@", [url path], [url parameterString]];
+	if ([URL parameterString]) {
+		path = [NSString stringWithFormat:@"%@;%@", [URL path], [URL parameterString]];
 	} else {
-		path = [url path];
+		path = [URL path];
 	}
-	if (![document hasObjectAtPath:path]) {
+	if (![documentFile hasObjectAtPath:path]) {
 		path = [path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	}
 	
-	NSData *data = [document dataForObjectAtPath:path];
+	NSData *data = [documentFile dataForObjectAtPath:path];
 	
 	if (data == nil) {
 		[[self client] URLProtocol:self didFailWithError:[NSError errorWithDomain:NSURLErrorDomain code:0 userInfo:nil]];
@@ -78,7 +78,7 @@
 		[extension isEqualToString:@"htm"]) {
 		type = @"text/html";
 	}
-	NSURLResponse *response = [[NSURLResponse alloc] initWithURL:url
+	NSURLResponse *response = [[NSURLResponse alloc] initWithURL:URL
 														MIMEType:type
 										   expectedContentLength:data.length
 												textEncodingName:encodingName];
@@ -95,24 +95,42 @@
 
 @implementation NSURLRequest (ITSSProtocol)
 
-- (CHMDocument *)chmDoc {
-	return [NSURLProtocol propertyForKey:@"chmdoc" inRequest:self];
+- (CHMDocumentFile *)documentFile {
+	return [NSURLProtocol propertyForKey:@"chm__documentFile" inRequest:self];
 }
 
 - (NSString *)encodingName {
-	return [NSURLProtocol propertyForKey:@"encodingName" inRequest:self];
+	return [NSURLProtocol propertyForKey:@"chm__encodingName" inRequest:self];
 }
+
 @end
 
 
 
 @implementation NSMutableURLRequest (ITSSProtocol)
 
-- (void)setChmDoc:(CHMDocument *)doc {
-	[NSURLProtocol setProperty:doc forKey:@"chmdoc" inRequest:self];
+- (void)setDocumentFile:(CHMDocumentFile *)aDocumentFile {
+	[NSURLProtocol setProperty:aDocumentFile forKey:@"chm__documentFile" inRequest:self];
 }
 
 - (void)setEncodingName:(NSString *)name {
-	[NSURLProtocol setProperty:name forKey:@"encodingName" inRequest:self];
+	[NSURLProtocol setProperty:name forKey:@"chm__encodingName" inRequest:self];
 }
+
 @end
+
+
+@implementation NSURL (ITSSProtocol)
+
+// create a composed URL (itss://chm/*) for an item at the specified path:
++ (NSURL *)chm__itssURLWithPath:(NSString *)aPath {
+	if ([NSThread isMainThread]) MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+	
+	NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", aPath]];
+	if (URL == nil) URL = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", [aPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+	return URL;
+}
+
+@end
+
+

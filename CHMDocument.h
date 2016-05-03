@@ -11,20 +11,12 @@
 #import <WebKit/WebKit.h>
 #import <AvailabilityMacros.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
+#import "CHMDocumentFile.h"
 
 
-@class CHMTableOfContents;
-@class CHMSearchResults;
 @class CHMLinkItem;
 @class CHMConsole;
-struct chmFile;
 
-
-enum {
-	CHMDocumentSearchInFile		= 1,
-	CHMDocumentSearchInIndex	= 2,
-};
-typedef NSUInteger CHMDocumentSearchMode;
 
 
 enum {
@@ -35,9 +27,9 @@ typedef NSUInteger CHMDocumentViewMode;
 
 
 #ifdef MAC_OS_X_VERSION_10_11
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate, WebPolicyDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate, WebUIDelegate> {
 #else
-@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate> {
+@interface CHMDocument : NSDocument <NSToolbarDelegate, NSMenuDelegate, NSSplitViewDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, PSMTabBarControlDelegate, CHMDocumentFileSearchDelegate> {
 #endif
 	
 	IBOutlet PSMTabBarControl		*tabBar;
@@ -58,26 +50,14 @@ typedef NSUInteger CHMDocumentViewMode;
 	IBOutlet NSProgressIndicator	*exportProgressIndicator;
 	IBOutlet NSTextField			*exportNoticeLabel;
 	
-	struct chmFile					*chmFileHandle;
 	NSString						*filePath;
 	
-    NSString						*docTitle;
-    NSString						*homePath;
-    NSString						*tableOfContentsPath;
-    NSString						*indexPath;
+	NSMutableArray					*searchResults;
 	
-	CHMTableOfContents				*tableOfContents;
-	CHMTableOfContents				*index;
-	CHMSearchResults				*searchResults;
 	
-	CHMDocumentSearchMode			searchMode;
+	CHMDocumentFileSearchMode		searchMode;
 	CHMDocumentViewMode				viewMode;
 	BOOL							isSearching;
-	
-	SKIndexRef						skIndex;
-	NSMutableData					*searchIndexObject;
-	BOOL							isIndexDone;
-	NSCondition						*searchIndexCondition;
 	
 	BOOL							isSidebarRestored;
 	
@@ -85,36 +65,25 @@ typedef NSUInteger CHMDocumentViewMode;
 	WebView							*curWebView;
 	CHMConsole						*console;
 	
-	NSStringEncoding				encoding;
-	NSString						*encodingName;
+	CHMDocumentFile					*documentFile;
 	
-	NSStringEncoding				customEncoding;
-	NSString						*customEncodingName;
+	CHMLinkItem						*currentItem;
 	
 }
 
 @property (readonly) NSString *filePath;
-@property (readonly) NSString *docTitle;
 
-@property (readonly, assign) NSStringEncoding encoding;
-@property (readonly, retain) NSString *encodingName;
-
-@property (assign) NSStringEncoding customEncoding;
-@property (retain) NSString *customEncodingName;
-
-@property (nonatomic, readonly, retain) NSString *currentEncodingName;
-
-@property (nonatomic, assign) CHMDocumentSearchMode	searchMode;
+@property (nonatomic, assign) CHMDocumentFileSearchMode	searchMode;
 
 @property (nonatomic, assign) CHMDocumentViewMode viewMode;
 
+@property (nonatomic, retain) CHMDocumentFile *documentFile;
+	
+@property (nonatomic, retain) CHMLinkItem *currentItem;
 
-- (NSString*)currentURL;
-- (NSString*)currentTitle;
-- (NSURL*)composeURL:(NSString *)path;
 
-- (BOOL)hasObjectAtPath:(NSString *)path;
-- (NSData *)dataForObjectAtPath:(NSString *)path;
+- (NSString *)currentURL;
+- (NSString *)currentTitle;
 
 
 - (void)loadURL:(NSURL *)url;
@@ -129,7 +98,6 @@ typedef NSUInteger CHMDocumentViewMode;
 - (IBAction)gotoNextPage:(id)sender;
 - (IBAction)gotoPrevPage:(id)sender;
 
-- (IBAction)locateTOC:(id)sender;
 
 // dump to pdf
 - (IBAction)exportToPDF:(id)sender;

@@ -12,6 +12,7 @@
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		C12CE0361CC1798300970809 /* CHMDocumentFile.m in Sources */ = {isa = PBXBuildFile; fileRef = C12CE0351CC1798300970809 /* CHMDocumentFile.m */; };
 		C14A60191CC6C43900B868C6 /* CHMLinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* CHMLinkItem.m */; };
 		C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */; };
 		C15332A01CCD4CFB00C67A97 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = C153329F1CCD4CFB00C67A97 /* view.png */; };
@@ -20,6 +21,7 @@
 		C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; };
 		C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */ = {isa = PBXBuildFile; fileRef = C18622321C8F550C00C1DD80 /* CHM.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C195099F1CD1782600288A26 /* CHMSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = C195099E1CD1782600288A26 /* CHMSearchResult.m */; };
 		C1C31ACF1CBDA789000F2B96 /* CHM.qlgenerator in Copy CHM.qlgenerator */ = {isa = PBXBuildFile; fileRef = C1C31AAD1CBD9876000F2B96 /* CHM.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C30F2B2F0E42135C003A17A7 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = C30F2B2E0E42135C003A17A7 /* home.png */; };
 		C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C33A4ABA0E34E92D00277D64 /* CHMDocument.m */; };
@@ -204,6 +206,8 @@
 		90C4D9C40E7DCC17006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
 		90C4D9C50E7DCC23006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		90C4D9C60E7DCC31006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
+		C12CE0341CC1798300970809 /* CHMDocumentFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocumentFile.h; sourceTree = "<group>"; };
+		C12CE0351CC1798300970809 /* CHMDocumentFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMDocumentFile.m; sourceTree = "<group>"; };
 		C14A60171CC6C43900B868C6 /* CHMLinkItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMLinkItem.h; sourceTree = "<group>"; };
 		C14A60181CC6C43900B868C6 /* CHMLinkItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMLinkItem.m; sourceTree = "<group>"; };
 		C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMImageViewPopUpButton.h; sourceTree = "<group>"; };
@@ -212,6 +216,8 @@
 		C183995D1CD00747009FDCDE /* PSMTabBarControl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PSMTabBarControl.xcodeproj; path = PSMTabBarControl/PSMTabBarControl.xcodeproj; sourceTree = "<group>"; };
 		C18622161C8F41F400C1DD80 /* CHM Framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Framework.xcodeproj"; path = "chmlib/osx/CHMFramework/CHM Framework.xcodeproj"; sourceTree = "<group>"; };
 		C186222C1C8F550C00C1DD80 /* CHM Spotlight Importer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CHM Spotlight Importer.xcodeproj"; path = "CHMSpotlightImporter/CHM Spotlight Importer.xcodeproj"; sourceTree = "<group>"; };
+		C195099D1CD1782600288A26 /* CHMSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMSearchResult.h; sourceTree = "<group>"; };
+		C195099E1CD1782600288A26 /* CHMSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMSearchResult.m; sourceTree = "<group>"; };
 		C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quickchm.xcodeproj; path = CHMQuickLook/quickchm.xcodeproj; sourceTree = "<group>"; };
 		C30F2B2E0E42135C003A17A7 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		C33A4AB90E34E92D00277D64 /* CHMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocument.h; sourceTree = "<group>"; };
@@ -394,6 +400,8 @@
 		C12CE03B1CC1798F00970809 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				C12CE0341CC1798300970809 /* CHMDocumentFile.h */,
+				C12CE0351CC1798300970809 /* CHMDocumentFile.m */,
 				C3E9715D0E4BEAA000B7B36D /* lcid.h */,
 				C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */,
 				C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */,
@@ -401,6 +409,8 @@
 				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
 				C14A60171CC6C43900B868C6 /* CHMLinkItem.h */,
 				C14A60181CC6C43900B868C6 /* CHMLinkItem.m */,
+				C195099D1CD1782600288A26 /* CHMSearchResult.h */,
+				C195099E1CD1782600288A26 /* CHMSearchResult.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -732,9 +742,11 @@
 				C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */,
 				C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */,
 				C3AA9B220E3EC8A200D2FB53 /* CHMWebViewController.m in Sources */,
+				C195099F1CD1782600288A26 /* CHMSearchResult.m in Sources */,
 				C33D3ACA0E4F05E500F7B487 /* Bookmarks.xcdatamodel in Sources */,
 				C33D3AD80E4F1E3800F7B487 /* CHMFile.m in Sources */,
 				C33D3AD90E4F1E3800F7B487 /* CHMTag.m in Sources */,
+				C12CE0361CC1798300970809 /* CHMDocumentFile.m in Sources */,
 				C33D3B0E0E4F245600F7B487 /* BookmarkController.m in Sources */,
 				C3BF8BA00E4FDD7200AE3BEE /* CHMBookmark.m in Sources */,
 				C3D5D3350E5159D5007C51BD /* BookmarkView.m in Sources */,

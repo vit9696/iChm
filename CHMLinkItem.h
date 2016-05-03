@@ -39,21 +39,10 @@
 
 - (void)appendChild:(CHMLinkItem *)item;
 
-- (CHMLinkItem *)itemForPath:(NSString *)aPath withStack:(NSMutableArray *)stack;
 - (NSArray *)ancestors;
 
 - (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
 - (void)sort;
-@end
-
-
-@interface CHMScoredLinkItem : CHMLinkItem {
-	CGFloat			relScore;
-}
-
-@property (nonatomic, assign) CGFloat relScore;
-
-- (id)initWithName:(NSString *)aName path:(NSString *)path score:(CGFloat)score;
 
 @end
 
