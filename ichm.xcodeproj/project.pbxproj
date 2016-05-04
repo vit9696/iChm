@@ -729,10 +729,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-lcrypto",
-				);
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = iChm;
 			};
 			name = Debug;
@@ -753,10 +750,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-lcrypto",
-				);
+				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = iChm;
 			};
 			name = Release;
