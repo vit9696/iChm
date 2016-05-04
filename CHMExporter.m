@@ -8,8 +8,7 @@
 #import "CHMExporter.h"
 #import "CHMTableOfContents.h"
 #import "CHMDocument.h"
-#import "ITSSProtocol.h"
-#import "CHMLinkItem.h"
+#import <CHMKit/CHMKit.h>
 
 
 #define MD_DEBUG 0

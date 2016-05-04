@@ -11,11 +11,10 @@
 #import <WebKit/WebKit.h>
 #import <AvailabilityMacros.h>
 #import <PSMTabBarControl/PSMTabBarControl.h>
-#import "CHMDocumentFile.h"
+#import <CHMKit/CHMKit.h>
 #import "CHMExporter.h"
 
 
-@class CHMLinkItem;
 @class CHMConsole;
 
 

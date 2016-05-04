@@ -7,7 +7,7 @@
 //
 
 #import "CHMAppController.h"
-#import "ITSSProtocol.h"
+#import <CHMKit/CHMKit.h>
 #import "BookmarkController.h"
 
 

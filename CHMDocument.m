@@ -7,14 +7,10 @@
 //
 
 #import "CHMDocument.h"
-#import "ITSSProtocol.h"
-#import "CHMTableOfContents.h"
 #import "CHMWebViewController.h"
 #import "CHMAppController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
-#import "CHMLinkItem.h"
-#import "CHMSearchResult.h"
 
 
 #define MD_DEBUG 1
