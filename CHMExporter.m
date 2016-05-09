@@ -105,7 +105,7 @@
 	}
 	
 	CHMLinkItem *item = [pageList objectAtIndex:currentPageListItemIndex];
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL chm__itssURLWithPath:item.path]];
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL chm__ITSSURLWithPath:item.path]];
 	[[webView mainFrame] loadRequest:request];
 	[delegate exporter:self didExportPage:cumulativeExportedPDFPageCount percentageComplete:100.0 * currentPageListItemIndex / pageList.count];
 }

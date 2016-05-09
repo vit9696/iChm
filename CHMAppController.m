@@ -23,7 +23,7 @@
 @implementation CHMAppController
 
 + (void)initialize {
-    [NSURLProtocol registerClass:[ITSSProtocol class]];
+    [NSURLProtocol registerClass:[CHMITSSURLProtocol class]];
 }
 
 
@@ -102,7 +102,7 @@
 
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    [NSURLProtocol unregisterClass:[ITSSProtocol class]];
+    [NSURLProtocol unregisterClass:[CHMITSSURLProtocol class]];
 }
 
 #pragma mark links

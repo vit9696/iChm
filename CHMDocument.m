@@ -248,7 +248,7 @@ static BOOL firstDocument = YES;
 	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
 	
 	self.currentItem = anItem;
-	NSURL *url = [NSURL chm__itssURLWithPath:anItem.path];
+	NSURL *url = [NSURL chm__ITSSURLWithPath:anItem.path];
 	[self loadURL:url];
 }
 
@@ -377,7 +377,7 @@ static BOOL firstDocument = YES;
 # pragma mark - <WebPolicyDelegate>
 - (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
 	
-	if ([ITSSProtocol canInitWithRequest:request]) {
+	if ([CHMITSSURLProtocol canInitWithRequest:request]) {
 		
 		int navigationType = [[actionInformation objectForKey:WebActionNavigationTypeKey] intValue];
 		unsigned int modifier = [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue];
@@ -400,7 +400,7 @@ static BOOL firstDocument = YES;
 - (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request newFrameName:(NSString *)frameName decisionListener:(id<WebPolicyDecisionListener>)listener {
 	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
-	if ([ITSSProtocol canInitWithRequest:request]) {
+	if ([CHMITSSURLProtocol canInitWithRequest:request]) {
 		[listener use];
 	} else {
 		[[NSWorkspace sharedWorkspace] openURL:[request URL]];
@@ -412,7 +412,7 @@ static BOOL firstDocument = YES;
 - (NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
 //	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
-	if ([ITSSProtocol canInitWithRequest:request]) {
+	if ([CHMITSSURLProtocol canInitWithRequest:request]) {
 		NSMutableURLRequest *specialURLRequest = [[request mutableCopy] autorelease];
 		[specialURLRequest setDocumentFile:documentFile];
 		[specialURLRequest setEncodingName:documentFile.currentEncodingName];

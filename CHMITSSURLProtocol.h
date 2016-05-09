@@ -1,5 +1,5 @@
 //
-//  ITSSProtocol.h
+//  CHMITSSURLProtocol.h
 //  ichm
 //
 //  Created by Robin Lu on 7/16/08.
@@ -10,27 +10,31 @@
 
 @class CHMDocumentFile;
 
-@interface ITSSProtocol : NSURLProtocol {
+@interface CHMITSSURLProtocol : NSURLProtocol {
 
 }
 
 @end
 
-@interface NSURLRequest (ITSSProtocol)
+@interface NSURLRequest (CHMITSSURLProtocol)
+
 - (CHMDocumentFile *)documentFile;
 - (NSString *)encodingName;
+
 @end
 
-@interface NSMutableURLRequest (ITSSProtocol)
+@interface NSMutableURLRequest (CHMITSSURLProtocol)
+
 - (void)setDocumentFile:(CHMDocumentFile *)aDocumentFile;
 - (void)setEncodingName:(NSString *)name;
+
 @end
 
 
-@interface NSURL (ITSSProtocol)
+@interface NSURL (CHMITSSURLProtocol)
 
 // create a composed URL (itss://chm/*) for an item at the specified path:
-+ (NSURL *)chm__itssURLWithPath:(NSString *)aPath;
++ (NSURL *)chm__ITSSURLWithPath:(NSString *)aPath;
 
 
 @end

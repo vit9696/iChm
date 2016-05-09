@@ -12,7 +12,7 @@
 #import "CHMLinkItem.h"
 #import "CHMTableOfContents.h"
 #import "CHMSearchResult.h"
-#import "ITSSProtocol.h"
+#import "CHMITSSURLProtocol.h"
 #import "CHMKitPrivateInterfaces.h"
 
 
@@ -667,7 +667,7 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 		filepath = [filepath substringFromIndex:1];
 	}
 	NSData *data = [self dataForObjectAtPath:filepath];
-	NSURL *url = [NSURL chm__itssURLWithPath:filepath];
+	NSURL *url = [NSURL chm__ITSSURLWithPath:filepath];
 	
 	if (!url) {
 		return;

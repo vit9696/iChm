@@ -11,5 +11,5 @@
 #import <CHMKit/CHMLinkItem.h>
 #import <CHMKit/CHMSearchResult.h>
 #import <CHMKit/CHMTableOfContents.h>
-#import <CHMKit/ITSSProtocol.h>
+#import <CHMKit/CHMITSSURLProtocol.h>
 

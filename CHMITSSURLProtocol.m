@@ -1,12 +1,12 @@
 //
-//  ITSSProtocol.m
+//  CHMITSSURLProtocol.m
 //  ichm
 //
 //  Created by Robin Lu on 7/16/08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "ITSSProtocol.h"
+#import "CHMITSSURLProtocol.h"
 #import "CHMDocumentFile.h"
 
 
@@ -19,7 +19,7 @@
 #endif
 
 
-@implementation ITSSProtocol
+@implementation CHMITSSURLProtocol
 
 - (id)initWithRequest:(NSURLRequest *)request cachedResponse:(NSCachedURLResponse *)cachedResponse client:(id <NSURLProtocolClient>)client {
     return [super initWithRequest:request cachedResponse:cachedResponse client:client];
@@ -93,7 +93,7 @@
 
 @end
 
-@implementation NSURLRequest (ITSSProtocol)
+@implementation NSURLRequest (CHMITSSURLProtocol)
 
 - (CHMDocumentFile *)documentFile {
 	return [NSURLProtocol propertyForKey:@"chm__documentFile" inRequest:self];
@@ -107,7 +107,7 @@
 
 
 
-@implementation NSMutableURLRequest (ITSSProtocol)
+@implementation NSMutableURLRequest (CHMITSSURLProtocol)
 
 - (void)setDocumentFile:(CHMDocumentFile *)aDocumentFile {
 	[NSURLProtocol setProperty:aDocumentFile forKey:@"chm__documentFile" inRequest:self];
@@ -120,10 +120,10 @@
 @end
 
 
-@implementation NSURL (ITSSProtocol)
+@implementation NSURL (CHMITSSURLProtocol)
 
 // create a composed URL (itss://chm/*) for an item at the specified path:
-+ (NSURL *)chm__itssURLWithPath:(NSString *)aPath {
++ (NSURL *)chm__ITSSURLWithPath:(NSString *)aPath {
 	if ([NSThread isMainThread]) MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
 	
 	NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", aPath]];

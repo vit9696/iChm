@@ -29,8 +29,8 @@
 		C1DA9EFF1CD9688600FE354F /* lcid.h in Headers */ = {isa = PBXBuildFile; fileRef = C3E9715D0E4BEAA000B7B36D /* lcid.h */; };
 		C1DA9F001CD9688600FE354F /* CHMTableOfContents.h in Headers */ = {isa = PBXBuildFile; fileRef = C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1DA9F011CD9688600FE354F /* CHMTableOfContents.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */; };
-		C1DA9F021CD9688600FE354F /* ITSSProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C1DA9F031CD9688600FE354F /* ITSSProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */; };
+		C1DA9F021CD9688600FE354F /* CHMITSSURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = C3DB25280E2DD49F000E5A20 /* CHMITSSURLProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1DA9F031CD9688600FE354F /* CHMITSSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB25290E2DD49F000E5A20 /* CHMITSSURLProtocol.m */; };
 		C1DA9F041CD9688600FE354F /* CHMLinkItem.h in Headers */ = {isa = PBXBuildFile; fileRef = C14A60171CC6C43900B868C6 /* CHMLinkItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1DA9F051CD9688600FE354F /* CHMLinkItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A60181CC6C43900B868C6 /* CHMLinkItem.m */; };
 		C1DA9F061CD9688600FE354F /* CHMSearchResult.h in Headers */ = {isa = PBXBuildFile; fileRef = C195099D1CD1782600288A26 /* CHMSearchResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -310,8 +310,8 @@
 		C3D6EE090E3D9E5C00A823A2 /* CHMOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMOutlineView.h; sourceTree = "<group>"; };
 		C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMOutlineView.m; sourceTree = "<group>"; };
 		C3DB24CD0E2DB849000E5A20 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ITSSProtocol.h; path = ../ITSSProtocol.h; sourceTree = "<group>"; };
-		C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ITSSProtocol.m; path = ../ITSSProtocol.m; sourceTree = "<group>"; };
+		C3DB25280E2DD49F000E5A20 /* CHMITSSURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMITSSURLProtocol.h; path = ../CHMITSSURLProtocol.h; sourceTree = "<group>"; };
+		C3DB25290E2DD49F000E5A20 /* CHMITSSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMITSSURLProtocol.m; path = ../CHMITSSURLProtocol.m; sourceTree = "<group>"; };
 		C3DB252D0E2DD646000E5A20 /* CHMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMAppController.h; sourceTree = "<group>"; };
 		C3DB252E0E2DD646000E5A20 /* CHMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMAppController.m; sourceTree = "<group>"; };
 		C3E9715D0E4BEAA000B7B36D /* lcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lcid.h; path = ../lcid.h; sourceTree = "<group>"; };
@@ -575,8 +575,8 @@
 				C12CE0351CC1798300970809 /* CHMDocumentFile.m */,
 				C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */,
 				C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */,
-				C3DB25280E2DD49F000E5A20 /* ITSSProtocol.h */,
-				C3DB25290E2DD49F000E5A20 /* ITSSProtocol.m */,
+				C3DB25280E2DD49F000E5A20 /* CHMITSSURLProtocol.h */,
+				C3DB25290E2DD49F000E5A20 /* CHMITSSURLProtocol.m */,
 				C14A60171CC6C43900B868C6 /* CHMLinkItem.h */,
 				C14A60181CC6C43900B868C6 /* CHMLinkItem.m */,
 				C195099D1CD1782600288A26 /* CHMSearchResult.h */,
@@ -626,7 +626,7 @@
 				C1DA9EFD1CD9688600FE354F /* CHMDocumentFile.h in Headers */,
 				C1DA9F001CD9688600FE354F /* CHMTableOfContents.h in Headers */,
 				C1DA9EFF1CD9688600FE354F /* lcid.h in Headers */,
-				C1DA9F021CD9688600FE354F /* ITSSProtocol.h in Headers */,
+				C1DA9F021CD9688600FE354F /* CHMITSSURLProtocol.h in Headers */,
 				C1DA9F481CDA99F700FE354F /* CHMKitPrivateInterfaces.h in Headers */,
 				C1DA9EEC1CD9668C00FE354F /* CHMKit.h in Headers */,
 			);
@@ -857,7 +857,7 @@
 				C1DA9F051CD9688600FE354F /* CHMLinkItem.m in Sources */,
 				C1DA9EFE1CD9688600FE354F /* CHMDocumentFile.m in Sources */,
 				C1D4A34D1CDE540E00E94D01 /* CHMKitPrivateInterfaces.m in Sources */,
-				C1DA9F031CD9688600FE354F /* ITSSProtocol.m in Sources */,
+				C1DA9F031CD9688600FE354F /* CHMITSSURLProtocol.m in Sources */,
 				C1DA9F071CD9688600FE354F /* CHMSearchResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
