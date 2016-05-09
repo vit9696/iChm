@@ -196,7 +196,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		case LCID_SL: //1250
 		case LCID_SQ: //1250
 		case LCID_SR_SP: //1250
-			name = @"CP1250";
+			name = @"windows-1250";
 			break;
 		case LCID_AZ_CY: //1251
 		case LCID_BE: //1251
@@ -209,7 +209,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		case LCID_UK: //1251
 		case LCID_UZ_UZ2: //1251
 		case LCID_YI: //1251
-			name = @"CP1251";
+			name = @"windows-1251";
 			break;
 		case LCID_AF: //1252
 		case LCID_CA: //1252
@@ -274,18 +274,18 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		case LCID_SV_FI: //1252
 		case LCID_SV_SE: //1252
 		case LCID_SW: //1252
-			name = @"CP1252";
+			name = @"windows-1252";
 			break;
 		case LCID_EL: //1253
-			name = @"CP1253";
+			name = @"windows-1253";
 			break;
 		case LCID_AZ_LA: //1254
 		case LCID_TR: //1254
 		case LCID_UZ_UZ: //1254
-			name = @"CP1254";
+			name = @"windows-1254";
 			break;
 		case LCID_HE: //1255
-			name = @"CP1255";
+			name = @"windows-1255";
 			break;
 		case LCID_AR_AE: //1256
 		case LCID_AR_BH: //1256
@@ -305,33 +305,33 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		case LCID_AR_YE: //1256
 		case LCID_FA: //1256
 		case LCID_UR: //1256
-			name = @"CP1256";
+			name = @"windows-1256";
 			break;
 		case LCID_ET: //1257
 		case LCID_LT: //1257
 		case LCID_LV: //1257
-			name = @"CP1257";
+			name = @"windows-1257";
 			break;
 		case LCID_VI: //1258
-			name = @"CP1258";
+			name = @"windows-1258";
 			break;
 		case LCID_TH: //874
-			name = @"CP874";
+			name = @"cp874";
 			break;
 		case LCID_JA: //932
-			name = @"CP932";
+			name = @"cp932";
 			break;
 		case LCID_ZH_CN: //936
 		case LCID_ZH_SG: //936
-			name = @"CP936";
+			name = @"cp936";
 			break;
 		case LCID_KO: //949
-			name = @"CP949";
+			name = @"cp949";
 			break;
 		case LCID_ZH_HK: //950
 		case LCID_ZH_MO: //950
 		case LCID_ZH_TW: //950
-			name = @"CP950";
+			name = @"cp950";
 			break;			
 		case LCID_GD_IE: //??
 		case LCID_MK: //??

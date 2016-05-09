@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string></string>
+			<key>title</key>
+			<string>Automatic</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>UTF-8</string>
+			<key>title</key>
+			<string>Unicode (UTF-8)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-1</string>
+			<key>title</key>
+			<string>Western (ISO Latin 1)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>macintosh</string>
+			<key>title</key>
+			<string>Western (Mac OS Roman)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1252</string>
+			<key>title</key>
+			<string>Western (Windows Latin 1)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>shift_jis</string>
+			<key>title</key>
+			<string>Japanese (Shift-JIS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>iso-2022-jp</string>
+			<key>title</key>
+			<string>Japanese (ISO 2022-JP)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>euc-jp</string>
+			<key>title</key>
+			<string>Japanese (EUC)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Shift_JIS</string>
+			<key>title</key>
+			<string>Japanese (Shift JIS X0213)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>cp932</string>
+			<key>title</key>
+			<string>Japanese (Windows, DOS)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>big5</string>
+			<key>title</key>
+			<string>Traditional Chinese (Big 5)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>big5-hkscs</string>
+			<key>title</key>
+			<string>Traditional Chinese (Big 5 HKSCS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>cp950</string>
+			<key>title</key>
+			<string>Traditional Chinese (Windows, DOS)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-2022-kr</string>
+			<key>title</key>
+			<string>Korean (ISO 2022-KR)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>x-mac-korean</string>
+			<key>title</key>
+			<string>Korean (Mac OS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>cp949</string>
+			<key>title</key>
+			<string>Korean (Windows, DOS)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-6</string>
+			<key>title</key>
+			<string>Arabic (ISO 8859-6)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1256</string>
+			<key>title</key>
+			<string>Arabic (Windows)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-8</string>
+			<key>title</key>
+			<string>Hebrew (ISO 8859-8)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1255</string>
+			<key>title</key>
+			<string>Hebrew (Windows)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-7</string>
+			<key>title</key>
+			<string>Greek (ISO 8859-7)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1253</string>
+			<key>title</key>
+			<string>Greek (Windows)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-5</string>
+			<key>title</key>
+			<string>Cyrillic (ISO 8859-5)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>x-mac-cyrillic</string>
+			<key>title</key>
+			<string>Cyrillic (Mac OS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>koi8-r</string>
+			<key>title</key>
+			<string>Cyrillic (KOI8-R)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1251</string>
+			<key>title</key>
+			<string>Cyrillic (Windows)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>koi8-u</string>
+			<key>title</key>
+			<string>Ukrainian (KOI8-U)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>cp874</string>
+			<key>title</key>
+			<string>Thai (Windows, DOS)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>gb2312</string>
+			<key>title</key>
+			<string>Simplified Chinese (GB 2312)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>cp936</string>
+			<key>title</key>
+			<string>Simplified Chinese (Windows, DOS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>GBK</string>
+			<key>title</key>
+			<string>Chinese (GBK)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>gb18030</string>
+			<key>title</key>
+			<string>Chinese (GB 18030)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-2</string>
+			<key>title</key>
+			<string>Central European (ISO Latin 2)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>x-mac-centraleurroman</string>
+			<key>title</key>
+			<string>Central European (Mac OS)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1250</string>
+			<key>title</key>
+			<string>Central European (Windows Latin 2)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>windows-1258</string>
+			<key>title</key>
+			<string>Vietnamese (Windows)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>iso-8859-9</string>
+			<key>title</key>
+			<string>Turkish (ISO Latin 5)</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>windows-1254</string>
+			<key>title</key>
+			<string>Turkish (Windows Latin 5)</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>windows-1257</string>
+			<key>title</key>
+			<string>Baltic (Windows)</string>
+		</dict>
+	</array>
+</array>
+</plist>

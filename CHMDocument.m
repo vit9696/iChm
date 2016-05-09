@@ -969,6 +969,26 @@ static BOOL firstDocument = YES;
 			return (documentFile.index != nil);
 		}
 	} else if (action == @selector(changeEncoding:)) {
+		if (tag == 0) {
+			NSFont *menuFont = menuItem.menu.font;
+			if (menuFont == nil) menuFont = [NSFont menuFontOfSize:[NSFont systemFontSize] + 1];
+			
+			NSMutableAttributedString *mTitle = [[[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"Automatic ", @"Automatic ")
+																						attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+																									menuFont,NSFontAttributeName, nil]] autorelease];
+			
+			NSString *locDescription = [NSString localizedNameOfStringEncoding:documentFile.encoding];
+			if (locDescription) {
+				NSAttributedString *attrLocDescription = [[[NSAttributedString alloc] initWithString:locDescription
+																						  attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+																									  menuFont,NSFontAttributeName,
+																									  [NSColor selectedTextBackgroundColor],NSForegroundColorAttributeName, nil]] autorelease];
+				[mTitle appendAttributedString:attrLocDescription];
+			}
+			
+			[menuItem setAttributedTitle:mTitle];
+		}
+		
 		[menuItem setState:documentFile.customEncoding == tag];
 		
 	} else if (action == @selector(zoomIn:)) {

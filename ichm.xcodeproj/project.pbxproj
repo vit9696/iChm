@@ -64,7 +64,7 @@
 		C3D6EE0B0E3D9E5C00A823A2 /* CHMOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6EE0A0E3D9E5C00A823A2 /* CHMOutlineView.m */; };
 		C3DB24CE0E2DB849000E5A20 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3DB24CD0E2DB849000E5A20 /* WebKit.framework */; };
 		C3DB252F0E2DD646000E5A20 /* CHMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3DB252E0E2DD646000E5A20 /* CHMAppController.m */; };
-		C3ED1DA00E43106D00C1B93A /* textencoding.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3ED1D9F0E43106D00C1B93A /* textencoding.plist */; };
+		C3ED1DA00E43106D00C1B93A /* textEncodings.plist in Resources */ = {isa = PBXBuildFile; fileRef = C3ED1D9F0E43106D00C1B93A /* textEncodings.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,7 +311,7 @@
 		C3DB252D0E2DD646000E5A20 /* CHMAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMAppController.h; sourceTree = "<group>"; };
 		C3DB252E0E2DD646000E5A20 /* CHMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMAppController.m; sourceTree = "<group>"; };
 		C3E9715D0E4BEAA000B7B36D /* lcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lcid.h; path = ../lcid.h; sourceTree = "<group>"; };
-		C3ED1D9F0E43106D00C1B93A /* textencoding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = textencoding.plist; sourceTree = "<group>"; };
+		C3ED1D9F0E43106D00C1B93A /* textEncodings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = textEncodings.plist; sourceTree = "<group>"; };
 		C3FF6BAD0E585DC300F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C3FF6BAE0E585DCF00F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C3FF6BAF0E585DD600F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/CHMWebView.xib; sourceTree = "<group>"; };
@@ -401,6 +401,7 @@
 			children = (
 				C3DB252D0E2DD646000E5A20 /* CHMAppController.h */,
 				C3DB252E0E2DD646000E5A20 /* CHMAppController.m */,
+				C3ED1D9F0E43106D00C1B93A /* textEncodings.plist */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
 				C18622411C8F5F3D00C1DD80 /* Document */,
 			);
@@ -423,7 +424,6 @@
 			isa = PBXGroup;
 			children = (
 				C3C082260E4557F900D58E19 /* images */,
-				C3ED1D9F0E43106D00C1B93A /* textencoding.plist */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
@@ -803,7 +803,7 @@
 				C36FD4240E482D3800496822 /* CHMWebView.xib in Resources */,
 				C33DE50B0E40A651009FF1F4 /* ichm.css in Resources */,
 				C30F2B2F0E42135C003A17A7 /* home.png in Resources */,
-				C3ED1DA00E43106D00C1B93A /* textencoding.plist in Resources */,
+				C3ED1DA00E43106D00C1B93A /* textEncodings.plist in Resources */,
 				C3C082250E4557E700D58E19 /* TB_Sidebar.png in Resources */,
 				C33BB2050E46DA100026F435 /* ichm_file.icns in Resources */,
 				C36FD52C0E48403F00496822 /* Localizable.strings in Resources */,

@@ -30,18 +30,18 @@
 - (void)awakeFromNib {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
-	NSString *path = [[NSBundle mainBundle] pathForResource:@"textencoding" ofType:@"plist"];
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"textEncodings" ofType:@"plist"];
 	
 	if (path == nil) {
 		NSBeep();
-		NSLog(@"[%@ %@] failed to find textencoding.plist!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+		NSLog(@"[%@ %@] failed to find textEncodings.plist!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 		return;
 	}
 	
 	NSArray *plist = [NSArray arrayWithContentsOfFile:path];
 	if (plist == nil) {
 		NSBeep();
-		NSLog(@"[%@ %@] failed to load textencoding.plist!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+		NSLog(@"[%@ %@] failed to load textEncodings.plist!", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 		return;
 	}
 	
@@ -60,21 +60,26 @@
 			
 			MDLog(@"[%@ %@] encodingName == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
 			
-			CFStringEncoding cfStringEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
+			CFStringEncoding cfStringEncoding = kCFStringEncodingInvalidId;
+			NSStringEncoding nsStringEncoding = 0;
 			
-			if (cfStringEncoding == kCFStringEncodingInvalidId) {
-				NSLog(@"[%@ %@] *** WARNING: CFStringConvertIANACharSetNameToEncoding() returned kCFStringEncodingInvalidId for \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
+			if (encodingName.length) {
+				cfStringEncoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName);
 				
-			} else {
-				MDLog(@"cfStringEncoding == %lu", (unsigned long)cfStringEncoding);
-				MDLog(@"cfStringEncoding == \"%@\"", CFStringGetNameOfEncoding(cfStringEncoding));
+				if (cfStringEncoding == kCFStringEncodingInvalidId) {
+					NSLog(@"[%@ %@] *** WARNING: CFStringConvertIANACharSetNameToEncoding() returned kCFStringEncodingInvalidId for \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), encodingName);
+					
+				} else {
+					MDLog(@"cfStringEncoding == %lu", (unsigned long)cfStringEncoding);
+					MDLog(@"cfStringEncoding == \"%@\"", CFStringGetNameOfEncoding(cfStringEncoding));
+					
+				}
+				
+				nsStringEncoding = CFStringConvertEncodingToNSStringEncoding(cfStringEncoding);
+				MDLog(@"nsStringEncoding == %lu", (unsigned long)nsStringEncoding);
+				MDLog(@"locDescrp == %@", [NSString localizedNameOfStringEncoding:nsStringEncoding]);
 				
 			}
-			
-			NSStringEncoding nsStringEncoding = CFStringConvertEncodingToNSStringEncoding(cfStringEncoding);
-			MDLog(@"nsStringEncoding == %lu", (unsigned long)nsStringEncoding);
-//			NSString *locDescrp = [NSString localizedNameOfStringEncoding:nsStringEncoding];
-			MDLog(@"locDescrp == %@", locDescrp);
 			
 			if (cfStringEncoding != kCFStringEncodingInvalidId || encodingName.length == 0) {
 				NSMenuItem *newItem = [[[NSMenuItem alloc] init] autorelease];
