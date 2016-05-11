@@ -91,6 +91,8 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 - (BOOL)hasObjectAtPath:(NSString *)path;
 - (NSData *)dataForObjectAtPath:(NSString *)path;
 
+- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToItem:(CHMLinkItem *)anItem;
+
 - (CHMLinkItem *)itemAtPath:(NSString *)aPath;
 
 

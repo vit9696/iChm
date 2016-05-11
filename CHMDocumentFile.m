@@ -398,6 +398,13 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
+- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToItem:(CHMLinkItem *)anItem {
+	NSString *fullPath = [[anItem.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:aRelativePath];
+//	MDLog(@"[%@ %@] fullPath == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), fullPath);
+	return [self dataForObjectAtPath:fullPath];
+}
+
+
 - (BOOL)loadMetadata {
 	/* before anything else, get the encoding */
 	
