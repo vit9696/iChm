@@ -7,17 +7,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
+
 @class WebView;
 
 @interface CHMWebViewController : NSViewController {
-	IBOutlet WebView* webView;
-	IBOutlet NSView*  findPanel;
-	IBOutlet NSSearchField* searchField;
+	IBOutlet WebView		*webView;
+	IBOutlet NSView			*findPanel;
+	IBOutlet NSSearchField	*searchField;
 }
 
-@property (readonly) WebView* webView;
-@property (readonly) NSSearchField* searchField;
+@property (readonly) WebView *webView;
+@property (readonly) NSSearchField *searchField;
 
 - (IBAction)hideFindPanel:(id)sender;
 - (IBAction)showFindPanel:(id)sender;
+
 @end

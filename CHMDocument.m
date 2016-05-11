@@ -627,7 +627,7 @@ static BOOL firstDocument = YES;
 }
 
 - (NSTabViewItem *)createWebViewInTab:(id)sender {
-	CHMWebViewController *chmWebViewController = [[CHMWebViewController alloc] init];
+	CHMWebViewController *chmWebViewController = [[[CHMWebViewController alloc] init] autorelease];
 	
 	// init the webview
 	WebView *newView = [chmWebViewController webView];
@@ -655,7 +655,7 @@ static BOOL firstDocument = YES;
 	if ([[NSUserDefaults standardUserDefaults] floatForKey:@"zoom factor"] != 0) {
 		[newView setTextSizeMultiplier:[[NSUserDefaults standardUserDefaults] floatForKey:@"zoom factor"]];
 	}
-	
+	// NOTE: the tab view item retains the CHMWebViewController instance
 	// create new tab item
 	NSTabViewItem *newItem = [[[NSTabViewItem alloc] init] autorelease];
 	[newItem setView:[chmWebViewController view]];
@@ -666,7 +666,6 @@ static BOOL firstDocument = YES;
 	[docTabView addTabViewItem:newItem];
 	[webViews addObject:newView];
 	
-	[chmWebViewController autorelease];
 	return newItem;
 }
 
@@ -856,10 +855,9 @@ static BOOL firstDocument = YES;
 	[documentWindow makeFirstResponder:searchField];
 }
 
-# pragma mark - find panel
+#pragma mark - find panel
 - (IBAction)showFindPanel:(id)sender {
-	CHMWebViewController *chmWebView = (CHMWebViewController *)[[docTabView selectedTabViewItem] identifier];
-	return [chmWebView showFindPanel:sender];
+	return [(CHMWebViewController *)[[docTabView selectedTabViewItem] identifier] showFindPanel:sender];
 }
 
 - (IBAction)beginFind:(id)sender {
@@ -899,7 +897,7 @@ static BOOL firstDocument = YES;
 }
 
 - (IBAction)doneFind:(id)sender {
-	[[[docTabView selectedTabViewItem] identifier] hideFindPanel:sender];
+	[(CHMWebViewController *)[[docTabView selectedTabViewItem] identifier] hideFindPanel:sender];
 	[self removeHighlight];
 }
 

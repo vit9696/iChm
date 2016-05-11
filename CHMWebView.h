@@ -11,8 +11,9 @@
 @class CHMDocument;
 
 @interface CHMWebView : WebView {
-	CHMDocument* chmDocument;
+	CHMDocument		*chmDocument;	// non-retained
 }
 
-- (void)setDocument:(CHMDocument*)doc;
+- (void)setDocument:(CHMDocument *)doc;
+
 @end

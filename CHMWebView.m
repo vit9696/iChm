@@ -9,20 +9,20 @@
 #import "CHMWebView.h"
 #import "CHMDocument.h"
 
+
 @implementation CHMWebView
 
-- (void)setDocument:(CHMDocument*)doc
-{
+
+- (void)setDocument:(CHMDocument *)doc {
 	chmDocument = doc;
 }
 
-- (void)scrollPageDown:(id)sender
-{
+- (void)scrollPageDown:(id)sender {
 	[chmDocument gotoNextPage:sender];
 }
 
-- (void)scrollPageUp:(id)sender
-{
+- (void)scrollPageUp:(id)sender {
 	[chmDocument gotoPrevPage:sender];	
 }
+
 @end

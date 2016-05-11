@@ -14,31 +14,28 @@
 @synthesize webView;
 @synthesize searchField;
 
-- (id) init
-{
+- (id)init {
 	if ((self = [super initWithNibName:@"CHMWebView" bundle:nil])) {
 		[self loadView];
 	}
 	return self;
 }
 
-- (IBAction)hideFindPanel:(id)sender
-{
-	if ([findPanel isHidden])
-		return;
+
+- (IBAction)hideFindPanel:(id)sender {
+	if ([findPanel isHidden]) return;
+	
 	[findPanel setHidden:YES];
-	float webViewHeight = [webView frame].size.height;
+	CGFloat webViewHeight = [webView frame].size.height;
 	webViewHeight = webViewHeight + 27;
 	[webView setFrame:NSMakeRect([webView frame].origin.x, [webView frame].origin.y, [webView frame].size.width, webViewHeight)];
 	[webView setNeedsDisplay:YES];
 }
 
-- (IBAction)showFindPanel:(id)sender
-{
-	if ([findPanel isHidden])
-	{
+- (IBAction)showFindPanel:(id)sender {
+	if ([findPanel isHidden]) {
 		[findPanel setHidden:NO];
-		float webViewHeight = [webView frame].size.height;
+		CGFloat webViewHeight = [webView frame].size.height;
 		webViewHeight = webViewHeight - 27;
 		[webView setFrame:NSMakeRect([webView frame].origin.x, [webView frame].origin.y, [webView frame].size.width, webViewHeight)];
 		[webView setNeedsDisplay:YES];
