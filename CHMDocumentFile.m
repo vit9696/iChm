@@ -13,6 +13,7 @@
 #import "CHMTableOfContents.h"
 #import "CHMSearchResult.h"
 #import "ITSSProtocol.h"
+#import "CHMKitPrivateInterfaces.h"
 
 
 #define MD_DEBUG 1
@@ -602,6 +603,20 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
+- (CHMLinkItem *)itemAtPath:(NSString *)aPath {
+//	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+	// strip leading /'s
+	aPath = [aPath chm__stringByDeletingLeadingSlashes];
+	
+	CHMLinkItem *item = nil;
+	if (tableOfContents) item = [tableOfContents itemAtPath:aPath];
+	if (item == nil && index) item = [index itemAtPath:aPath];
+//	MDLog(@"[%@ %@] item == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), item);
+	return item;
+}
+
+
+
 #pragma mark - search
 - (void)prepareSearchIndex {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
@@ -824,17 +839,6 @@ static NSString * const CHMDocumentFileSearchModeDescriptions[] = {
 - (NSArray *)searchResults {
 	return [[searchResults copy] autorelease];
 }
-
-
-- (CHMLinkItem *)itemAtPath:(NSString *)aPath {
-//	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
-	CHMLinkItem *item = nil;
-	if (tableOfContents) item = [tableOfContents itemAtPath:aPath];
-	if (item == nil && index) item = [index itemAtPath:aPath];
-//	MDLog(@"[%@ %@] item == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), item);
-	return item;
-}
-
 
 
 #pragma mark - encodings

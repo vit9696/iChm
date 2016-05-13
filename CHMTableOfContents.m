@@ -9,6 +9,7 @@
 #import "CHMTableOfContents.h"
 #import <libxml/HTMLparser.h>
 #import "CHMLinkItem.h"
+#import "CHMKitPrivateInterfaces.h"
 
 
 #define MD_DEBUG 0
@@ -19,20 +20,6 @@
 #define MDLog(...)
 #endif
 
-
-
-
-@interface CHMTableOfContents ()
-
-
-- (void)push_item;
-- (void)pop_item;
-- (void)new_item;
-
-- (CHMLinkItem *)curItem;
-
-- (void)addToPageList:(CHMLinkItem *)item;
-@end
 
 
 @implementation CHMTableOfContents
@@ -121,8 +108,7 @@ static htmlSAXHandler saxHandler = {
 
 - (CHMLinkItem *)itemAtPath:(NSString *)aPath {
 	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
-	
-	if ([aPath hasPrefix:@"/"]) aPath = [aPath substringFromIndex:1];
+	aPath = [aPath chm__stringByDeletingLeadingSlashes];
 	
 	CHMLinkItem *item = [itemsAndPaths objectForKey:aPath];
 	

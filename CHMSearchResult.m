@@ -8,6 +8,7 @@
 
 #import "CHMSearchResult.h"
 #import "CHMLinkItem.h"
+#import "CHMKitPrivateInterfaces.h"
 
 
 @implementation CHMSearchResult

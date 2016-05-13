@@ -7,9 +7,10 @@
 //
 
 #import "CHMLinkItem.h"
+#import "CHMKitPrivateInterfaces.h"
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
@@ -17,13 +18,6 @@
 #define MDLog(...)
 #endif
 
-
-
-@interface CHMLinkItem ()
-
-@property (nonatomic, assign) CHMLinkItem *parent;
-
-@end
 
 
 @implementation CHMLinkItem
@@ -130,7 +124,7 @@
 -(NSString *)description {
 //    return [NSString stringWithFormat:@"{\n\tname:%@\n\tpath:%@\n\tchildren:%@\n}", name, path, children];
 	NSMutableString *description = [NSMutableString stringWithFormat:@"<%@> %@\r", NSStringFromClass([self class]), self.name];
-	[description appendFormat:@"          path == %@\r\r", path];
+	[description appendFormat:@"          path == \"%@\"\r\r", path];
 	if (children.count) [description appendFormat:@"          children (%lu)\r\r", (unsigned long)children.count];
 //	if (children.count) [description appendFormat:@"          children (%lu) == %@\r\r", (unsigned long)children.count, children];
 	

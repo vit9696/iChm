@@ -20,8 +20,6 @@
 }
 
 
-- (id)initWithName:(NSString *)aName path:(NSString *)aPath;
-
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *path;
 @property (nonatomic, retain) NSMutableArray *children;
@@ -32,17 +30,10 @@
 @property (readonly, nonatomic, retain) NSString *uppercaseName;
 
 
-- (void)purge;
-
 - (NSUInteger)numberOfChildren;
 - (CHMLinkItem *)childAtIndex:(NSUInteger)n;
 
-- (void)appendChild:(CHMLinkItem *)item;
-
 - (NSArray *)ancestors;
-
-- (void)enumerateItemsWithSelector:(SEL)selector forTarget:(id)target;
-- (void)sort;
 
 @end
 

@@ -17,10 +17,6 @@
 	
 }
 
-+ (id)searchResultWithItem:(CHMLinkItem *)anItem score:(CGFloat)aScore;
-- (id)initWithItem:(CHMLinkItem *)anItem score:(CGFloat)aScore;
-
-
 @property (nonatomic, retain) CHMLinkItem *item;
 @property (nonatomic, assign) CGFloat score;
 

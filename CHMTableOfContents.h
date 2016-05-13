@@ -21,16 +21,10 @@
 	
 }
 
-@property (readonly) CHMLinkItem *items;
-@property (readonly) NSArray *pageList;
-
-- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
+@property (readonly, retain) CHMLinkItem *items;
+@property (readonly, retain) NSArray *pageList;
 
 
-- (CHMLinkItem *)itemAtPath:(NSString *)aPath;
-
-
-- (void)sort;
 
 - (CHMLinkItem *)pageAfterPage:(CHMLinkItem *)item;
 - (CHMLinkItem *)pageBeforePage:(CHMLinkItem *)item;
