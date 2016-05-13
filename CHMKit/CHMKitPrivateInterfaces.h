@@ -18,6 +18,8 @@
 
 @property (nonatomic, assign) CHMLinkItem *parent;
 
+@property (nonatomic, assign) CHMTableOfContents *container;
+
 - (void)purge;
 
 - (void)appendChild:(CHMLinkItem *)item;
@@ -33,6 +35,8 @@
 @interface CHMTableOfContents ()
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
+
+@property (assign) CHMDocumentFile *documentFile;
 
 
 - (CHMLinkItem *)itemAtPath:(NSString *)aPath;

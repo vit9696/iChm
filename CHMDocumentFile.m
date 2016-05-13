@@ -579,6 +579,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	if (tableOfContentsPath && tableOfContentsPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:tableOfContentsPath];
 		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
+		newTOC.documentFile = self;
 		CHMTableOfContents *oldTOC = tableOfContents;
 		tableOfContents = newTOC;
 		
@@ -589,6 +590,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	if (indexPath && indexPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:indexPath];
 		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
+		newTOC.documentFile = self;
 		CHMTableOfContents *oldTOC = index;
 		index = newTOC;
 		[index sort];

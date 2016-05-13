@@ -26,7 +26,7 @@
 @synthesize children;
 @synthesize pageID;
 @synthesize parent;
-
+@synthesize container;
 @dynamic uppercaseName;
 
 - (id)init {

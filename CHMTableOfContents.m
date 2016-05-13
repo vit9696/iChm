@@ -10,6 +10,7 @@
 #import <libxml/HTMLparser.h>
 #import "CHMLinkItem.h"
 #import "CHMKitPrivateInterfaces.h"
+#import "CHMDocumentFile.h"
 
 
 #define MD_DEBUG 0
@@ -26,6 +27,7 @@
 
 @synthesize items;
 @synthesize pageList;
+@synthesize documentFile;
 
 static void elementDidStart(CHMTableOfContents *toc, const xmlChar *name, const xmlChar **atts);
 static void elementDidEnd(CHMTableOfContents *toc, const xmlChar *name);
@@ -85,6 +87,7 @@ static htmlSAXHandler saxHandler = {
 		[items enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
 		
 		for (CHMLinkItem *item in pageList) {
+			item.container = self;
 			NSString *path = item.path;
 			if (path) [itemsAndPaths setObject:item forKey:path];
 		}

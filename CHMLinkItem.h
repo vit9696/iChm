@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class CHMTableOfContents;
+
 
 @interface CHMLinkItem	: NSObject {
-	NSString			*name;
-	NSString			*path;
-	NSMutableArray		*children;
-	NSUInteger			pageID;
+	NSString				*name;
+	NSString				*path;
+	NSMutableArray			*children;
+	NSUInteger				pageID;
 	
-	CHMLinkItem			*parent;		// non-retained
+	CHMLinkItem				*parent;		// non-retained
 	
+	CHMTableOfContents		*container;		// non-retained
 }
 
 
@@ -26,6 +29,8 @@
 @property (nonatomic, assign) NSUInteger pageID;
 
 @property (readonly, nonatomic, assign) CHMLinkItem *parent;
+
+@property (readonly, nonatomic, assign) CHMTableOfContents *container;
 
 @property (readonly, nonatomic, retain) NSString *uppercaseName;
 
