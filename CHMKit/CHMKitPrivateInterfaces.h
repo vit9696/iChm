@@ -16,9 +16,17 @@
 - (id)initWithName:(NSString *)aName path:(NSString *)aPath;
 
 
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSString *path;
+@property (nonatomic, retain) NSArray *children;
+@property (nonatomic, assign) NSUInteger pageID;
+
+
 @property (nonatomic, assign) CHMLinkItem *parent;
 
 @property (nonatomic, assign) CHMTableOfContents *container;
+
+@property (readonly, nonatomic, retain) NSString *uppercaseName;
 
 - (void)purge;
 

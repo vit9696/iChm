@@ -23,16 +23,13 @@
 }
 
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *path;
-@property (nonatomic, retain) NSMutableArray *children;
-@property (nonatomic, assign) NSUInteger pageID;
+@property (readonly, nonatomic, retain) NSString *name;
+@property (readonly, nonatomic, retain) NSString *path;
+@property (readonly, nonatomic, retain) NSArray *children;
 
 @property (readonly, nonatomic, assign) CHMLinkItem *parent;
 
 @property (readonly, nonatomic, assign) CHMTableOfContents *container;
-
-@property (readonly, nonatomic, retain) NSString *uppercaseName;
 
 
 - (NSUInteger)numberOfChildren;

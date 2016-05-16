@@ -52,6 +52,11 @@
 }
 
 
+- (NSArray *)children {
+	return [[children copy] autorelease];
+}
+
+
 - (NSUInteger)numberOfChildren {
 	return children.count;
 }

@@ -741,7 +741,7 @@ static NSString * const CHMDocumentFileSearchModeDescriptions[] = {
 		}
 		
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-		NSMutableArray *indexChildren = index.items.children;
+		NSArray *indexChildren = index.items.children;
 		NSArray *filteredResults = [indexChildren filteredArrayUsingPredicate:predicate];
 		
 		NSMutableArray *mSearchResults = [NSMutableArray array];
