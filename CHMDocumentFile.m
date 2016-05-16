@@ -379,7 +379,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	void *buffer = NULL;
 	
 	if (chm_resolve_object(chmFileHandle, [path UTF8String], &info ) == CHM_RESOLVE_SUCCESS) {
-		buffer = malloc(info.length);
+		buffer = malloc((size_t)info.length);
 		
 		if (buffer) {
 			if (!chm_retrieve_object(chmFileHandle, &info, buffer, 0, info.length)) {
@@ -391,7 +391,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
     
 	if (buffer)
-		return [NSData dataWithBytesNoCopy:buffer length:info.length];
+		return [NSData dataWithBytesNoCopy:buffer length:(NSUInteger)info.length];
 	
 	return nil;
 	
@@ -432,7 +432,9 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			NSStringEncoding nsStringEncoding = CFStringConvertEncodingToNSStringEncoding(cfStringEncoding);
 //			MDLog(@"nsStringEncoding == %lu", (unsigned long)nsStringEncoding);
 			
+#if MD_DEBUG
 			NSString *locDescrp = [NSString localizedNameOfStringEncoding:nsStringEncoding];
+#endif
 			MDLog(@"[%@ %@] (SYSTEM) encoding == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), locDescrp);
 			
 			encoding = nsStringEncoding;
@@ -704,12 +706,13 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 	}
 }
 
-
+#if MD_DEBUG
 static NSString * const CHMDocumentFileSearchModeDescriptions[] = {
 	@"<invalid value>",
 	@"CHMDocumentFileSearchInFile",
 	@"CHMDocumentFileSearchInIndex",
 };
+#endif
 
 - (void)searchForString:(NSString *)searchString usingMode:(CHMDocumentFileSearchMode)searchMode {
 	NSParameterAssert(searchString != nil && searchMode >= CHMDocumentFileSearchInFile && searchMode <= CHMDocumentFileSearchInIndex);
