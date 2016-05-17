@@ -100,7 +100,7 @@ static BOOL firstDocument = YES;
 
 - (CHMTableOfContents *)currentDataSource;
 
-- (void)loadItem:(CHMLinkItem *)anItem;
+- (void)loadLinkItem:(CHMLinkItem *)anItem;
 
 - (IBAction)revealCurrentItemInOutlineView:(id)sender;
 
@@ -114,8 +114,7 @@ static BOOL firstDocument = YES;
 @synthesize searchMode;
 @synthesize viewMode;
 @synthesize documentFile;
-@synthesize currentItem;
-
+@synthesize currentLinkItem;
 
 
 - (id)init {
@@ -148,7 +147,7 @@ static BOOL firstDocument = YES;
 	documentFile.searchDelegate = nil;
 	[documentFile release];
 	
-	[currentItem release];
+	[currentLinkItem release];
 	
 	[searchResults release];
 	
@@ -158,10 +157,8 @@ static BOOL firstDocument = YES;
 }
 
 
-# pragma mark - NSDocument
+#pragma mark - NSDocument
 - (NSString *)windowNibName {
-	// Override returning the nib file name of the document
-	// If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
 	return @"CHMDocument";
 }
 
@@ -179,7 +176,7 @@ static BOOL firstDocument = YES;
 	
 	[outlineView setAutoresizesOutlineColumn:NO];
 	
-	if (documentFile.tableOfContents.items.numberOfChildren == 0) {
+	if (documentFile.tableOfContents.linkItems.numberOfChildren == 0) {
 		[self hideSidebar:self];
 	}
 	
@@ -191,8 +188,8 @@ static BOOL firstDocument = YES;
 	if (nil == lastPath) {
 		[self goHome:self];
 	} else {
-		CHMLinkItem *lastItem = [documentFile itemAtPath:lastPath];
-		(lastItem ? [self loadItem:lastItem] : [self goHome:self]);
+		CHMLinkItem *lastItem = [documentFile linkItemAtPath:lastPath];
+		(lastItem ? [self loadLinkItem:lastItem] : [self goHome:self]);
 	}
 	
 	// set search type and search menu
@@ -244,10 +241,10 @@ static BOOL firstDocument = YES;
 	}
 }
 
-- (void)loadItem:(CHMLinkItem *)anItem {
+- (void)loadLinkItem:(CHMLinkItem *)anItem {
 	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
 	
-	self.currentItem = anItem;
+	self.currentLinkItem = anItem;
 	NSURL *url = [NSURL chm__ITSSURLWithPath:anItem.path];
 	[self loadURL:url];
 }
@@ -307,7 +304,7 @@ static BOOL firstDocument = YES;
 }
 
 
-# pragma mark - <WebFrameLoadDelegate>
+#pragma mark - <WebFrameLoadDelegate>
 - (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
 	NSLog(@"[%@ %@] error == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
 }
@@ -329,15 +326,15 @@ static BOOL firstDocument = YES;
 	
 	NSURL *URL = [[[frame dataSource] request] URL];
 	
-	CHMLinkItem *newCurrentItem = [documentFile itemAtPath:URL.path];
+	CHMLinkItem *newCurrentItem = [documentFile linkItemAtPath:URL.path];
 	
-	if (newCurrentItem) self.currentItem = newCurrentItem;
+	if (newCurrentItem) self.currentLinkItem = newCurrentItem;
 	
 	[self updateHistoryButton];
 	[self revealCurrentItemInOutlineView:nil];
 	
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
-	NSString *name = currentItem.name;
+	NSString *name = currentLinkItem.name;
 	if (name.length == 0) name = [curWebView mainFrameTitle];
 	
 	[tabItem setLabel:(name.length ? name : NSLocalizedString(@"(Untitled)", @"(Untitled)"))];
@@ -363,7 +360,7 @@ static BOOL firstDocument = YES;
 }
 
 
-# pragma mark - Javascript
+#pragma mark - Javascript
 - (void)loadJavascript {
 	NSString *scriptPath = [[NSBundle mainBundle] pathForResource:@"highlight" ofType:@"js"];
 	[self runJavascript:[NSString stringWithContentsOfFile:scriptPath encoding:NSUTF8StringEncoding error:NULL]];
@@ -374,7 +371,7 @@ static BOOL firstDocument = YES;
 }
 
 
-# pragma mark - <WebPolicyDelegate>
+#pragma mark - <WebPolicyDelegate>
 - (void)webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
 	
 	if ([CHMITSSURLProtocol canInitWithRequest:request]) {
@@ -408,7 +405,7 @@ static BOOL firstDocument = YES;
 	}
 }
 
-# pragma mark - <WebResourceLoadDelegate>
+#pragma mark - <WebResourceLoadDelegate>
 - (NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
 //	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
@@ -422,7 +419,7 @@ static BOOL firstDocument = YES;
 	}
 }
 
-# pragma mark - <WebUIDelegate>
+#pragma mark - <WebUIDelegate>
 - (WebView *)webView:(WebView *)sender createWebViewWithRequest:(NSURLRequest *)request {
 	WebView *wv = [(CHMWebViewController *)[[self createWebViewInTab:sender] identifier] webView];
 	[[wv mainFrame] loadRequest:request];
@@ -440,13 +437,13 @@ static BOOL firstDocument = YES;
 	}
 }
 
-# pragma mark - IBActions
+#pragma mark - IBActions
 - (IBAction)changeTopic:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	
 	if (selectedRow >= 0) {
 		CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
-		[self loadItem:topic];
+		[self loadLinkItem:topic];
 	}
 }
 
@@ -464,7 +461,7 @@ static BOOL firstDocument = YES;
 }
 
 - (IBAction)goHome:(id)sender {
-	[self loadItem:[documentFile itemAtPath:documentFile.homePath]];
+	[self loadLinkItem:[documentFile linkItemAtPath:documentFile.homePath]];
 }
 
 - (IBAction)goHistory:(id)sender {
@@ -486,28 +483,28 @@ static BOOL firstDocument = YES;
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
 	CHMLinkItem *nextPage = [documentFile.tableOfContents pageAfterPage:topic];
-	if (nextPage) [self loadItem:nextPage];
+	if (nextPage) [self loadLinkItem:nextPage];
 }
 
 - (IBAction)gotoPrevPage:(id)sender {
 	NSInteger selectedRow = [outlineView selectedRow];
 	CHMLinkItem *topic = [outlineView itemAtRow:selectedRow];
 	CHMLinkItem *prevPage = [documentFile.tableOfContents pageBeforePage:topic];
-	if (prevPage) [self loadItem:prevPage];
+	if (prevPage) [self loadLinkItem:prevPage];
 }
 
 - (IBAction)revealCurrentItemInOutlineView:(id)sender {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
 	if (!isSearching) {
-		NSArray *ancestors = [currentItem ancestors];
+		NSArray *ancestors = [currentLinkItem ancestors];
 		
 		for (CHMLinkItem *parent in ancestors) {
 			[outlineView expandItem:parent];
 		}
 	}
 	
-	NSInteger currentItemIndex = [outlineView rowForItem:currentItem];
+	NSInteger currentItemIndex = [outlineView rowForItem:currentLinkItem];
 	
 	if (currentItemIndex == -1) return;
 	
@@ -705,7 +702,7 @@ static BOOL firstDocument = YES;
 	[docTabView selectPreviousTabViewItem:sender];
 }
 
-# pragma mark - Toolbar
+#pragma mark - Toolbar
 - (void)setupToolbar {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:ICHMToolbarIdentifier] autorelease];
 	
@@ -910,8 +907,8 @@ static BOOL firstDocument = YES;
 	NSInteger tag = [sender tag];
 	id representedObject = [sender representedObject];
 	
-	// get the path of the currentItem
-	NSString *previousCurrentItemPath = [[currentItem.path retain] autorelease];
+	// get the path of the currentLinkItem
+	NSString *previousCurrentItemPath = [[currentLinkItem.path retain] autorelease];
 	
 	if (tag == 0 && documentFile.customEncoding) {
 		// go back to default encoding
@@ -937,8 +934,8 @@ static BOOL firstDocument = YES;
 	} else {
 		return;
 	}
-	// Setting a new encoding will recreate the table of contents and CHMLinkItem tree, so our currentItem is no longer valid; replace it with the new one at the same path.
-	self.currentItem = [documentFile itemAtPath:previousCurrentItemPath];
+	// Setting a new encoding will recreate the table of contents and CHMLinkItem tree, so our currentLinkItem is no longer valid; replace it with the new one at the same path.
+	self.currentLinkItem = [documentFile linkItemAtPath:previousCurrentItemPath];
 	
 	for (WebView *webView in webViews) {
 		[webView setCustomTextEncodingName:documentFile.currentEncodingName];
@@ -1059,7 +1056,7 @@ static BOOL firstDocument = YES;
 		if (isSearching) {
 			return searchResults.count;
 		} else {
-			item = [self currentDataSource].items;
+			item = [self currentDataSource].linkItems;
 		}
 	}
     return [(CHMLinkItem *)item numberOfChildren];
@@ -1079,11 +1076,11 @@ static BOOL firstDocument = YES;
 	if (isSearching) {
 		if (item == nil) {
 			CHMSearchResult *searchResult = [searchResults objectAtIndex:theIndex];
-			return searchResult.item;
+			return searchResult.linkItem;
 		}
 		return nil;
 	}
-	if (item == nil) item = [self currentDataSource].items;
+	if (item == nil) item = [self currentDataSource].linkItems;
     return [(CHMLinkItem *)item childAtIndex:theIndex];
 }
 

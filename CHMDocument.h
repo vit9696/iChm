@@ -67,7 +67,7 @@ typedef NSUInteger CHMDocumentViewMode;
 	
 	CHMDocumentFile					*documentFile;
 	
-	CHMLinkItem						*currentItem;
+	CHMLinkItem						*currentLinkItem;
 	
 	CHMExporter						*exporter;
 	
@@ -81,7 +81,7 @@ typedef NSUInteger CHMDocumentViewMode;
 
 @property (nonatomic, retain) CHMDocumentFile *documentFile;
 	
-@property (nonatomic, retain) CHMLinkItem *currentItem;
+@property (nonatomic, retain) CHMLinkItem *currentLinkItem;
 
 
 - (NSString *)currentURL;

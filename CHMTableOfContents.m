@@ -25,7 +25,7 @@
 
 @implementation CHMTableOfContents
 
-@synthesize items;
+@synthesize linkItems;
 @synthesize pageList;
 @synthesize documentFile;
 
@@ -69,8 +69,8 @@ static htmlSAXHandler saxHandler = {
 		pageList = [[NSMutableArray alloc] init];
 		itemsAndPaths = [[NSMutableDictionary alloc] init];
 		
-		items = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
-		curItem = items;
+		linkItems = [[CHMLinkItem alloc] initWithName:@"root" path:@"/"];
+		curItem = linkItems;
 		
 		if (!encodingName || [encodingName length] == 0) {
 			encodingName = @"iso_8859_1";
@@ -83,8 +83,8 @@ static htmlSAXHandler saxHandler = {
 		if (doc) {
 			xmlFreeDoc(doc);
 		}
-		[items purge];
-		[items enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
+		[linkItems purge];
+		[linkItems enumerateItemsWithSelector:@selector(addToPageList:) forTarget:self];
 		
 		for (CHMLinkItem *item in pageList) {
 			item.container = self;
@@ -101,7 +101,7 @@ static htmlSAXHandler saxHandler = {
 
 
 - (void)dealloc {
-	[items release];
+	[linkItems release];
 	[itemStack release];
 	[pageList release];
 	[itemsAndPaths release];
@@ -109,7 +109,7 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (CHMLinkItem *)itemAtPath:(NSString *)aPath {
+- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath {
 	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
 	aPath = [aPath chm__stringByDeletingLeadingSlashes];
 	
@@ -127,7 +127,7 @@ static htmlSAXHandler saxHandler = {
 
 
 - (void)sort {
-	[items sort];
+	[linkItems sort];
 }
 
 - (CHMLinkItem *)pageAfterPage:(CHMLinkItem *)item {
@@ -251,7 +251,7 @@ static void elementDidEnd(CHMTableOfContents *context, const xmlChar *name) {
 
 - (NSString *)description {
 	NSMutableString *description = [NSMutableString stringWithFormat:@"%@\r", [super description]];
-	[description appendFormat:@"     items == %@", items];
+	[description appendFormat:@"     linkItems == %@", linkItems];
 	
 	return description;
 }

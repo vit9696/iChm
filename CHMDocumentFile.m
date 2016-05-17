@@ -132,7 +132,7 @@ static BOOL automaticallyPreparesSearchIndex = YES;
 		[self loadMetadata];
 		[self setupTableOfContentsAndIndex];
 		
-		self.archiveItems = [CHMArchiveItem rootItemWithDocumentFile:self chmFileHandle:chmFileHandle];
+		self.archiveItems = [CHMArchiveItem rootArchiveItemWithDocumentFile:self chmFileHandle:chmFileHandle];
 		
 		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] autorelease];
 		[archiveItems sortWithSortDescriptors:[NSArray arrayWithObject:sortDescriptor] recursively:YES];
@@ -415,7 +415,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToItem:(CHMLinkItem *)anItem {
+- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToLinkItem:(CHMLinkItem *)anItem {
 	NSString *fullPath = [[anItem.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:aRelativePath];
 //	MDLog(@"[%@ %@] fullPath == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), fullPath);
 	return [self dataForObjectAtPath:fullPath];
@@ -631,14 +631,14 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-- (CHMLinkItem *)itemAtPath:(NSString *)aPath {
+- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath {
 //	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
 	// strip leading /'s
 	aPath = [aPath chm__stringByDeletingLeadingSlashes];
 	
 	CHMLinkItem *item = nil;
-	if (tableOfContents) item = [tableOfContents itemAtPath:aPath];
-	if (item == nil && index) item = [index itemAtPath:aPath];
+	if (tableOfContents) item = [tableOfContents linkItemAtPath:aPath];
+	if (item == nil && index) item = [index linkItemAtPath:aPath];
 //	MDLog(@"[%@ %@] item == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), item);
 	return item;
 }
@@ -777,13 +777,13 @@ static NSString * const CHMDocumentFileSearchModeDescriptions[] = {
 		}
 		
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name beginswith[c] %@ ", searchString];
-		NSArray *indexChildren = index.items.children;
+		NSArray *indexChildren = index.linkItems.children;
 		NSArray *filteredResults = [indexChildren filteredArrayUsingPredicate:predicate];
 		
 		NSMutableArray *mSearchResults = [NSMutableArray array];
 		
 		for (CHMLinkItem *item in filteredResults) {
-			CHMSearchResult *searchResult = [[CHMSearchResult alloc] initWithItem:item score:0];
+			CHMSearchResult *searchResult = [[CHMSearchResult alloc] initWithLinkItem:item score:0];
 			if (searchResult) [mSearchResults addObject:searchResult];
 			[searchResult release];
 		}
@@ -855,9 +855,9 @@ static NSString * const CHMDocumentFileSearchModeDescriptions[] = {
 			
             NSURL *url = [(id)SKDocumentCopyURL(doc) autorelease];
 			
-			CHMLinkItem *item = [self itemAtPath:url.path];
+			CHMLinkItem *item = [self linkItemAtPath:url.path];
 			if (item) {
-				CHMSearchResult *searchResult = [[CHMSearchResult alloc] initWithItem:item score:foundScores[pos]];
+				CHMSearchResult *searchResult = [[CHMSearchResult alloc] initWithLinkItem:item score:foundScores[pos]];
 				if (searchResult) [mSearchResults addObject:searchResult];
 				[searchResult release];
 			}

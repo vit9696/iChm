@@ -13,24 +13,21 @@
 
 @implementation CHMSearchResult
 
-@synthesize item;
+@synthesize linkItem;
 @synthesize score;
 
-+ (id)searchResultWithItem:(CHMLinkItem *)anItem score:(CGFloat)aScore {
-	return [[[[self class] alloc] initWithItem:anItem score:aScore] autorelease];
-}
 
 
-- (id)initWithItem:(CHMLinkItem *)anItem score:(CGFloat)aScore {
+- (id)initWithLinkItem:(CHMLinkItem *)anItem score:(CGFloat)aScore {
 	if ((self = [super init])) {
-		item = [anItem retain];
+		linkItem = [anItem retain];
 		score = aScore;
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[item release];
+	[linkItem release];
 	[super dealloc];
 }
 
@@ -42,7 +39,7 @@
 	} else {
 		description = [NSMutableString stringWithFormat:@"<%@>\r", NSStringFromClass([self class])];
 	}
-	[description appendFormat:@"          item == %@\r\r", item];
+	[description appendFormat:@"          linkItem == %@\r\r", linkItem];
 	
 //	[description replaceOccurrencesOfString:@"\\n" withString:@"\r" options:0 range:NSMakeRange(0, description.length)];
 //	[description replaceOccurrencesOfString:@"\\\"" withString:@"          " options:0 range:NSMakeRange(0, description.length)];

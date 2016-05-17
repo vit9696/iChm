@@ -12,12 +12,12 @@
 
 
 @interface CHMSearchResult : NSObject {
-	CHMLinkItem			*item;
+	CHMLinkItem			*linkItem;
 	CGFloat				score;
 	
 }
 
-@property (nonatomic, retain) CHMLinkItem *item;
+@property (nonatomic, retain) CHMLinkItem *linkItem;
 @property (nonatomic, assign) CGFloat score;
 
 

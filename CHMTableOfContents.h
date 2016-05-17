@@ -13,7 +13,7 @@
 
 
 @interface CHMTableOfContents : NSObject {
-	CHMLinkItem				*items;
+	CHMLinkItem				*linkItems;
 	NSMutableArray			*pageList;
 	NSMutableDictionary		*itemsAndPaths;
 	
@@ -24,7 +24,7 @@
 	
 }
 
-@property (readonly, retain) CHMLinkItem *items;
+@property (readonly, retain) CHMLinkItem *linkItems;
 @property (readonly, retain) NSArray *pageList;
 
 // Returns the CHMDocumentFile instance this table of contents is a part of.

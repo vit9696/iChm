@@ -52,7 +52,8 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 @dynamic pathExtension;
 @dynamic isRootNode;
 
-+ (id)rootItemWithDocumentFile:(CHMDocumentFile *)aDocumentFile chmFileHandle:(struct chmFile *)aChmFileHandle {
+
++ (id)rootArchiveItemWithDocumentFile:(CHMDocumentFile *)aDocumentFile chmFileHandle:(struct chmFile *)aChmFileHandle {
 	NSMutableDictionary *fileAndDirPaths = [NSMutableDictionary dictionary];
 	[fileAndDirPaths setObject:[NSMutableArray array] forKey:@"chmDirs"];
 	[fileAndDirPaths setObject:[NSMutableArray array] forKey:@"chmFiles"];
@@ -85,7 +86,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 		
 		NSMutableArray *itemChildPaths = [dirPathsAndFilePaths objectForKey:chmDirPath];
 		
-		CHMArchiveItem *archiveItem = [[CHMArchiveItem alloc] initDirectoryItemWithPath:chmDirPath childNodePaths:itemChildPaths documentFile:aDocumentFile];
+		CHMArchiveItem *archiveItem = [[CHMArchiveItem alloc] initDirectoryArchiveItemWithPath:chmDirPath childNodePaths:itemChildPaths documentFile:aDocumentFile];
 		if (rootArchiveItem == nil) {
 			rootArchiveItem = archiveItem;
 		} else {
@@ -107,7 +108,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 }
 
 
-- (id)initDirectoryItemWithPath:(NSString *)aPath childNodePaths:(NSArray *)childNodePaths documentFile:(CHMDocumentFile *)aDocumentFile {
+- (id)initDirectoryArchiveItemWithPath:(NSString *)aPath childNodePaths:(NSArray *)childNodePaths documentFile:(CHMDocumentFile *)aDocumentFile {
 	if ((self = [super init])) {
 		path = [aPath retain];
 		name = [[path lastPathComponent] retain];
@@ -119,7 +120,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 			NSMutableArray *createdChildNodes = [NSMutableArray array];
 			
 			for (NSString *childNodePath in childNodePaths) {
-				CHMArchiveItem *archiveItem = [[CHMArchiveItem alloc] initLeafItemWithPath:childNodePath documentFile:documentFile];
+				CHMArchiveItem *archiveItem = [[CHMArchiveItem alloc] initLeafArchiveItemWithPath:childNodePath documentFile:documentFile];
 				if (archiveItem) [createdChildNodes addObject:archiveItem];
 				[archiveItem release];
 			}
@@ -130,7 +131,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 }
 
 
-- (id)initLeafItemWithPath:(NSString *)aPath documentFile:(CHMDocumentFile *)aDocumentFile {
+- (id)initLeafArchiveItemWithPath:(NSString *)aPath documentFile:(CHMDocumentFile *)aDocumentFile {
 	if ((self = [super init])) {
 		path = [aPath retain];
 		name = [[path lastPathComponent] retain];

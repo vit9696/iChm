@@ -7,6 +7,8 @@
 //
 
 #import "CHMKitPrivateInterfaces.h"
+#import "CHMDocumentFile.h"
+
 
 @implementation NSString (CHMKitPrivateInterfaces)
 
