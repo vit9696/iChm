@@ -9,6 +9,42 @@
 #import "CHMLinkItem.h"
 #import "CHMTableOfContents.h"
 #import "CHMSearchResult.h"
+#import "CHMArchiveItem.h"
+
+@class CHMDocumentFile;
+struct chmFile;
+
+@interface CHMArchiveItem ()
+
++ (id)rootItemWithDocumentFile:(CHMDocumentFile *)aDocumentFile chmFileHandle:(struct chmFile *)aChmFileHandle;
+
+- (id)initDirectoryItemWithPath:(NSString *)aPath childNodePaths:(NSArray *)childNodePaths documentFile:(CHMDocumentFile *)aDocumentFile;
+
+- (id)initLeafItemWithPath:(NSString *)aPath documentFile:(CHMDocumentFile *)aDocumentFile;
+
+
+@property (nonatomic, assign) CHMDocumentFile *documentFile;
+
+@property (nonatomic, assign) CHMArchiveItem *parent;
+
+@property (nonatomic, assign, setter=setLeaf:) BOOL isLeaf;
+
+@property (nonatomic, assign) BOOL isRootNode;
+
+@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, retain) NSString *path;
+
+
+- (void)insertChildNode:(CHMArchiveItem *)aChildNode;
+- (void)insertChildNodes:(NSArray *)newChildren;
+
+
+- (void)sortWithSortDescriptors:(NSArray *)sortDescriptors recursively:(BOOL)recursively;
+
+
+@end
+
 
 
 @interface CHMLinkItem ()
@@ -43,6 +79,7 @@
 @interface CHMTableOfContents ()
 
 - (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
+
 
 @property (assign) CHMDocumentFile *documentFile;
 

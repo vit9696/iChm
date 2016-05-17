@@ -20,6 +20,8 @@
 		C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186221B1C8F41F400C1DD80 /* CHM.framework */; };
 		C186223E1C8F574200C1DD80 /* CHM.mdimporter in Copy CHM.mdimporter */ = {isa = PBXBuildFile; fileRef = C18622321C8F550C00C1DD80 /* CHM.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C1C31ACF1CBDA789000F2B96 /* CHM.qlgenerator in Copy CHM.qlgenerator */ = {isa = PBXBuildFile; fileRef = C1C31AAD1CBD9876000F2B96 /* CHM.qlgenerator */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C1CFFB341CE3FB3100DDAAF3 /* CHMArchiveItem.h in Headers */ = {isa = PBXBuildFile; fileRef = C1CFFB321CE3FB3100DDAAF3 /* CHMArchiveItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C1CFFB351CE3FB3100DDAAF3 /* CHMArchiveItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CFFB331CE3FB3100DDAAF3 /* CHMArchiveItem.m */; };
 		C1D4A34D1CDE540E00E94D01 /* CHMKitPrivateInterfaces.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DA9F4A1CDA9BF700FE354F /* CHMKitPrivateInterfaces.m */; };
 		C1DA9EEC1CD9668C00FE354F /* CHMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C1DA9EEB1CD9668C00FE354F /* CHMKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1DA9EF01CD9668C00FE354F /* CHMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1DA9EE91CD9668C00FE354F /* CHMKit.framework */; };
@@ -248,6 +250,8 @@
 		C195099D1CD1782600288A26 /* CHMSearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMSearchResult.h; path = ../CHMSearchResult.h; sourceTree = "<group>"; };
 		C195099E1CD1782600288A26 /* CHMSearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMSearchResult.m; path = ../CHMSearchResult.m; sourceTree = "<group>"; };
 		C1C31AA81CBD9876000F2B96 /* quickchm.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quickchm.xcodeproj; path = CHMQuickLook/quickchm.xcodeproj; sourceTree = "<group>"; };
+		C1CFFB321CE3FB3100DDAAF3 /* CHMArchiveItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMArchiveItem.h; sourceTree = "<group>"; };
+		C1CFFB331CE3FB3100DDAAF3 /* CHMArchiveItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMArchiveItem.m; sourceTree = "<group>"; };
 		C1DA9EE91CD9668C00FE354F /* CHMKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CHMKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1DA9EEB1CD9668C00FE354F /* CHMKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CHMKit.h; sourceTree = "<group>"; };
 		C1DA9EED1CD9668C00FE354F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -579,6 +583,8 @@
 				C3DB25290E2DD49F000E5A20 /* CHMITSSURLProtocol.m */,
 				C14A60171CC6C43900B868C6 /* CHMLinkItem.h */,
 				C14A60181CC6C43900B868C6 /* CHMLinkItem.m */,
+				C1CFFB321CE3FB3100DDAAF3 /* CHMArchiveItem.h */,
+				C1CFFB331CE3FB3100DDAAF3 /* CHMArchiveItem.m */,
 				C195099D1CD1782600288A26 /* CHMSearchResult.h */,
 				C195099E1CD1782600288A26 /* CHMSearchResult.m */,
 				C3E9715D0E4BEAA000B7B36D /* lcid.h */,
@@ -627,6 +633,7 @@
 				C1DA9F001CD9688600FE354F /* CHMTableOfContents.h in Headers */,
 				C1DA9EFF1CD9688600FE354F /* lcid.h in Headers */,
 				C1DA9F021CD9688600FE354F /* CHMITSSURLProtocol.h in Headers */,
+				C1CFFB341CE3FB3100DDAAF3 /* CHMArchiveItem.h in Headers */,
 				C1DA9F481CDA99F700FE354F /* CHMKitPrivateInterfaces.h in Headers */,
 				C1DA9EEC1CD9668C00FE354F /* CHMKit.h in Headers */,
 			);
@@ -853,6 +860,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1CFFB351CE3FB3100DDAAF3 /* CHMArchiveItem.m in Sources */,
 				C1DA9F011CD9688600FE354F /* CHMTableOfContents.m in Sources */,
 				C1DA9F051CD9688600FE354F /* CHMLinkItem.m in Sources */,
 				C1DA9EFE1CD9688600FE354F /* CHMDocumentFile.m in Sources */,

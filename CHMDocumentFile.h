@@ -13,7 +13,7 @@ struct chmFile;
 @class CHMTableOfContents;
 @class CHMDocumentFile;
 @class CHMLinkItem;
-
+@class CHMArchiveItem;
 
 
 @protocol CHMDocumentFileSearchDelegate <NSObject>
@@ -53,6 +53,9 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 	CHMTableOfContents						*index;
 	NSMutableArray							*searchResults;
 	
+	CHMArchiveItem							*archiveItems;
+	NSMutableArray							*allArchiveItems;
+	
 	SKIndexRef								skIndex;
 	NSMutableData							*searchIndexData;
 	BOOL									hasPreparedSearchIndex;
@@ -69,6 +72,11 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 	
 }
 
+// error reporting isn't yet implemented
++ (id)documentFileWithContentsOfFile:(NSString *)path error:(NSError **)outError;
+- (id)initWithContentsOfFile:(NSString *)path error:(NSError **)outError;
+
+
 @property (readonly, nonatomic, retain) NSString *filePath;
 
 @property (readonly, nonatomic, retain) NSString *title;
@@ -81,10 +89,11 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 @property (readonly, retain) CHMTableOfContents *index;
 
 
+// returns the root-level CHMArchiveItem
+@property (readonly, nonatomic, retain) CHMArchiveItem *archiveItems;
 
-// error reporting isn't yet implemented
-+ (id)documentFileWithContentsOfFile:(NSString *)path error:(NSError **)outError;
-- (id)initWithContentsOfFile:(NSString *)path error:(NSError **)outError;
+// returns an array of all CHMArchiveItem, including the root item and all its descendants
+@property (readonly, nonatomic, retain) NSArray *allArchiveItems;
 
 
 

@@ -9,6 +9,7 @@
 
 #import <CHMKit/CHMDocumentFile.h>
 #import <CHMKit/CHMLinkItem.h>
+#import <CHMKit/CHMArchiveItem.h>
 #import <CHMKit/CHMSearchResult.h>
 #import <CHMKit/CHMTableOfContents.h>
 #import <CHMKit/CHMITSSURLProtocol.h>

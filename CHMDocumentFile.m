@@ -14,6 +14,7 @@
 #import "CHMSearchResult.h"
 #import "CHMITSSURLProtocol.h"
 #import "CHMKitPrivateInterfaces.h"
+#import "CHMArchiveItem.h"
 
 
 #define MD_DEBUG 1
@@ -45,6 +46,10 @@
 
 @property (assign) BOOL isPreparingSearchIndex;
 
+
+@property (nonatomic, retain) CHMArchiveItem *archiveItems;
+
+@property (nonatomic, retain) NSArray *allArchiveItems;
 
 - (BOOL)loadMetadata;
 - (void)setupTableOfContentsAndIndex;
@@ -86,6 +91,8 @@ static BOOL automaticallyPreparesSearchIndex = YES;
 @synthesize hasPreparedSearchIndex;
 @synthesize isPreparingSearchIndex;
 
+@synthesize archiveItems;
+@synthesize allArchiveItems;
 
 
 + (BOOL)automaticallyPreparesSearchIndex {
@@ -125,6 +132,13 @@ static BOOL automaticallyPreparesSearchIndex = YES;
 		[self loadMetadata];
 		[self setupTableOfContentsAndIndex];
 		
+		self.archiveItems = [CHMArchiveItem rootItemWithDocumentFile:self chmFileHandle:chmFileHandle];
+		
+		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] autorelease];
+		[archiveItems sortWithSortDescriptors:[NSArray arrayWithObject:sortDescriptor] recursively:YES];
+		
+//		MDLog(@"[%@ %@] archiveItems == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), archiveItems);
+				
 		if ([[self class] automaticallyPreparesSearchIndex]) [self prepareSearchIndex];
 		
 	}
@@ -156,6 +170,9 @@ static BOOL automaticallyPreparesSearchIndex = YES;
 	
 	[encodingName release];
 	[customEncodingName release];
+	
+	[archiveItems release];
+	[allArchiveItems release];
 	
 	[super dealloc];
 }
@@ -626,6 +643,22 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	return item;
 }
 
+
+- (NSArray *)allArchiveItems {
+	if (allArchiveItems == nil) {
+		allArchiveItems = [[NSMutableArray alloc] init];
+		[allArchiveItems addObject:archiveItems];
+		
+		NSArray *childNodes = archiveItems.childNodes;
+		
+		for (CHMArchiveItem *childNode in childNodes) {
+			if (!childNode.isLeaf) {
+				[allArchiveItems addObjectsFromArray:[childNode descendants]];
+			}
+		}
+	}
+	return [[allArchiveItems copy] autorelease];
+}
 
 
 #pragma mark - search
