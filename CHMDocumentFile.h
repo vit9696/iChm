@@ -45,6 +45,7 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 	struct chmFile							*chmFileHandle;
 	
     NSString								*title;
+	
     NSString								*homePath;
     NSString								*tableOfContentsPath;
     NSString								*indexPath;
@@ -72,7 +73,7 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 	
 }
 
-// error reporting isn't yet implemented
+// NOTE: error reporting isn't yet implemented
 + (id)documentFileWithContentsOfFile:(NSString *)path error:(NSError **)outError;
 - (id)initWithContentsOfFile:(NSString *)path error:(NSError **)outError;
 
@@ -80,6 +81,7 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 @property (readonly, nonatomic, retain) NSString *filePath;
 
 @property (readonly, nonatomic, retain) NSString *title;
+
 @property (readonly, nonatomic, retain) NSString *homePath;
 @property (readonly, nonatomic, retain) NSString *tableOfContentsPath;
 @property (readonly, nonatomic, retain) NSString *indexPath;
@@ -106,13 +108,11 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 
 
 #pragma mark - encodings
-
 @property (readonly, assign) NSStringEncoding encoding;
-@property (readonly, retain) NSString *encodingName;
-
+@property (readonly, retain) NSString *encodingName;			// IANA
 
 @property (readonly, assign) NSStringEncoding customEncoding;
-@property (readonly, retain) NSString *customEncodingName;
+@property (readonly, retain) NSString *customEncodingName;		// IANA
 
 // to set or clear a custom encoding; to clear, pass `CHMDocumentFileDefaultStringEncoding` and `nil`
 - (void)setCustomEncoding:(NSStringEncoding)aCustomEncoding customEncodingName:(NSString *)aCustomEncodingName;

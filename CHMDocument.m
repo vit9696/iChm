@@ -233,7 +233,7 @@ static BOOL firstDocument = YES;
 
 
 - (void)loadURL:(NSURL *)URL {
-	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
+//	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
 	
 	if (URL) {
 		NSURLRequest *req = [NSURLRequest requestWithURL:URL];
@@ -242,7 +242,7 @@ static BOOL firstDocument = YES;
 }
 
 - (void)loadLinkItem:(CHMLinkItem *)anItem {
-	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
+//	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
 	
 	self.currentLinkItem = anItem;
 	NSURL *url = [NSURL chm__ITSSURLWithPath:anItem.path];
@@ -315,14 +315,14 @@ static BOOL firstDocument = YES;
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
 	if (frame == [sender mainFrame]) {
-		MDLog(@"[%@ %@] title == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), title);
+//		MDLog(@"[%@ %@] title == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), title);
 	}
 }
 
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
 //	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
-	MDLog(@"[%@ %@] (frame == [sender mainFrame]) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (frame == [sender mainFrame] ? @"YES" : @"NO"));
+//	MDLog(@"[%@ %@] (frame == [sender mainFrame]) == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (frame == [sender mainFrame] ? @"YES" : @"NO"));
 	
 	NSURL *URL = [[[frame dataSource] request] URL];
 	
@@ -395,7 +395,7 @@ static BOOL firstDocument = YES;
 
 
 - (void)webView:(WebView *)sender decidePolicyForNewWindowAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request newFrameName:(NSString *)frameName decisionListener:(id<WebPolicyDecisionListener>)listener {
-	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
+//	MDLog(@"[%@ %@] request == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), request);
 	
 	if ([CHMITSSURLProtocol canInitWithRequest:request]) {
 		[listener use];
@@ -494,7 +494,7 @@ static BOOL firstDocument = YES;
 }
 
 - (IBAction)revealCurrentItemInOutlineView:(id)sender {
-	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+//	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
 	if (!isSearching) {
 		NSArray *ancestors = [currentLinkItem ancestors];

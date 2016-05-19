@@ -473,19 +473,19 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		for (NSUInteger entryIndex = 0; entryIndex < entryCount; ++entryIndex) {
 			NSUInteger entryOffset = 8 + (entryIndex * entrySize);
 
-			if (!title || ([title length] == 0)) {
+			if (title == nil || title.length == 0) {
 				title = readTrimmedString(stringsData, readInt(windowsData, entryOffset + 0x14), encoding);
 				MDLog(@"[%@ %@] (STRINGS) title == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), title);
 			}
-			if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
+			if (tableOfContentsPath == nil || tableOfContentsPath.length == 0) {
 				tableOfContentsPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60), encoding);
 				MDLog(@"[%@ %@] (STRINGS) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 			}
-			if (!indexPath || ([indexPath length] == 0)) {
+			if (indexPath == nil || indexPath.length == 0) {
 				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64), encoding);
 				MDLog(@"[%@ %@] (STRINGS) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 			}
-			if (!homePath || ([homePath length] == 0)) {
+			if (homePath == nil || homePath.length == 0) {
 				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68), encoding);
 				MDLog(@"[%@ %@] (STRINGS) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 			}
@@ -499,7 +499,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	for (; offset < maxOffset; ) {
 		switch (readShort(systemData, offset)) {
 			case 0: {
-				if (!tableOfContentsPath || ([tableOfContentsPath length] == 0)) {
+				if (tableOfContentsPath == nil || tableOfContentsPath.length == 0) {
 					tableOfContentsPath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 				}
@@ -507,7 +507,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			}
 				
 			case 1: {
-				if (!indexPath || ([indexPath length] == 0)) {
+				if (indexPath == nil || indexPath.length == 0) {
 					indexPath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
@@ -515,7 +515,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			}
 				
 			case 2: {
-				if (!homePath || ([homePath length] == 0)) {
+				if (homePath == nil || homePath.length == 0) {
 					homePath = readString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 				}
@@ -523,7 +523,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			}
 				
 			case 3: {
-				if (!title || ([title length] == 0)) {
+				if (title == nil || title.length == 0) {
 					title = readTrimmedString(systemData, offset + 4, encoding);
 					MDLog(@"[%@ %@] (SYSTEM) title == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), title);
 				}
@@ -533,19 +533,20 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			case 6: {
 				const char *data = (const char *)([systemData bytes] + offset + 4);
 				NSString *prefix = [[NSString alloc] initWithCString:data encoding:encoding];
-				if (!tableOfContentsPath || [tableOfContentsPath length] == 0) {
+				if (tableOfContentsPath == nil || tableOfContentsPath.length == 0) {
 					NSString *path = [NSString stringWithFormat:@"/%@.hhc", prefix];
 					if ([self hasObjectAtPath:path]) {
 						tableOfContentsPath = path;
 					}
+					MDLog(@"[%@ %@] (SYSTEM) (case 6) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 				}
-				if (!indexPath || [indexPath length] == 0) {
+				if (indexPath == nil || indexPath.length == 0) {
 					NSString *path = [NSString stringWithFormat:@"/%@.hhk", prefix];
 					if ([self hasObjectAtPath:path]) {
 						indexPath = path;
 					}
+					MDLog(@"[%@ %@] (SYSTEM) (case 6) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
-				MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 				[prefix release];
 				break;
 			}
@@ -563,16 +564,16 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 	
 	// Check for empty string titles
-	if ([title length] == 0) {
+	if (title.length == 0) {
 		title = nil;
 	} else {
 		[title retain];
 	}
 	
 	// Check for lack of index page
-	if (!homePath) {
 		homePath = [self findHomeForPath:@"/"];
-		MDLog(@"[%@ %@] Implicit homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
+	if (homePath == nil) {
+		MDLog(@"[%@ %@] (IMPLICIT) implicit homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 	}
 	[homePath retain];
 	[tableOfContentsPath retain];
