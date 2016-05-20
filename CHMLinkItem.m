@@ -94,7 +94,7 @@
 	if (![path isEqualToString:@"/"])
 		[target performSelector:selector withObject:self];
 		
-	for (CHMLinkItem* item in children) {
+	for (CHMLinkItem *item in children) {
 		[item enumerateItemsWithSelector:selector forTarget:target];
 	}
 }
@@ -110,18 +110,21 @@
 }
 
 - (void)purge {
+	if (self.numberOfChildren == 0) return;
+	
 	NSMutableIndexSet *set = [[NSMutableIndexSet alloc] init];
 	NSUInteger i = 0;
 	for (CHMLinkItem *item in children) {
-		if (item.name == nil && item.path == nil && item.numberOfChildren == 0)
+		if (item.name == nil || item.path == nil) {
 			[set addIndex:i];
-		else
+		} else {
 			[item purge];
+		}
 		
 		i++;
 	}
 	
-	[children removeObjectsAtIndexes:set];
+	if (set.count) [children removeObjectsAtIndexes:set];
 	[set release];
 }
 
