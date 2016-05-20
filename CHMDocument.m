@@ -185,9 +185,14 @@ static BOOL firstDocument = YES;
 	
 	// go to last viewed page
 	NSString *lastPath = (NSString *)[self getPreferenceforFile:filePath withKey:PREF_LAST_PATH];
-	if (nil == lastPath) {
+	
+	if (lastPath == nil) {
 		[self goHome:self];
 	} else {
+		
+		// old prefs saved relative paths, we now use absolute paths; make sure to make any relative paths to absolute
+		if (![lastPath hasPrefix:@"/"]) lastPath = [@"/" stringByAppendingPathComponent:lastPath];
+		
 		CHMLinkItem *lastItem = [documentFile linkItemAtPath:lastPath];
 		(lastItem ? [self loadLinkItem:lastItem] : [self goHome:self]);
 	}
@@ -352,11 +357,7 @@ static BOOL firstDocument = YES;
 	}
 	
 	// setup last path
-	NSString *trimedPath = [NSString stringWithString:[URL path]];
-	while ([trimedPath hasPrefix:@"/"]) {
-		trimedPath = [trimedPath substringFromIndex:1];
-	}
-	[self setPreference:trimedPath forFile:filePath withKey:PREF_LAST_PATH];
+	[self setPreference:URL.path forFile:filePath withKey:PREF_LAST_PATH];
 }
 
 

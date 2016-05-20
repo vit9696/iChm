@@ -23,6 +23,10 @@
 	NSString			*path;
 	
 	BOOL				isLeaf;
+	
+@private
+	id chm__privateData;
+	
 }
 
 @property (readonly, nonatomic, assign) CHMDocumentFile *documentFile;

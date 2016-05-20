@@ -99,12 +99,11 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 
 
 
-- (BOOL)hasObjectAtPath:(NSString *)path;
-- (NSData *)dataForObjectAtPath:(NSString *)path;
+- (NSData *)dataForObjectAtPath:(NSString *)absolutePath;
 
 - (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToLinkItem:(CHMLinkItem *)anItem;
 
-- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath;
+- (CHMLinkItem *)linkItemAtPath:(NSString *)absolutePath;
 
 
 #pragma mark - encodings

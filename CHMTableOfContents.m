@@ -61,10 +61,13 @@ static htmlSAXHandler saxHandler = {
 };
 
 
-- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName {
+- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName documentFile:(CHMDocumentFile *)aDocumentFile {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
 	if ((self = [super init])) {
+		
+		documentFile = aDocumentFile;
+		
 		itemStack = [[NSMutableArray alloc] init];
 		pageList = [[NSMutableArray alloc] init];
 		itemsAndPaths = [[NSMutableDictionary alloc] init];
@@ -109,16 +112,19 @@ static htmlSAXHandler saxHandler = {
 }
 
 
-- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath {
-	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
-	aPath = [aPath chm__stringByDeletingLeadingSlashes];
+- (CHMLinkItem *)linkItemAtPath:(NSString *)absolutePath {
+//	MDLog(@"[%@ %@] absolutePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), absolutePath);
 	
-	CHMLinkItem *item = [itemsAndPaths objectForKey:aPath];
+	CHMLinkItem *item = [itemsAndPaths objectForKey:absolutePath];
 	
 	if (item == nil) {
-		NSString *encodedPath = [aPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		
-		NSLog(@"[%@ %@] no item found at \"%@\", trying at \"%@\" instead...", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath, encodedPath);
+		NSString *encodedPath = [absolutePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		if ([encodedPath isEqualToString:absolutePath]) {
+			NSLog(@"[%@ %@] *** NOTE: no item found at \"%@\"...", NSStringFromClass([self class]), NSStringFromSelector(_cmd), absolutePath);
+		} else {
+			NSLog(@"[%@ %@] no item found at \"%@\", trying at \"%@\" instead...", NSStringFromClass([self class]), NSStringFromSelector(_cmd), absolutePath, encodedPath);
+			
+		}
 		
 		item = [itemsAndPaths objectForKey:encodedPath];
 	}
@@ -231,9 +237,9 @@ static void elementDidStart(CHMTableOfContents *context, const xmlChar *name, co
 				
 			} else if (!strcasecmp("Local", (char *)type)) {
 				// Path of the topic
-				NSString *str = [[NSString alloc] initWithUTF8String:(char *)value];
-				[[context curItem] setPath:str];
-				[str release];
+				NSString *str = [NSString stringWithUTF8String:(char *)value];
+				NSString *sanitizedPath = [context.documentFile actualAbsolutePathForRelativeCaseInsensitivePath:str];
+				[[context curItem] setPath:sanitizedPath];
 			}
 		}
 		return;

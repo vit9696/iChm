@@ -148,6 +148,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 	[path release];
 	[name release];
 	[childNodes release];
+	[chm__privateData release];
 	[super dealloc];
 }
 
@@ -193,7 +194,7 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 
 
 - (CHMArchiveItem *)descendantAtPath:(NSString *)aPath {
-//	MDLog(@"[%@ %@] aPath == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+//	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
 	
 	if (aPath == nil) return nil;
 	
@@ -227,6 +228,29 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 	}
 	return nil;
 }
+
+
+- (NSString *)actualPathForItemWithCaseInsensitivePath:(NSString *)aPath {
+	NSAssert(self.isRootNode, @"self.isRootNode");
+	
+	if (chm__privateData == nil) {
+		chm__privateData = [[NSMutableArray alloc] init];
+		NSArray *descendents = [self descendants];
+		
+		for (CHMArchiveItem *descendent in descendents) {
+			NSString *aPath = nil;
+			if (descendent.isLeaf && (aPath = descendent.path) != nil) {
+				[chm__privateData addObject:aPath];
+			}
+		}
+	}
+	
+	for (NSString *leafPath in (NSMutableArray *)chm__privateData) {
+		if ([aPath caseInsensitiveCompare:leafPath] == NSOrderedSame) return leafPath;
+	}
+	return aPath;
+}
+
 
 - (NSData *)data {
 	if (isLeaf)	return [documentFile dataForObjectAtPath:path];

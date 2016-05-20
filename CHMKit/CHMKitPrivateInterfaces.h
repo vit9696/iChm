@@ -10,8 +10,9 @@
 #import "CHMTableOfContents.h"
 #import "CHMSearchResult.h"
 #import "CHMArchiveItem.h"
+#import "CHMDocumentFile.h"
 
-@class CHMDocumentFile;
+
 struct chmFile;
 
 @interface CHMArchiveItem ()
@@ -30,6 +31,42 @@ struct chmFile;
 - (void)insertChildNode:(CHMArchiveItem *)aChildNode;
 - (void)insertChildNodes:(NSArray *)newChildren;
 - (void)sortWithSortDescriptors:(NSArray *)sortDescriptors recursively:(BOOL)recursively;
+
+- (NSString *)actualPathForItemWithCaseInsensitivePath:(NSString *)aPath;
+
+@end
+
+
+@interface CHMDocumentFile ()
+
+@property (nonatomic, retain) NSString *filePath;
+
+@property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain) NSString *homePath;
+@property (nonatomic, retain) NSString *tableOfContentsPath;
+@property (nonatomic, retain) NSString *indexPath;
+
+@property (assign) NSStringEncoding encoding;
+@property (retain) NSString *encodingName;
+@property (assign) NSStringEncoding customEncoding;
+@property (retain) NSString *customEncodingName;
+
+@property (assign) BOOL hasPreparedSearchIndex;
+@property (assign) BOOL isPreparingSearchIndex;
+
+
+@property (nonatomic, retain) CHMArchiveItem *archiveItems;
+@property (nonatomic, retain) NSArray *allArchiveItems;
+
+- (BOOL)loadMetadata;
+- (void)setupTableOfContentsAndIndex;
+
+- (void)buildSearchIndexInBackgroundThread;
+- (void)addToSearchIndex:(const char *)path;
+- (void)notifyDelegateSearchIndexIsPrepared:(id)sender;
+
+- (BOOL)hasObjectAtPath:(NSString *)absolutePath;
+- (NSString *)actualAbsolutePathForRelativeCaseInsensitivePath:(NSString *)aPath;
 
 @end
 
@@ -56,11 +93,11 @@ struct chmFile;
 
 @interface CHMTableOfContents ()
 
-- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName;
+- (id)initWithData:(NSData *)data encodingName:(NSString *)encodingName documentFile:(CHMDocumentFile *)aDocumentFile;
 
 @property (assign) CHMDocumentFile *documentFile;
 
-- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath;
+- (CHMLinkItem *)linkItemAtPath:(NSString *)absolutePath;
 - (void)push_item;
 - (void)pop_item;
 - (void)new_item;
@@ -81,5 +118,10 @@ struct chmFile;
 @interface NSString (CHMKitPrivateInterfaces)
 
 - (NSString *)chm__stringByDeletingLeadingSlashes;
+
+// adds a leading slash, if necessary
+// e.g.: "HTML/file.html" becomes "/HTML/file.html"
+
+- (NSString *)chm__stringByAssuringAbsolutePath;
 
 @end

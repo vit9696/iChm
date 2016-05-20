@@ -7,7 +7,6 @@
 //
 
 #import "CHMKitPrivateInterfaces.h"
-#import "CHMDocumentFile.h"
 
 
 @implementation NSString (CHMKitPrivateInterfaces)
@@ -18,5 +17,12 @@
 	}
 	return self;
 }
+
+
+- (NSString *)chm__stringByAssuringAbsolutePath {
+	if (![self hasPrefix:@"/"]) return [@"/" stringByAppendingPathComponent:self];
+	return self;
+}
+
 
 @end

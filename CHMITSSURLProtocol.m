@@ -8,6 +8,7 @@
 
 #import "CHMITSSURLProtocol.h"
 #import "CHMDocumentFile.h"
+#import "CHMKitPrivateInterfaces.h"
 
 
 #define MD_DEBUG 0
@@ -125,6 +126,8 @@
 // create a composed URL (itss://chm/*) for an item at the specified path:
 + (NSURL *)chm__ITSSURLWithPath:(NSString *)aPath {
 	if ([NSThread isMainThread]) MDLog(@"[%@ %@] path == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+	
+	aPath = [aPath chm__stringByDeletingLeadingSlashes];
 	
 	NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", aPath]];
 	if (URL == nil) URL = [NSURL URLWithString:[NSString stringWithFormat:@"itss://chm/%@", [aPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];

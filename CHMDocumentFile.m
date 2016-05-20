@@ -26,43 +26,6 @@
 #endif
 
 
-@interface CHMDocumentFile ()
-
-@property (nonatomic, retain) NSString *filePath;
-
-@property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSString *homePath;
-@property (nonatomic, retain) NSString *tableOfContentsPath;
-@property (nonatomic, retain) NSString *indexPath;
-
-
-@property (assign) NSStringEncoding encoding;
-@property (retain) NSString *encodingName;
-
-@property (assign) NSStringEncoding customEncoding;
-@property (retain) NSString *customEncodingName;
-
-@property (assign) BOOL hasPreparedSearchIndex;
-
-@property (assign) BOOL isPreparingSearchIndex;
-
-
-@property (nonatomic, retain) CHMArchiveItem *archiveItems;
-
-@property (nonatomic, retain) NSArray *allArchiveItems;
-
-- (BOOL)loadMetadata;
-- (void)setupTableOfContentsAndIndex;
-
-- (void)buildSearchIndexInBackgroundThread;
-- (void)addToSearchIndex:(const char *)path;
-- (void)notifyDelegateSearchIndexIsPrepared:(id)sender;
-
-@end
-
-
-
-
 static BOOL automaticallyPreparesSearchIndex = YES;
 
 
@@ -129,16 +92,16 @@ static BOOL automaticallyPreparesSearchIndex = YES;
 		
 		searchResults = [[NSMutableArray alloc] init];
 		
-		[self loadMetadata];
-		[self setupTableOfContentsAndIndex];
-		
 		self.archiveItems = [CHMArchiveItem rootArchiveItemWithDocumentFile:self chmFileHandle:chmFileHandle];
 		
 		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] autorelease];
 		[archiveItems sortWithSortDescriptors:[NSArray arrayWithObject:sortDescriptor] recursively:YES];
 		
 //		MDLog(@"[%@ %@] archiveItems == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), archiveItems);
-				
+		
+		[self loadMetadata];
+		[self setupTableOfContentsAndIndex];
+		
 		if ([[self class] automaticallyPreparesSearchIndex]) [self prepareSearchIndex];
 		
 	}
@@ -373,34 +336,35 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 #pragma mark - chmlib
-- (BOOL)hasObjectAtPath:(NSString *)path {
+- (BOOL)hasObjectAtPath:(NSString *)absolutePath {
 	struct chmUnitInfo info;
 	if (chmFileHandle) {
-		return chm_resolve_object(chmFileHandle, [path UTF8String], &info) == CHM_RESOLVE_SUCCESS;
+		return chm_resolve_object(chmFileHandle, [absolutePath UTF8String], &info) == CHM_RESOLVE_SUCCESS;
 	}
 	return NO;
 }
 
-- (NSData *)dataForObjectAtPath:(NSString *)path {
-	if (path == nil) return nil;
+- (NSData *)dataForObjectAtPath:(NSString *)absolutePath {
+//	if ([NSThread isMainThread]) MDLog(@"[%@ %@] absolutePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), absolutePath);
+	if (absolutePath == nil) return nil;
     
-    if ([path hasPrefix:@"/"]) {
+    if ([absolutePath hasPrefix:@"/"]) {
 		// Quick fix
-		if ([path hasPrefix:@"///"]) {
-			path = [path substringFromIndex:2];
+		if ([absolutePath hasPrefix:@"///"]) {
+			absolutePath = [absolutePath substringFromIndex:2];
 		}
     } else {
-		path = [NSString stringWithFormat:@"/%@", path];
+		absolutePath = [absolutePath chm__stringByAssuringAbsolutePath];
 	}
 	struct chmUnitInfo info;
 	void *buffer = NULL;
 	
-	if (chm_resolve_object(chmFileHandle, [path UTF8String], &info ) == CHM_RESOLVE_SUCCESS) {
+	if (chm_resolve_object(chmFileHandle, [absolutePath UTF8String], &info ) == CHM_RESOLVE_SUCCESS) {
 		buffer = malloc((size_t)info.length);
 		
 		if (buffer) {
 			if (!chm_retrieve_object(chmFileHandle, &info, buffer, 0, info.length)) {
-				NSLog(@"[%@ %@] failed to load %lu for item at path \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)info.length, path);
+				NSLog(@"[%@ %@] failed to load %lu for item at path \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)info.length, absolutePath);
 				free(buffer);
 				buffer = NULL;
 			}
@@ -419,6 +383,26 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	NSString *fullPath = [[anItem.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:aRelativePath];
 //	MDLog(@"[%@ %@] fullPath == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), fullPath);
 	return [self dataForObjectAtPath:fullPath];
+}
+
+
+/* NOTE: I've seen some CHM files who, in the Table of Contents, record the path to a page item in a
+ case-insensitive manner, for example, "html/01lc01a.htm", yet whose actual item would exist at "HTML/01lc01a.htm".
+ While chmlib seems able to deal with this case-insensitiveness, it was causing CHMKit problems: we were 
+ assuming case-sensitive paths, which caused errors when trying to locate those items. This method, then, is intended to be
+ used by CHMTableOfContents to sanitize the paths of CHMLinkItems to make sure they reflect the actual paths as exists
+ in the CHM file's archived file hierarchy. */
+
+- (NSString *)actualAbsolutePathForRelativeCaseInsensitivePath:(NSString *)aPath {
+//	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
+	aPath = [aPath chm__stringByAssuringAbsolutePath];
+	NSString *sanitizedPath = [archiveItems actualPathForItemWithCaseInsensitivePath:aPath];
+#if MD_DEBUG
+	if (![sanitizedPath isEqualToString:aPath]) {
+		NSLog(@"[%@ %@] *** NOTICE: correcting \"%@\" to \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath, sanitizedPath);
+	}
+#endif
+	return sanitizedPath;
 }
 
 
@@ -479,14 +463,20 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			}
 			if (tableOfContentsPath == nil || tableOfContentsPath.length == 0) {
 				tableOfContentsPath = readString(stringsData, readInt(windowsData, entryOffset + 0x60), encoding);
+				if (tableOfContentsPath.length) tableOfContentsPath = [tableOfContentsPath chm__stringByAssuringAbsolutePath];
+				
 				MDLog(@"[%@ %@] (STRINGS) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 			}
 			if (indexPath == nil || indexPath.length == 0) {
 				indexPath = readString(stringsData, readInt(windowsData, entryOffset + 0x64), encoding);
+				if (indexPath.length) indexPath = [indexPath chm__stringByAssuringAbsolutePath];
+				
 				MDLog(@"[%@ %@] (STRINGS) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 			}
 			if (homePath == nil || homePath.length == 0) {
 				homePath = readString(stringsData, readInt(windowsData, entryOffset + 0x68), encoding);
+				if (homePath.length) homePath = [homePath chm__stringByAssuringAbsolutePath];
+				
 				MDLog(@"[%@ %@] (STRINGS) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 			}
 		}
@@ -501,6 +491,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			case 0: {
 				if (tableOfContentsPath == nil || tableOfContentsPath.length == 0) {
 					tableOfContentsPath = readString(systemData, offset + 4, encoding);
+					if (tableOfContentsPath.length) tableOfContentsPath = [tableOfContentsPath chm__stringByAssuringAbsolutePath];
+					
 					MDLog(@"[%@ %@] (SYSTEM) tableOfContentsPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), tableOfContentsPath);
 				}
 				break;
@@ -509,6 +501,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			case 1: {
 				if (indexPath == nil || indexPath.length == 0) {
 					indexPath = readString(systemData, offset + 4, encoding);
+					if (indexPath.length) indexPath = [indexPath chm__stringByAssuringAbsolutePath];
+					
 					MDLog(@"[%@ %@] (SYSTEM) indexPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), indexPath);
 				}
 				break;
@@ -517,6 +511,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 			case 2: {
 				if (homePath == nil || homePath.length == 0) {
 					homePath = readString(systemData, offset + 4, encoding);
+					if (homePath.length) homePath = [homePath chm__stringByAssuringAbsolutePath];
+					
 					MDLog(@"[%@ %@] (SYSTEM) homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 				}
 				break;
@@ -571,8 +567,8 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 	
 	// Check for lack of index page
-		homePath = [self findHomeForPath:@"/"];
 	if (homePath == nil) {
+		homePath = [self findHomePath];
 		MDLog(@"[%@ %@] (IMPLICIT) implicit homePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), homePath);
 	}
 	[homePath retain];
@@ -583,30 +579,27 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-- (NSString *)findHomeForPath:(NSString *)basePath {
-	NSString *separator = [basePath hasSuffix:@"/"] ? @"" : @"/";
-	
-	NSString *testPath = [NSString stringWithFormat:@"%@%@index.htm", basePath, separator];
+- (NSString *)findHomePath {
+	NSString *testPath = @"/index.htm";
 	if ([self hasObjectAtPath:testPath]) {
 		return testPath;
 	}
-	testPath = [NSString stringWithFormat:@"%@%@default.html", basePath, separator];
+	testPath = @"/default.html";
 	if ([self hasObjectAtPath:testPath]) {
 		return testPath;
 	}
-	testPath = [NSString stringWithFormat:@"%@%@default.htm", basePath, separator];
+	testPath = @"/default.htm";
 	if ([self hasObjectAtPath:testPath]) {
 		return testPath;
 	}
-	return [NSString stringWithFormat:@"%@%@index.html", basePath, separator];
+	return @"/index.html";
 }
 
 
 - (void)setupTableOfContentsAndIndex {
 	if (tableOfContentsPath && tableOfContentsPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:tableOfContentsPath];
-		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		newTOC.documentFile = self;
+		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName] documentFile:self];
 		CHMTableOfContents *oldTOC = tableOfContents;
 		tableOfContents = newTOC;
 		
@@ -616,8 +609,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	}
 	if (indexPath && indexPath.length) {
 		NSData *tocData = [self dataForObjectAtPath:indexPath];
-		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName]];
-		newTOC.documentFile = self;
+		CHMTableOfContents *newTOC = [[CHMTableOfContents alloc] initWithData:tocData encodingName:[self currentEncodingName] documentFile:self];
 		CHMTableOfContents *oldTOC = index;
 		index = newTOC;
 		[index sort];
@@ -632,15 +624,11 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 }
 
 
-- (CHMLinkItem *)linkItemAtPath:(NSString *)aPath {
-//	MDLog(@"[%@ %@] aPath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aPath);
-	// strip leading /'s
-	aPath = [aPath chm__stringByDeletingLeadingSlashes];
-	
+- (CHMLinkItem *)linkItemAtPath:(NSString *)absolutePath {
+//	MDLog(@"[%@ %@] absolutePath == \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), absolutePath);
 	CHMLinkItem *item = nil;
-	if (tableOfContents) item = [tableOfContents linkItemAtPath:aPath];
-	if (item == nil && index) item = [index linkItemAtPath:aPath];
-//	MDLog(@"[%@ %@] item == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), item);
+	if (tableOfContents) item = [tableOfContents linkItemAtPath:absolutePath];
+	if (item == nil && index) item = [index linkItemAtPath:absolutePath];
 	return item;
 }
 
@@ -708,9 +696,6 @@ static int forEachFile(struct chmFile *h, struct chmUnitInfo *ui, void *context)
 
 - (void)addToSearchIndex:(const char *)path {
 	NSString *filepath = [NSString stringWithCString:path encoding:encoding];
-	if ([filepath hasPrefix:@"/"]) {
-		filepath = [filepath substringFromIndex:1];
-	}
 	NSData *data = [self dataForObjectAtPath:filepath];
 	NSURL *url = [NSURL chm__ITSSURLWithPath:filepath];
 	
