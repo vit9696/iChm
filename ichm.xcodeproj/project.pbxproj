@@ -12,6 +12,7 @@
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		C14C1EAD1CF35E2300413CBD /* pathExtensionsAndMIMETypes.plist in Resources */ = {isa = PBXBuildFile; fileRef = C14C1EAC1CF35E2300413CBD /* pathExtensionsAndMIMETypes.plist */; };
 		C153329A1CCD255000C67A97 /* CHMImageViewPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */; };
 		C15332A01CCD4CFB00C67A97 /* view.png in Resources */ = {isa = PBXBuildFile; fileRef = C153329F1CCD4CFB00C67A97 /* view.png */; };
 		C18399691CD00820009FDCDE /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18399641CD00747009FDCDE /* PSMTabBarControl.framework */; };
@@ -241,6 +242,7 @@
 		C12CE0351CC1798300970809 /* CHMDocumentFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMDocumentFile.m; path = ../CHMDocumentFile.m; sourceTree = "<group>"; };
 		C14A60171CC6C43900B868C6 /* CHMLinkItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMLinkItem.h; path = ../CHMLinkItem.h; sourceTree = "<group>"; };
 		C14A60181CC6C43900B868C6 /* CHMLinkItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMLinkItem.m; path = ../CHMLinkItem.m; sourceTree = "<group>"; };
+		C14C1EAC1CF35E2300413CBD /* pathExtensionsAndMIMETypes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pathExtensionsAndMIMETypes.plist; sourceTree = "<group>"; };
 		C15332981CCD255000C67A97 /* CHMImageViewPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMImageViewPopUpButton.h; sourceTree = "<group>"; };
 		C15332991CCD255000C67A97 /* CHMImageViewPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMImageViewPopUpButton.m; sourceTree = "<group>"; };
 		C153329F1CCD4CFB00C67A97 /* view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = view.png; sourceTree = "<group>"; };
@@ -591,6 +593,7 @@
 				C1DA9F411CDA98EC00FE354F /* CHMKitPrivateInterfaces.h */,
 				C1DA9F4A1CDA9BF700FE354F /* CHMKitPrivateInterfaces.m */,
 				C1DA9EED1CD9668C00FE354F /* Info.plist */,
+				C14C1EAC1CF35E2300413CBD /* pathExtensionsAndMIMETypes.plist */,
 			);
 			name = "CHMKit framework";
 			path = CHMKit;
@@ -829,6 +832,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14C1EAD1CF35E2300413CBD /* pathExtensionsAndMIMETypes.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -52,5 +52,6 @@
 - (CHMArchiveItem *)descendantAtPath:(NSString *)aPath;
 
 - (NSData *)data;
++ (NSString *)MIMETypeForPathExtension:(NSString *)aPathExtension;
 
 @end

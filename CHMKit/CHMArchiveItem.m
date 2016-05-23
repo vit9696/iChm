@@ -270,6 +270,29 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 }
 
 
++ (NSString *)MIMETypeForPathExtension:(NSString *)aPathExtension {
+	if (aPathExtension == nil) return nil;
+	
+	aPathExtension = [aPathExtension lowercaseString];
+	
+	static NSDictionary *pathExtensionsAndMIMETypes = nil;
+	
+	if (pathExtensionsAndMIMETypes == nil) {
+		pathExtensionsAndMIMETypes = [[NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"pathExtensionsAndMIMETypes" ofType:@"plist"]] retain];
+	}
+	
+	NSString *MIMEType = [pathExtensionsAndMIMETypes objectForKey:aPathExtension];
+	
+	if (MIMEType == nil) {
+		NSString *utiType = [(NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (CFStringRef)aPathExtension, NULL) autorelease];
+		if (utiType == nil) return nil;
+		MIMEType = [(NSString *)UTTypeCopyPreferredTagWithClass((CFStringRef)utiType, kUTTagClassMIMEType) autorelease];
+	}
+	
+	return MIMEType;
+}
+
+
 - (NSString *)description {
 	NSMutableString *description = [NSMutableString stringWithFormat:@"<%@> %@", NSStringFromClass([self class]), self.name];
 	if (childNodes) [description appendFormat:@"\r          childNodes == %@", childNodes];
