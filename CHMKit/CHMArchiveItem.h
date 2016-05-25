@@ -46,12 +46,16 @@
 // convenience, will be lowercase
 @property (readonly, nonatomic, retain) NSString *pathExtension;
 
+@property (readonly, nonatomic, retain) NSData *data;
+
 
 - (NSArray *)descendants;
 
 - (CHMArchiveItem *)descendantAtPath:(NSString *)aPath;
 
-- (NSData *)data;
+
 + (NSString *)MIMETypeForPathExtension:(NSString *)aPathExtension;
 
 @end
+
+

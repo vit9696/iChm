@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class CHMTableOfContents;
+@class CHMArchiveItem;
 
 
 @interface CHMLinkItem	: NSObject {
@@ -16,6 +17,8 @@
 	NSString				*path;
 	NSMutableArray			*children;
 	NSUInteger				pageID;
+	
+	CHMArchiveItem			*archiveItem;
 	
 	CHMLinkItem				*parent;		// non-retained
 	
@@ -26,6 +29,8 @@
 @property (readonly, nonatomic, retain) NSString *name;
 @property (readonly, nonatomic, retain) NSString *path;
 @property (readonly, nonatomic, retain) NSArray *children;
+
+@property (readonly, nonatomic, retain) CHMArchiveItem *archiveItem;
 
 @property (readonly, nonatomic, assign) CHMLinkItem *parent;
 

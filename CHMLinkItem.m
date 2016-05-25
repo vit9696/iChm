@@ -8,6 +8,7 @@
 
 #import "CHMLinkItem.h"
 #import "CHMKitPrivateInterfaces.h"
+#import "CHMArchiveItem.h"
 
 
 #define MD_DEBUG 0
@@ -25,6 +26,7 @@
 @synthesize path;
 @synthesize children;
 @synthesize pageID;
+@synthesize archiveItem;
 @synthesize parent;
 @synthesize container;
 @dynamic uppercaseName;
@@ -48,6 +50,7 @@
 	[children release];
 	[path release];
 	[name release];
+	[archiveItem release];
 	[super dealloc];
 }
 

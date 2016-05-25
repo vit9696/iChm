@@ -17,7 +17,7 @@
 #import "CHMArchiveItem.h"
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 
 #if MD_DEBUG
 #define MDLog(...) NSLog(__VA_ARGS__)
@@ -375,14 +375,17 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 		return [NSData dataWithBytesNoCopy:buffer length:(NSUInteger)info.length];
 	
 	return nil;
-	
 }
 
 
-- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToLinkItem:(CHMLinkItem *)anItem {
-	NSString *fullPath = [[anItem.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:aRelativePath];
-//	MDLog(@"[%@ %@] fullPath == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), fullPath);
-	return [self dataForObjectAtPath:fullPath];
+- (CHMArchiveItem *)archiveItemAtPath:(NSString *)absolutePath {
+	return [archiveItems descendantAtPath:absolutePath];
+}
+
+
+- (CHMArchiveItem *)archiveItemAtPath:(NSString *)relativePath relativeToArchiveItem:(CHMArchiveItem *)anItem {
+	NSString *fullPath = [[anItem.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath];
+	return [archiveItems descendantAtPath:fullPath];
 }
 
 

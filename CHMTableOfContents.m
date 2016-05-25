@@ -92,7 +92,10 @@ static htmlSAXHandler saxHandler = {
 		for (CHMLinkItem *item in pageList) {
 			item.container = self;
 			NSString *path = item.path;
-			if (path) [itemsAndPaths setObject:item forKey:path];
+			if (path) {
+				[itemsAndPaths setObject:item forKey:path];
+				item.archiveItem = [documentFile archiveItemAtPath:path];
+			}
 		}
 		
 //		MDLog(@"[%@ %@] itemsAndPaths == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), itemsAndPaths);

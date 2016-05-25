@@ -98,10 +98,9 @@ typedef NSUInteger CHMDocumentFileSearchMode;
 @property (readonly, nonatomic, retain) NSArray *allArchiveItems;
 
 
+- (CHMArchiveItem *)archiveItemAtPath:(NSString *)absolutePath;
+- (CHMArchiveItem *)archiveItemAtPath:(NSString *)relativePath relativeToArchiveItem:(CHMArchiveItem *)anItem;
 
-- (NSData *)dataForObjectAtPath:(NSString *)absolutePath;
-
-- (NSData *)dataForObjectAtPath:(NSString *)aRelativePath relativeToLinkItem:(CHMLinkItem *)anItem;
 
 - (CHMLinkItem *)linkItemAtPath:(NSString *)absolutePath;
 

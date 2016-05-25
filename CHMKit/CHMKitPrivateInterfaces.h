@@ -66,6 +66,7 @@ struct chmFile;
 - (void)notifyDelegateSearchIndexIsPrepared:(id)sender;
 
 - (BOOL)hasObjectAtPath:(NSString *)absolutePath;
+- (NSData *)dataForObjectAtPath:(NSString *)absolutePath;
 - (NSString *)actualAbsolutePathForRelativeCaseInsensitivePath:(NSString *)aPath;
 
 @end
@@ -79,6 +80,7 @@ struct chmFile;
 @property (nonatomic, retain) NSString *path;
 @property (nonatomic, retain) NSArray *children;
 @property (nonatomic, assign) NSUInteger pageID;
+@property (nonatomic, retain) CHMArchiveItem *archiveItem;
 @property (nonatomic, assign) CHMLinkItem *parent;
 @property (nonatomic, assign) CHMTableOfContents *container;
 @property (readonly, nonatomic, retain) NSString *uppercaseName;
