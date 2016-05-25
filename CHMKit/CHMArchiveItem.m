@@ -54,13 +54,15 @@ static int CHMEnumerateItems(struct chmFile *chmHandle, struct chmUnitInfo *unit
 
 
 + (id)rootArchiveItemWithDocumentFile:(CHMDocumentFile *)aDocumentFile chmFileHandle:(struct chmFile *)aChmFileHandle {
+	if (aDocumentFile == nil || aChmFileHandle == NULL) return nil;
+	
 	NSMutableDictionary *fileAndDirPaths = [NSMutableDictionary dictionary];
 	[fileAndDirPaths setObject:[NSMutableArray array] forKey:@"chmDirs"];
 	[fileAndDirPaths setObject:[NSMutableArray array] forKey:@"chmFiles"];
 	
-	if (!chm_enumerate(aChmFileHandle, CHM_ENUMERATE_ALL, CHMEnumerateItems, (void *)fileAndDirPaths)) {
-		NSLog(@"[%@ %@] *** ERROR: chm_enumerate() failed for file at \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), aDocumentFile.filePath);
-		return nil;
+	int result = chm_enumerate(aChmFileHandle, CHM_ENUMERATE_ALL, CHMEnumerateItems, (void *)fileAndDirPaths);
+	if (result == 0) {
+		NSLog(@"[%@ %@] *** NOTE: chm_enumerate() returned %d for file at \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), result, aDocumentFile.filePath);
 	}
 	
 	NSMutableDictionary *dirPathsAndFilePaths = [NSMutableDictionary dictionary];
