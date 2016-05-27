@@ -394,5 +394,6 @@
                 <outlet property="groupByTagsMenu" destination="540" id="546"/>
             </connections>
         </customObject>
+        <customObject id="JZg-MG-bY1" userLabel="CHMDocumentController" customClass="CHMDocumentController"/>
     </objects>
 </document>

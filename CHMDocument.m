@@ -11,6 +11,7 @@
 #import "CHMAppController.h"
 #import "BookmarkController.h"
 #import "CHMWebView.h"
+#import "CHMBookmark.h"
 
 
 #define MD_DEBUG 1
@@ -100,6 +101,8 @@ static BOOL firstDocument = YES;
 
 - (CHMTableOfContents *)currentDataSource;
 
+- (void)chm__loadURL:(NSURL *)URL;
+
 - (void)loadLinkItem:(CHMLinkItem *)anItem;
 
 - (IBAction)revealCurrentItemInOutlineView:(id)sender;
@@ -115,6 +118,7 @@ static BOOL firstDocument = YES;
 @synthesize viewMode;
 @synthesize documentFile;
 @synthesize currentLinkItem;
+@synthesize pendingBookmarkToLoad;
 
 
 - (id)init {
@@ -153,6 +157,9 @@ static BOOL firstDocument = YES;
 	
 	exporter.delegate = nil;
 	[exporter release];
+	
+	[pendingBookmarkToLoad release];
+	
 	[super dealloc];
 }
 
@@ -183,18 +190,25 @@ static BOOL firstDocument = YES;
 	[self setupToolbar];
 	[self restoreSidebar];
 	
-	// go to last viewed page
-	NSString *lastPath = (NSString *)[self getPreferenceforFile:filePath withKey:PREF_LAST_PATH];
-	
-	if (lastPath == nil) {
-		[self goHome:self];
+	if (pendingBookmarkToLoad) {
+		NSURL *bookmarkURL = [NSURL URLWithString:pendingBookmarkToLoad.url];
+		CHMLinkItem *bookmarkLinkItem = [documentFile linkItemAtPath:bookmarkURL.path];
+		(bookmarkLinkItem ? [self loadLinkItem:bookmarkLinkItem] : [self goHome:self]);
+		self.pendingBookmarkToLoad = nil;
 	} else {
+		// go to last viewed page
+		NSString *lastPath = (NSString *)[self getPreferenceforFile:filePath withKey:PREF_LAST_PATH];
 		
-		// old prefs saved relative paths, we now use absolute paths; make sure to make any relative paths to absolute
-		if (![lastPath hasPrefix:@"/"]) lastPath = [@"/" stringByAppendingPathComponent:lastPath];
-		
-		CHMLinkItem *lastItem = [documentFile linkItemAtPath:lastPath];
-		(lastItem ? [self loadLinkItem:lastItem] : [self goHome:self]);
+		if (lastPath == nil) {
+			[self goHome:self];
+		} else {
+			
+			// old prefs saved relative paths, we now use absolute paths; make sure to make any relative paths to absolute
+			if (![lastPath hasPrefix:@"/"]) lastPath = [@"/" stringByAppendingPathComponent:lastPath];
+			
+			CHMLinkItem *lastItem = [documentFile linkItemAtPath:lastPath];
+			(lastItem ? [self loadLinkItem:lastItem] : [self goHome:self]);
+		}
 	}
 	
 	// set search type and search menu
@@ -237,21 +251,27 @@ static BOOL firstDocument = YES;
 }
 
 
+- (void)chm__loadURL:(NSURL *)URL {
+//	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
+	if (URL == nil) return;
+	NSURLRequest *req = [NSURLRequest requestWithURL:URL];
+	[[curWebView mainFrame] loadRequest:req];
+}
+
+
 - (void)loadURL:(NSURL *)URL {
 //	MDLog(@"[%@ %@] URL == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), URL);
-	
-	if (URL) {
-		NSURLRequest *req = [NSURLRequest requestWithURL:URL];
-		[[curWebView mainFrame] loadRequest:req];
-	}
+	if (URL == nil) return;
+	CHMLinkItem *linkItem = [documentFile linkItemAtPath:URL.path];
+	if (linkItem) [self loadLinkItem:linkItem];
 }
 
 - (void)loadLinkItem:(CHMLinkItem *)anItem {
 //	MDLog(@"[%@ %@] anItem == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), anItem);
-	
+	if (anItem == nil) return;
 	self.currentLinkItem = anItem;
-	NSURL *url = [NSURL chm__ITSSURLWithPath:anItem.path];
-	[self loadURL:url];
+	NSURL *URL = [NSURL chm__ITSSURLWithPath:anItem.path];
+	[self chm__loadURL:URL];
 }
 
 
@@ -315,7 +335,9 @@ static BOOL firstDocument = YES;
 }
 
 - (void)webView:(WebView *)sender didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-	NSLog(@"[%@ %@] error == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
+	if (error.domain == NSURLErrorDomain && error.code != NSURLErrorCancelled) {
+		NSLog(@"[%@ %@] error == %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), error);
+	}
 }
 
 - (void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {

@@ -16,6 +16,7 @@
 
 
 @class CHMConsole;
+@class CHMBookmark;
 
 
 
@@ -71,6 +72,8 @@ typedef NSUInteger CHMDocumentViewMode;
 	
 	BOOL							ignoreOutlineViewSelectionChanges;
 	
+	CHMBookmark						*pendingBookmarkToLoad;
+	
 	CHMExporter						*exporter;
 	
 }
@@ -82,8 +85,10 @@ typedef NSUInteger CHMDocumentViewMode;
 @property (nonatomic, assign) CHMDocumentViewMode viewMode;
 
 @property (nonatomic, retain) CHMDocumentFile *documentFile;
-	
+
 @property (nonatomic, retain) CHMLinkItem *currentLinkItem;
+
+@property (nonatomic, retain) CHMBookmark *pendingBookmarkToLoad;
 
 
 - (NSString *)currentURL;

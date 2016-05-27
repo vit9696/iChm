@@ -11,7 +11,7 @@
 #import "CHMFile.h"
 #import "CHMBookmark.h"
 #import "CHMTag.h"
-#import "CHMDocumentFile.h"
+#import "CHMDocumentController.h"
 
 
 #define MD_DEBUG 1
@@ -385,15 +385,20 @@
 		[self addEmptyItemToMenu:menu];
 }
 
-- (IBAction)openBookmark:(id)sender
-{
-	NSDocumentController *controller = [NSDocumentController sharedDocumentController];
-	NSError *error = nil;
-	CHMBookmark * bm = (CHMBookmark*)[sender representedObject];
-	NSURL *url = [NSURL fileURLWithPath:bm.file.path];
-	CHMDocument* doc = [controller openDocumentWithContentsOfURL:url display:YES error:&error];
-	[doc loadURL:[NSURL URLWithString:bm.url]];
+
+- (IBAction)openBookmark:(id)sender {
+	CHMDocumentController *docController = [CHMDocumentController sharedDocumentController];
+	CHMBookmark *bookmark = (CHMBookmark *)[sender representedObject];
+	NSURL *URL = [NSURL fileURLWithPath:bookmark.file.path];
+	CHMDocument *document = [docController documentForURL:URL];
+	if (document) {
+		[document loadURL:[NSURL URLWithString:bookmark.url]];
+	} else {
+		NSError *error = nil;
+		[docController openDocumentWithContentsOfURL:URL loadBookmark:bookmark error:&error];
+	}
 }
+
 
 # pragma mark NSOutlineView datasource
 - (void)setupDataSource
