@@ -83,7 +83,7 @@ static BOOL firstDocument = YES;
 
 
 - (void)setupToolbar;
-- (void)updateHistoryButton;
+- (void)updateToolbarButtons;
 
 
 - (void)setupTabBar;
@@ -335,7 +335,7 @@ static BOOL firstDocument = YES;
 	
 	if (newCurrentItem) self.currentLinkItem = newCurrentItem;
 	
-	[self updateHistoryButton];
+	[self updateToolbarButtons];
 	[self revealCurrentItemInOutlineView:nil];
 	
 	NSTabViewItem *tabItem = [docTabView selectedTabViewItem];
@@ -558,9 +558,11 @@ static BOOL firstDocument = YES;
 	
 }
 
-- (void)updateHistoryButton {
+- (void)updateToolbarButtons {
 	[historyControl setEnabled:[curWebView canGoBack] forSegment:0];
 	[historyControl setEnabled:[curWebView canGoForward] forSegment:1];
+	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
+	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
 }
 
 #pragma mark - export to pdf
@@ -689,10 +691,12 @@ static BOOL firstDocument = YES;
 
 - (void)tabView:(NSTabView *)tabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
 	[webViews removeObject:[[tabViewItem identifier] webView]];
+	[self updateToolbarButtons];
 }
 
 - (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem {
 	curWebView = [(CHMWebViewController *)[tabViewItem identifier] webView];
+	[self updateToolbarButtons];
 }
 
 - (IBAction)chmDocumentSelectNextTabViewItem:(id)sender {
