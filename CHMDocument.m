@@ -440,6 +440,8 @@ static BOOL firstDocument = YES;
 
 #pragma mark - IBActions
 - (IBAction)changeTopic:(id)sender {
+	if (ignoreOutlineViewSelectionChanges) return;
+	
 	NSInteger selectedRow = [outlineView selectedRow];
 	
 	if (selectedRow >= 0) {
@@ -501,7 +503,7 @@ static BOOL firstDocument = YES;
 		NSArray *ancestors = [currentLinkItem ancestors];
 		
 		for (CHMLinkItem *parent in ancestors) {
-			[outlineView expandItem:parent];
+			if (![outlineView isItemExpanded:parent]) [outlineView expandItem:parent];
 		}
 	}
 	
@@ -509,7 +511,13 @@ static BOOL firstDocument = YES;
 	
 	if (currentItemIndex == -1) return;
 	
-	[outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentItemIndex] byExtendingSelection:NO];
+	NSIndexSet *selectedRowIndexes = [outlineView selectedRowIndexes];
+	
+	if (![selectedRowIndexes containsIndex:currentItemIndex]) {
+		ignoreOutlineViewSelectionChanges = YES;
+		[outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:currentItemIndex] byExtendingSelection:NO];
+		ignoreOutlineViewSelectionChanges = NO;
+	}
 	[outlineView scrollRowToVisible:currentItemIndex];
 }
 

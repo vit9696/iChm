@@ -69,6 +69,8 @@ typedef NSUInteger CHMDocumentViewMode;
 	
 	CHMLinkItem						*currentLinkItem;
 	
+	BOOL							ignoreOutlineViewSelectionChanges;
+	
 	CHMExporter						*exporter;
 	
 }
