@@ -695,12 +695,23 @@ static BOOL firstDocument = YES;
 	curWebView = [(CHMWebViewController *)[tabViewItem identifier] webView];
 }
 
-- (IBAction)selectNextTabViewItem:(id)sender {
-	[docTabView selectNextTabViewItem:sender];
+- (IBAction)chmDocumentSelectNextTabViewItem:(id)sender {
+	NSInteger tabViewItemCount = docTabView.numberOfTabViewItems;
+	NSInteger currentTabViewItemIndex = [docTabView indexOfTabViewItem:[docTabView selectedTabViewItem]];
+	if (currentTabViewItemIndex == tabViewItemCount - 1) {
+		[docTabView selectFirstTabViewItem:sender];
+	} else {
+		[docTabView selectNextTabViewItem:sender];
+	}
 }
 
-- (IBAction)selectPreviousTabViewItem:(id)sender {
-	[docTabView selectPreviousTabViewItem:sender];
+- (IBAction)chmDocumentSelectPreviousTabViewItem:(id)sender {
+	NSInteger currentIndex = [docTabView indexOfTabViewItem:[docTabView selectedTabViewItem]];
+	if (currentIndex == 0) {
+		[docTabView selectLastTabViewItem:sender];
+	} else {
+		[docTabView selectPreviousTabViewItem:sender];
+	}
 }
 
 #pragma mark - Toolbar
@@ -992,6 +1003,11 @@ static BOOL firstDocument = YES;
 		
 	} else if (action == @selector(zoomOut:)) {
 		return [curWebView canMakeTextSmaller];
+		
+	} else if (action == @selector(chmDocumentSelectNextTabViewItem:) ||
+			   action == @selector(chmDocumentSelectPreviousTabViewItem:)) {
+		return docTabView.numberOfTabViewItems > 1;
+		
 	}
 	return YES;
 }

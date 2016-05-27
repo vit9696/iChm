@@ -134,6 +134,9 @@ typedef NSUInteger CHMDocumentViewMode;
 // tab
 - (IBAction)addNewTab:(id)sender;
 - (IBAction)closeTab:(id)sender;
+- (IBAction)chmDocumentSelectNextTabViewItem:(id)sender;
+- (IBAction)chmDocumentSelectPreviousTabViewItem:(id)sender;
+
 
 //text encoding
 - (IBAction)changeEncoding:(id)sender;
