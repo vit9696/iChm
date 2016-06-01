@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1808" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1060" identifier="macosx"/>
         <development version="5100" identifier="xcode"/>
@@ -148,17 +148,17 @@
         </window>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="100064" userLabel="History Toolbar">
-            <rect key="frame" x="0.0" y="0.0" width="109" height="40"/>
-            <autoresizingMask key="autoresizingMask"/>
+            <rect key="frame" x="0.0" y="0.0" width="65" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
                 <segmentedControl verticalHuggingPriority="750" id="100070">
-                    <rect key="frame" x="-2" y="16" width="71" height="25"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="3" y="3" width="59" height="25"/>
+                    <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" state="on" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="momentary" id="100071">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="NSGoLeftTemplate" width="32"/>
-                            <segment image="NSGoRightTemplate" width="32" tag="1"/>
+                            <segment image="NSGoLeftTemplate" width="26"/>
+                            <segment image="NSGoRightTemplate" width="26" tag="1"/>
                         </segments>
                         <connections>
                             <action selector="goHistory:" target="-2" id="100083"/>
@@ -166,6 +166,7 @@
                     </segmentedCell>
                 </segmentedControl>
             </subviews>
+            <point key="canvasLocation" x="187.5" y="507"/>
         </customView>
         <customView id="100094" userLabel="Search">
             <rect key="frame" x="0.0" y="0.0" width="266" height="42"/>
@@ -187,17 +188,17 @@
             </subviews>
         </customView>
         <customView id="100099" userLabel="Zoom">
-            <rect key="frame" x="0.0" y="0.0" width="97" height="40"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <rect key="frame" x="0.0" y="0.0" width="65" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
                 <segmentedControl verticalHuggingPriority="750" id="100100">
-                    <rect key="frame" x="-2" y="16" width="71" height="25"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="3" y="3" width="59" height="25"/>
+                    <autoresizingMask key="autoresizingMask"/>
                     <segmentedCell key="cell" state="on" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="momentary" id="100101">
                         <font key="font" metaFont="system"/>
                         <segments>
-                            <segment image="NSAddTemplate" width="32"/>
-                            <segment image="NSRemoveTemplate" width="32" tag="1"/>
+                            <segment image="textSmallerTemplate" width="26"/>
+                            <segment image="textLargerTemplate" width="26" tag="1"/>
                         </segments>
                         <connections>
                             <action selector="zoom:" target="-2" id="100105"/>
@@ -205,6 +206,7 @@
                     </segmentedCell>
                 </segmentedControl>
             </subviews>
+            <point key="canvasLocation" x="484.5" y="329"/>
         </customView>
         <menu id="100115" userLabel="outlineViewMenu">
             <items>
@@ -217,12 +219,12 @@
             </items>
         </menu>
         <customView id="100123" userLabel="Home">
-            <rect key="frame" x="0.0" y="0.0" width="98" height="43"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <rect key="frame" x="0.0" y="0.0" width="38" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" id="100124">
-                    <rect key="frame" x="0.0" y="19" width="32" height="25"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <rect key="frame" x="3" y="3" width="32" height="25"/>
+                    <autoresizingMask key="autoresizingMask"/>
                     <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="home" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="100125">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -232,6 +234,7 @@
                     </connections>
                 </button>
             </subviews>
+            <point key="canvasLocation" x="179" y="404"/>
         </customView>
         <customView id="100131" userLabel="Toggle Sidebar">
             <rect key="frame" x="0.0" y="0.0" width="97" height="43"/>
@@ -310,12 +313,12 @@
         </menu>
     </objects>
     <resources>
-        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSGoLeftTemplate" width="9" height="12"/>
         <image name="NSGoRightTemplate" width="9" height="12"/>
-        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="TB_Sidebar" width="19" height="14"/>
         <image name="home" width="128" height="128"/>
+        <image name="textLargerTemplate" width="14" height="14"/>
+        <image name="textSmallerTemplate" width="14" height="14"/>
         <image name="view" width="22" height="13"/>
     </resources>
 </document>

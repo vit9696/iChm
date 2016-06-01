@@ -43,6 +43,8 @@
 		C1DA9F091CD96E2500FE354F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		C1DA9F0B1CD96E3C00FE354F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1DA9F0A1CD96E3C00FE354F /* CoreServices.framework */; };
 		C1DA9F481CDA99F700FE354F /* CHMKitPrivateInterfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = C1DA9F411CDA98EC00FE354F /* CHMKitPrivateInterfaces.h */; };
+		C1EE6B6D1CFA0092008C038D /* textLargerTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C1EE6B6B1CFA0092008C038D /* textLargerTemplate.pdf */; };
+		C1EE6B6E1CFA0092008C038D /* textSmallerTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C1EE6B6C1CFA0092008C038D /* textSmallerTemplate.pdf */; };
 		C30F2B2F0E42135C003A17A7 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = C30F2B2E0E42135C003A17A7 /* home.png */; };
 		C33A4ABB0E34E92D00277D64 /* CHMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C33A4ABA0E34E92D00277D64 /* CHMDocument.m */; };
 		C33A4AE10E34EA7700277D64 /* CHMDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */; };
@@ -263,6 +265,8 @@
 		C1DA9F0A1CD96E3C00FE354F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		C1DA9F411CDA98EC00FE354F /* CHMKitPrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CHMKitPrivateInterfaces.h; sourceTree = "<group>"; };
 		C1DA9F4A1CDA9BF700FE354F /* CHMKitPrivateInterfaces.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMKitPrivateInterfaces.m; sourceTree = "<group>"; };
+		C1EE6B6B1CFA0092008C038D /* textLargerTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = textLargerTemplate.pdf; sourceTree = "<group>"; };
+		C1EE6B6C1CFA0092008C038D /* textSmallerTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = textSmallerTemplate.pdf; sourceTree = "<group>"; };
 		C30F2B2E0E42135C003A17A7 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		C33A4AB90E34E92D00277D64 /* CHMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocument.h; sourceTree = "<group>"; };
 		C33A4ABA0E34E92D00277D64 /* CHMDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMDocument.m; sourceTree = "<group>"; };
@@ -624,6 +628,8 @@
 				C30F2B2E0E42135C003A17A7 /* home.png */,
 				C35B99F90E39C23400A63BC3 /* redbird.icns */,
 				C3C082240E4557E700D58E19 /* TB_Sidebar.png */,
+				C1EE6B6C1CFA0092008C038D /* textSmallerTemplate.pdf */,
+				C1EE6B6B1CFA0092008C038D /* textLargerTemplate.pdf */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -815,6 +821,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1EE6B6E1CFA0092008C038D /* textSmallerTemplate.pdf in Resources */,
 				C33DE67D0E40C40A009FF1F4 /* highlight.js in Resources */,
 				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
@@ -827,6 +834,7 @@
 				C30F2B2F0E42135C003A17A7 /* home.png in Resources */,
 				C3ED1DA00E43106D00C1B93A /* textEncodings.plist in Resources */,
 				C3C082250E4557E700D58E19 /* TB_Sidebar.png in Resources */,
+				C1EE6B6D1CFA0092008C038D /* textLargerTemplate.pdf in Resources */,
 				C33BB2050E46DA100026F435 /* ichm_file.icns in Resources */,
 				C36FD52C0E48403F00496822 /* Localizable.strings in Resources */,
 				C3D2046B0E53EFAF00D5CA58 /* Bookmark.xib in Resources */,

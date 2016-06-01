@@ -554,10 +554,10 @@ static BOOL firstDocument = YES;
 	NSSegmentedCell *segCell = sender;
 	switch ([segCell selectedSegment]) {
 		case 0:
-			[self zoomIn:sender];
+			[self zoomOut:sender];
 			break;
 		case 1:
-			[self zoomOut:sender];
+			[self zoomIn:sender];
 			break;
 		default:
 			break;
@@ -570,8 +570,8 @@ static BOOL firstDocument = YES;
 }
 
 - (void)after_zoom {
-	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
-	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
+	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:0];
+	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:1];
 	float zoomFactor = [curWebView textSizeMultiplier];
 	[[NSUserDefaults standardUserDefaults] setFloat:zoomFactor forKey:@"zoom factor"];
 }
@@ -591,8 +591,8 @@ static BOOL firstDocument = YES;
 - (void)updateToolbarButtons {
 	[historyControl setEnabled:[curWebView canGoBack] forSegment:0];
 	[historyControl setEnabled:[curWebView canGoForward] forSegment:1];
-	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
-	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
+	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:0];
+	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:1];
 }
 
 #pragma mark - export to pdf
@@ -751,14 +751,10 @@ static BOOL firstDocument = YES;
 #pragma mark - Toolbar
 - (void)setupToolbar {
 	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:ICHMToolbarIdentifier] autorelease];
-	
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
-	
 	[toolbar setDelegate:self];
-	
 	[documentWindow setToolbar:toolbar];
-	
 }
 
 
@@ -781,7 +777,7 @@ static BOOL firstDocument = YES;
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Zoom", @"Zoom")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Zoom", @"Zoom")];
-		[toolbarItem setView:textSizeControl];
+		[toolbarItem setView:[textSizeControl superview]];
 		[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:0];
 		[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:1];
 	} else if ([itemIdent isEqual:HistoryToolbarItemIdentifier]) {
@@ -791,7 +787,7 @@ static BOOL firstDocument = YES;
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"History", @"History")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Navigate in History", @"Navigate in History")];
-		[toolbarItem setView:historyControl];
+		[toolbarItem setView:[historyControl superview]];
 		[historyControl setEnabled:NO forSegment:0];
 		[historyControl setEnabled:NO forSegment:1];
 	} else if ([itemIdent isEqual:HomeToolbarItemIdentifier]) {
@@ -801,7 +797,7 @@ static BOOL firstDocument = YES;
 		[toolbarItem setPaletteLabel:NSLocalizedString(@"Home", @"Home")];
 		
 		[toolbarItem setToolTip:NSLocalizedString(@"Back to Home", @"Back to Home")];
-		[toolbarItem setView:homeButton];
+		[toolbarItem setView:[homeButton superview]];
 	} else if ([itemIdent isEqual:SidebarToolbarItemIdentifier]) {
 		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
 		
@@ -829,7 +825,6 @@ static BOOL firstDocument = YES;
 
 
 #pragma mark - <CHMDocumentFileSearchDelegate>
-
 
 - (void)documentFile:(CHMDocumentFile *)aDocumentFile didUpdateSearchResults:(NSArray *)aSearchResults {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
