@@ -597,11 +597,11 @@ static BOOL firstDocument = YES;
 	/* create or get the shared instance of NSSavePanel */
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setTitle:NSLocalizedString(@"Save as PDF", @"Save as PDF")];
-	
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObjects:@"pdf", nil]];
+	[savePanel setNameFieldStringValue:[[filePath lastPathComponent] stringByDeletingPathExtension]];
 	
 	/* display the NSSavePanel */
-	NSInteger runResult = [savePanel runModalForDirectory:nil file:[[filePath lastPathComponent] stringByDeletingPathExtension]];
+	NSInteger runResult = [savePanel runModal];
 	
 	/* if successful, save file under designated name */
 	if (runResult == NSOKButton) {
