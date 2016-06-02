@@ -579,13 +579,9 @@ static BOOL firstDocument = YES;
 
 - (IBAction)printDocument:(id)sender {
 	NSView *docView = [[[curWebView mainFrame] frameView] documentView];
-    
-    NSPrintOperation *op = [NSPrintOperation printOperationWithView:docView printInfo:[self printInfo]];
-	
-    [op setShowPanels:YES];
-	
-    [self runModalPrintOperation:op delegate:nil didRunSelector:NULL contextInfo:NULL];
-	
+    NSPrintOperation *operation = [NSPrintOperation printOperationWithView:docView printInfo:[self printInfo]];
+	operation.showsPrintPanel = YES;
+	[self runModalPrintOperation:operation delegate:nil didRunSelector:NULL contextInfo:NULL];
 }
 
 - (void)updateToolbarButtons {
