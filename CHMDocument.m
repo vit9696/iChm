@@ -23,24 +23,25 @@
 #endif
 
 
-#define PREF_FILES_INFO @"files info"
-#define PREF_UPDATED_AT @"updated at"
-#define PREF_LAST_PATH @"last path"
-#define PREF_SEARCH_TYPE @"search type"
+#define CHM_DEFAULT_SIDEBAR_WIDTH 176.0
 
-#define PREF_VALUE_SEARCH_IN_INDEX @"index"
-#define PREF_VALUE_SEARCH_IN_FILE  @"file"
+static NSString * const	ICHMToolbarIdentifier				= @"ICHM Toolbar Identifier";
+static NSString * const HistoryToolbarItemIdentifier		= @"History Item Identifier";
+static NSString * const TextSizeToolbarItemIdentifier		= @"Text Size Item Identifier";
+static NSString * const SearchToolbarItemIdentifier			= @"Search Item Identifier";
+static NSString * const HomeToolbarItemIdentifier			= @"Home Item Identifier";
+static NSString * const SidebarToolbarItemIdentifier		= @"Sidebar Item Identifier";
+static NSString * const WebVewPreferenceIndentifier			= @"iCHM WebView Preferences";
 
+static NSString * const CHMDocumentSidebarWidthKey			= @"Sidebar Width";
+static NSString * const CHMDocumentTextSizeMultiplierKey	= @"zoom factor";
+static NSString * const CHMDocumentFilesInfoKey				= @"files info";
+static NSString * const CHMDocumentUpdatedAtKey				= @"updated at";
+static NSString * const CHMDocumentLastPathKey				= @"last path";
+static NSString * const CHMDocumentSearchTypeKey			= @"search type";
+static NSString * const CHMDocumentSearchTypeIndex			= @"index";
+static NSString * const CHMDocumentSearchTypeFile			= @"file";
 
-static NSString * const	ICHMToolbarIdentifier			= @"ICHM Toolbar Identifier";
-static NSString * const HistoryToolbarItemIdentifier 	= @"History Item Identifier";
-static NSString * const TextSizeToolbarItemIdentifier 	= @"Text Size Item Identifier";
-static NSString * const SearchToolbarItemIdentifier     = @"Search Item Identifier";
-static NSString * const HomeToolbarItemIdentifier       = @"Home Item Identifier";
-static NSString * const SidebarToolbarItemIdentifier    = @"Sidebar Item Identifier";
-static NSString * const WebVewPreferenceIndentifier     = @"iCHM WebView Preferences";
-static NSString * const SidebarWidthName				= @"Sidebar Width";
-static CGFloat MinSidebarWidth = 160.0;
 static BOOL firstDocument = YES;
 
 @interface CHMConsole : NSObject {
@@ -197,7 +198,7 @@ static BOOL firstDocument = YES;
 		self.pendingBookmarkToLoad = nil;
 	} else {
 		// go to last viewed page
-		NSString *lastPath = (NSString *)[self getPreferenceforFile:filePath withKey:PREF_LAST_PATH];
+		NSString *lastPath = (NSString *)[self getPreferenceforFile:filePath withKey:CHMDocumentLastPathKey];
 		
 		if (lastPath == nil) {
 			[self goHome:self];
@@ -212,8 +213,8 @@ static BOOL firstDocument = YES;
 	}
 	
 	// set search type and search menu
-	NSString *type = [self getPreferenceforFile:filePath withKey:PREF_SEARCH_TYPE];
-	if (type && [type isEqualToString:PREF_VALUE_SEARCH_IN_INDEX]) {
+	NSString *type = [self getPreferenceforFile:filePath withKey:CHMDocumentSearchTypeKey];
+	if (type && [type isEqualToString:CHMDocumentSearchTypeIndex]) {
 		self.searchMode = CHMDocumentFileSearchInIndex;
 		[[searchField cell] setPlaceholderString:NSLocalizedString(@"Search in Index", @"")];
 	}
@@ -277,10 +278,10 @@ static BOOL firstDocument = YES;
 
 - (void)setPreference:(id)object forFile:(NSString *)filename withKey:(NSString *)key {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSMutableDictionary *filesInfoList = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:PREF_FILES_INFO]];
+	NSMutableDictionary *filesInfoList = [NSMutableDictionary dictionaryWithDictionary:[defaults dictionaryForKey:CHMDocumentFilesInfoKey]];
 	NSMutableDictionary *fileInfo = [NSMutableDictionary dictionaryWithDictionary:[filesInfoList objectForKey:filename]];
 	[fileInfo setObject:object forKey:key];
-	[fileInfo setObject:[NSDate date] forKey:PREF_UPDATED_AT];
+	[fileInfo setObject:[NSDate date] forKey:CHMDocumentUpdatedAtKey];
 	[filesInfoList setObject:fileInfo forKey:filename];
 	
 	if ([filesInfoList count] > 20) {
@@ -288,7 +289,7 @@ static BOOL firstDocument = YES;
 		NSString *oldestKey = nil;
 		for (NSString *key in[filesInfoList allKeys]) {
 			NSDictionary *info = [filesInfoList objectForKey:key];
-			if (oldest == nil || [[oldest objectForKey:PREF_UPDATED_AT] compare:[info objectForKey:PREF_UPDATED_AT]] == NSOrderedDescending) {
+			if (oldest == nil || [[oldest objectForKey:CHMDocumentUpdatedAtKey] compare:[info objectForKey:CHMDocumentUpdatedAtKey]] == NSOrderedDescending) {
 				oldest = info;
 				oldestKey = key;
 			}
@@ -297,12 +298,12 @@ static BOOL firstDocument = YES;
 		if (oldestKey) [filesInfoList removeObjectForKey:oldestKey];
 		[oldestKey release];
 	}
-	[defaults setObject:filesInfoList forKey:PREF_FILES_INFO];
+	[defaults setObject:filesInfoList forKey:CHMDocumentFilesInfoKey];
 }
 
 - (id)getPreferenceforFile:(NSString *)filename withKey:(NSString *)key {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSDictionary *filesInfoList = [defaults dictionaryForKey:PREF_FILES_INFO];
+	NSDictionary *filesInfoList = [defaults dictionaryForKey:CHMDocumentFilesInfoKey];
 	if (filesInfoList == nil) {
 		return nil;
 	}
@@ -379,7 +380,7 @@ static BOOL firstDocument = YES;
 	}
 	
 	// setup last path
-	[self setPreference:URL.path forFile:filePath withKey:PREF_LAST_PATH];
+	[self setPreference:URL.path forFile:filePath withKey:CHMDocumentLastPathKey];
 }
 
 
@@ -573,7 +574,7 @@ static BOOL firstDocument = YES;
 	[textSizeControl setEnabled:[curWebView canMakeTextSmaller] forSegment:0];
 	[textSizeControl setEnabled:[curWebView canMakeTextLarger] forSegment:1];
 	float zoomFactor = [curWebView textSizeMultiplier];
-	[[NSUserDefaults standardUserDefaults] setFloat:zoomFactor forKey:@"zoom factor"];
+	[[NSUserDefaults standardUserDefaults] setFloat:zoomFactor forKey:CHMDocumentTextSizeMultiplierKey];
 }
 
 
@@ -678,8 +679,8 @@ static BOOL firstDocument = YES;
 	[newView setUIDelegate:self];
 	[newView setResourceLoadDelegate:self];
 	
-	if ([[NSUserDefaults standardUserDefaults] floatForKey:@"zoom factor"] != 0) {
-		[newView setTextSizeMultiplier:[[NSUserDefaults standardUserDefaults] floatForKey:@"zoom factor"]];
+	if ([[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentTextSizeMultiplierKey] != 0) {
+		[newView setTextSizeMultiplier:[[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentTextSizeMultiplierKey]];
 	}
 	// NOTE: the tab view item retains the CHMWebViewController instance
 	// create new tab item
@@ -837,7 +838,7 @@ static BOOL firstDocument = YES;
 	self.searchMode = tag;
 	[[searchField cell] setPlaceholderString:(searchMode == CHMDocumentFileSearchInFile ? NSLocalizedString(@"Search in File", @"") : NSLocalizedString(@"Search in Index", @""))];
 	
-	[self setPreference:(searchMode == CHMDocumentFileSearchInFile ? PREF_VALUE_SEARCH_IN_FILE : PREF_VALUE_SEARCH_IN_INDEX) forFile:filePath withKey:PREF_SEARCH_TYPE];
+	[self setPreference:(searchMode == CHMDocumentFileSearchInFile ? CHMDocumentSearchTypeFile : CHMDocumentSearchTypeIndex) forFile:filePath withKey:CHMDocumentSearchTypeKey];
 	
 	if ([searchField stringValue].length) [self search:self];
 	
@@ -1045,16 +1046,16 @@ static BOOL firstDocument = YES;
 	}
 	NSView *sidebarView = [[splitView subviews] objectAtIndex:1];
 	CGFloat curWidth = [sidebarView frame].size.width;
-	if (curWidth > MinSidebarWidth) {
-		[[NSUserDefaults standardUserDefaults] setFloat:curWidth forKey:SidebarWidthName];
+	if (curWidth >= CHM_DEFAULT_SIDEBAR_WIDTH) {
+		[[NSUserDefaults standardUserDefaults] setFloat:curWidth forKey:CHMDocumentSidebarWidthKey];
 	}
 }
 
 #pragma mark -
 - (void)restoreSidebar {
-	CGFloat width = [[NSUserDefaults standardUserDefaults] floatForKey:SidebarWidthName];
-	if (width < MinSidebarWidth) {
-		width = MinSidebarWidth;
+	CGFloat width = [[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentSidebarWidthKey];
+	if (width < CHM_DEFAULT_SIDEBAR_WIDTH) {
+		width = CHM_DEFAULT_SIDEBAR_WIDTH;
 	}
 	CGFloat newpos = [splitView frame].size.width - width;
 	isSidebarRestored = YES;
