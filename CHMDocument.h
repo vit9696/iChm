@@ -45,6 +45,8 @@ typedef NSUInteger CHMDocumentViewMode;
 	IBOutlet NSSearchField			*searchField;
 	
 	IBOutlet NSSplitView			*splitView;
+	IBOutlet NSView					*tabViewView;
+	IBOutlet NSView					*sidebarView;
 	IBOutlet NSMenu					*sidebarViewMenu;
 	
 	IBOutlet NSWindow				*exportProgressSheet;
@@ -60,7 +62,9 @@ typedef NSUInteger CHMDocumentViewMode;
 	CHMDocumentViewMode				viewMode;
 	BOOL							isSearching;
 	
+	CGFloat							sidebarWidth;
 	BOOL							isSidebarRestored;
+	
 	
 	NSMutableArray					*webViews;
 	WebView							*curWebView;

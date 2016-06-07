@@ -17,9 +17,11 @@
                 <outlet property="homeButton" destination="100124" id="LxS-ej-1Ao"/>
                 <outlet property="outlineView" destination="100058" id="4c3-IN-FXu"/>
                 <outlet property="searchField" destination="100095" id="1jY-1w-3lb"/>
+                <outlet property="sidebarView" destination="100045" id="HSI-GG-qbg"/>
                 <outlet property="sidebarViewMenu" destination="GwC-Ok-t28" id="F5B-G6-B7a"/>
                 <outlet property="splitView" destination="100043" id="100128"/>
                 <outlet property="tabBar" destination="100106" id="100113"/>
+                <outlet property="tabViewView" destination="100044" id="kbx-Kg-eG3"/>
                 <outlet property="textSizeControl" destination="100100" id="JYx-tc-xP6"/>
                 <outlet property="toggleSidebarButton" destination="100132" id="xlD-TL-Vqk"/>
                 <outlet property="window" destination="5" id="100078"/>
@@ -40,7 +42,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="819" height="559"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <customView id="100044">
+                            <customView id="100044" userLabel="tabViewView">
                                 <rect key="frame" x="0.0" y="0.0" width="642" height="559"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
@@ -59,7 +61,7 @@
                                     </customView>
                                 </subviews>
                             </customView>
-                            <customView id="100045">
+                            <customView id="100045" userLabel="sidebarView">
                                 <rect key="frame" x="643" y="0.0" width="176" height="559"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>

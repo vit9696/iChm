@@ -23,7 +23,8 @@
 #endif
 
 
-#define CHM_DEFAULT_SIDEBAR_WIDTH 176.0
+#define CHM_SIDEBAR_WIDTH_MIN		130.0
+#define CHM_SIDEBAR_WIDTH_DEFAULT	176.0
 
 static NSString * const	ICHMToolbarIdentifier				= @"ICHM Toolbar Identifier";
 static NSString * const HistoryToolbarItemIdentifier		= @"History Item Identifier";
@@ -93,12 +94,12 @@ static BOOL firstDocument = YES;
 - (void)runJavascript:(NSString *)script;
 
 - (void)restoreSidebar;
+- (IBAction)hideSidebar:(id)sender;
 
 - (void)after_zoom;
 
 - (NSTabViewItem *)createWebViewInTab:(id)sender;
 
-- (IBAction)hideSidebar:(id)sender;
 
 - (CHMTableOfContents *)currentDataSource;
 
@@ -122,6 +123,27 @@ static BOOL firstDocument = YES;
 @synthesize pendingBookmarkToLoad;
 
 
++ (void)initialize {
+	/* This `initialized` flag is used to guard against the rare cases where Cocoa bindings
+	 may cause `+initialize` to be called twice: once for this class, and once for the isa-swizzled class: 
+	 
+	 `[NSKVONotifying_MDClassName initialize]`
+	 
+	 */
+	static BOOL initialized = NO;
+	@synchronized(self) {
+		if (initialized == NO) {
+			NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
+			[defaults setObject:[NSNumber numberWithFloat:CHM_SIDEBAR_WIDTH_DEFAULT] forKey:CHMDocumentSidebarWidthKey];
+			[defaults setObject:[NSNumber numberWithFloat:1.0] forKey:CHMDocumentTextSizeMultiplierKey];
+			[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+			[[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:defaults];
+			initialized = YES;
+		}
+	}
+}
+
+
 - (id)init {
 	if ((self = [super init])) {
 		
@@ -131,6 +153,7 @@ static BOOL firstDocument = YES;
 		webViews = [[NSMutableArray alloc] init];
 		console = [[CHMConsole alloc] init];
 		
+		sidebarWidth = [[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentSidebarWidthKey];
 		isSidebarRestored = NO;
 		
 		searchMode = CHMDocumentFileSearchInFile;
@@ -142,7 +165,7 @@ static BOOL firstDocument = YES;
 }
 
 - (void)dealloc {
-	MDLog(@"\"%@\" - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	MDLog(@"%@ - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
 	[filePath release];
 	
@@ -172,7 +195,7 @@ static BOOL firstDocument = YES;
 
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
-	MDLog(@"\"%@\" - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+	MDLog(@"%@ - [%@ %@]", [self displayName], NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
 	[super windowControllerDidLoadNib:aController];
 	[aController.window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
@@ -679,9 +702,8 @@ static BOOL firstDocument = YES;
 	[newView setUIDelegate:self];
 	[newView setResourceLoadDelegate:self];
 	
-	if ([[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentTextSizeMultiplierKey] != 0) {
-		[newView setTextSizeMultiplier:[[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentTextSizeMultiplierKey]];
-	}
+	[newView setTextSizeMultiplier:[[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentTextSizeMultiplierKey]];
+	
 	// NOTE: the tab view item retains the CHMWebViewController instance
 	// create new tab item
 	NSTabViewItem *newItem = [[[NSTabViewItem alloc] init] autorelease];
@@ -1040,31 +1062,57 @@ static BOOL firstDocument = YES;
 
 
 #pragma mark - <NSSplitViewDelegate>
+- (BOOL)splitView:(NSSplitView *)aSplitView canCollapseSubview:(NSView *)subview {
+	return (subview == sidebarView);
+}
+
+- (BOOL)splitView:(NSSplitView *)aSplitView shouldCollapseSubview:(NSView *)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex {
+	return (subview == sidebarView);
+}
+
+- (CGFloat)splitView:(NSSplitView *)aSplitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+	return NSWidth(aSplitView.frame) * 2.0 / 3.0;
+}
+
+
+- (CGFloat)splitView:(NSSplitView *)aSplitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+	return NSWidth(aSplitView.frame) - CHM_SIDEBAR_WIDTH_MIN;
+}
+
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification {
-	if (!isSidebarRestored) {
-		return;
-	}
-	NSView *sidebarView = [[splitView subviews] objectAtIndex:1];
-	CGFloat curWidth = [sidebarView frame].size.width;
-	if (curWidth >= CHM_DEFAULT_SIDEBAR_WIDTH) {
-		[[NSUserDefaults standardUserDefaults] setFloat:curWidth forKey:CHMDocumentSidebarWidthKey];
+	if (isSidebarRestored == NO) return;
+	
+	CGFloat currentWidth = NSWidth(sidebarView.frame);
+	
+	if (currentWidth != sidebarWidth && currentWidth >= CHM_SIDEBAR_WIDTH_DEFAULT) {
+		sidebarWidth = currentWidth;
+		[[NSUserDefaults standardUserDefaults] setFloat:currentWidth forKey:CHMDocumentSidebarWidthKey];
 	}
 }
+
 
 #pragma mark -
 - (void)restoreSidebar {
-	CGFloat width = [[NSUserDefaults standardUserDefaults] floatForKey:CHMDocumentSidebarWidthKey];
-	if (width < CHM_DEFAULT_SIDEBAR_WIDTH) {
-		width = CHM_DEFAULT_SIDEBAR_WIDTH;
+	CGFloat splitViewWidth = NSWidth(splitView.frame);
+	
+	if (isSidebarRestored == NO) {
+		/* if this is the initial load and showing of the sidebar, make sure the width of the sidebar is reasonable given the 
+			overall width of the window (splitView). For instance, we don't want a sidebar view that's wider than the web view itself. */
+		
+		if (sidebarWidth >= (splitViewWidth / 2.0)) {
+			sidebarWidth = MAX(ceil(splitViewWidth/3.0), CHM_SIDEBAR_WIDTH_DEFAULT);
+			[[NSUserDefaults standardUserDefaults] setFloat:sidebarWidth forKey:CHMDocumentSidebarWidthKey];
+		}
 	}
-	CGFloat newpos = [splitView frame].size.width - width;
+	
+	CGFloat newPosition = NSWidth(splitView.frame) - sidebarWidth - splitView.dividerThickness;
+	[splitView setPosition:newPosition ofDividerAtIndex:0];
 	isSidebarRestored = YES;
-	[splitView setPosition:newpos ofDividerAtIndex:0];
 }
 
 - (IBAction)toggleSidebar:(id)sender {
-	CGFloat curWidth = [outlineView frame].size.width;
-	if (curWidth > 30) {
+	CGFloat currentWidth = NSWidth(sidebarView.frame);
+	if (currentWidth >= CHM_SIDEBAR_WIDTH_MIN && ![splitView isSubviewCollapsed:sidebarView]) {
 		[self hideSidebar:sender];
 	} else {
 		[self restoreSidebar];
@@ -1131,9 +1179,9 @@ static BOOL firstDocument = YES;
     return [(CHMLinkItem *)item name];
 }
 
-
-
 #pragma mark <NSOutlineViewDataSource>
+
+
 #pragma mark - Bookmark
 - (IBAction)showAddBookmark:(id)sender {
 	CHMAppController *chmapp = [NSApp delegate];
