@@ -1052,6 +1052,12 @@ static BOOL firstDocument = YES;
 	} else if (action == @selector(zoomOut:)) {
 		return [curWebView canMakeTextSmaller];
 		
+	} else if (action == @selector(goBack:)) {
+		return [curWebView canGoBack];
+		
+	} else if (action == @selector(goForward:)) {
+		return [curWebView canGoForward];
+	
 	} else if (action == @selector(chmDocumentSelectNextTabViewItem:) ||
 			   action == @selector(chmDocumentSelectPreviousTabViewItem:)) {
 		return docTabView.numberOfTabViewItems > 1;

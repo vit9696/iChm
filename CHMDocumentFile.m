@@ -359,12 +359,12 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	struct chmUnitInfo info;
 	void *buffer = NULL;
 	
-	if (chm_resolve_object(chmFileHandle, [absolutePath UTF8String], &info ) == CHM_RESOLVE_SUCCESS) {
+	if (chm_resolve_object(chmFileHandle, [absolutePath UTF8String], &info) == CHM_RESOLVE_SUCCESS) {
 		buffer = malloc((size_t)info.length);
 		
 		if (buffer) {
 			if (!chm_retrieve_object(chmFileHandle, &info, buffer, 0, info.length)) {
-				NSLog(@"[%@ %@] failed to load %lu for item at path \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)info.length, absolutePath);
+				NSLog(@"[%@ %@] failed to load %lu bytes for item at path \"%@\"", NSStringFromClass([self class]), NSStringFromSelector(_cmd), (unsigned long)info.length, absolutePath);
 				free(buffer);
 				buffer = NULL;
 			}
