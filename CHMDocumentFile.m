@@ -660,7 +660,7 @@ static inline NSString *LCIDtoEncodingName(unsigned int lcid) {
 	self.isPreparingSearchIndex = YES;
 	
 	[searchIndexData release];
-	searchIndexData = [[NSMutableData dataWithCapacity: 2^22] retain];
+	searchIndexData = [[NSMutableData dataWithCapacity: 1<<22U] retain];
 	
 	if (skIndex) {
 		SKIndexClose(skIndex);
