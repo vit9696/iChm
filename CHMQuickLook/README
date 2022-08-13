@@ -1,0 +1,25 @@
+QuickCHM
+========
+
+Installation
+============
+ 1. Copy quickchm.qlgenerator to /System/Library/QuickLook
+ 2. Relaunch finder 
+
+ChangeLog
+=========
+
+1.2 
+    * 64 bits
+    * Mac OS X 10.8
+
+1.1		
+    * Universal binary build
+    * Preview is now generated as HTML
+    * Thumbnails are generated in the same thread as plugin main thread, eliminated thread issue and potential memory leak
+    * Performance enhancement
+    * Experimental multi-page preview(only works in command-line preview)
+
+1.0
+    * Generate preview as image
+    * Generate thumbnail using URL loading protocols

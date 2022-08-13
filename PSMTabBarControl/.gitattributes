@@ -1,0 +1,10 @@
+*.xib binary
+
+# NOTE: The following line works to allow `git diff` to properly compare 
+# UTF-16 `.strings` files. To work properly, it requires that you add the 
+# following lines to your global ~/.gitconfig file (uncommented, of course):
+#
+#[diff "localizablestrings"]
+#	textconv = "iconv -f utf-16 -t utf-8"
+
+*.strings diff=localizablestrings

@@ -1,0 +1,15 @@
+obj/
+*.bz2
+afl_findings_dir/
+*~
+.DS_Store
+*.mode1
+*.mode1v3
+*.pbxuser
+*.xcsettings
+*.xcworkspacedata
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata
+build

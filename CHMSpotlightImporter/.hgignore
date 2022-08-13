@@ -1,0 +1,9 @@
+syntax: regexp
+
+# XCode Metadata
+\.xcodeproj/.*\.pbxuser$
+\.xcodeproj/.*\.mode1v3$
+
+# XCode Build Files
+.*build/.*
+

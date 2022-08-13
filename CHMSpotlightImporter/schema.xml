@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<schema version="1.0" xmlns="http://www.apple.com/metadata"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://www.apple.com/metadata file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd">
+    <attributes>
+        <attribute name="com_marcoyuen_chmImporter_SectionTitles" multivalued="true" type="CFString"/>
+    </attributes>
+
+    <types>
+        <type name="com.microsoft.chm">  <!-- add one <type>...</type> entry for each UTI that you need to define.
+            <note>
+                CHM file.
+            </note>
+            <!-- 'allattrs' is a whitespace separated list of all of the attributes that this UTI type normally has.
+                 It does not have to be exhaustive. -->
+            <allattrs>
+				kMDItemTitle
+				com_marcoyuen_chmImporter_SectionTitles
+            </allattrs>
+			
+			<previewattrs>
+				kMDItemTitle
+				com_marcoyuen_chmImporter_SectionTitles
+			</previewattrs>
+			
+            <!-- 'displayattrs' is a whitespace separated list of the attributes that should normally be displayed when previewing files of this UTI type. -->
+            <displayattrs>
+				kMDItemLastUsedDate
+				kMDItemTitle
+				com_marcoyuen_chmImporter_SectionTitles
+            </displayattrs>
+            
+        </type>
+    </types>
+</schema>
+
