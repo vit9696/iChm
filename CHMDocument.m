@@ -1077,12 +1077,12 @@ static BOOL firstDocument = YES;
 }
 
 - (CGFloat)splitView:(NSSplitView *)aSplitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-	return NSWidth(aSplitView.frame) * 2.0 / 3.0;
+	return CHM_SIDEBAR_WIDTH_MIN;
 }
 
 
 - (CGFloat)splitView:(NSSplitView *)aSplitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
-	return NSWidth(aSplitView.frame) - CHM_SIDEBAR_WIDTH_MIN;
+	return NSWidth(aSplitView.frame) * 2.0 / 3.0;
 }
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification {
@@ -1109,10 +1109,15 @@ static BOOL firstDocument = YES;
 			sidebarWidth = MAX(ceil(splitViewWidth/3.0), CHM_SIDEBAR_WIDTH_DEFAULT);
 			[[NSUserDefaults standardUserDefaults] setFloat:sidebarWidth forKey:CHMDocumentSidebarWidthKey];
 		}
-	}
+        
+        CGFloat newPosition = sidebarWidth;
+        [splitView setPosition:newPosition ofDividerAtIndex:1];
+    } else {
+        CGFloat newPosition = sidebarWidth;
+        [splitView setPosition:newPosition ofDividerAtIndex:0];
+    }
 	
-	CGFloat newPosition = NSWidth(splitView.frame) - sidebarWidth - splitView.dividerThickness;
-	[splitView setPosition:newPosition ofDividerAtIndex:0];
+	
 	isSidebarRestored = YES;
 }
 
@@ -1126,7 +1131,7 @@ static BOOL firstDocument = YES;
 }
 
 - (IBAction)hideSidebar:(id)sender {
-	[splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:0] ofDividerAtIndex:0];
+	[splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] ofDividerAtIndex:0];
 }
 
 
