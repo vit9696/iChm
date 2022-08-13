@@ -4,23 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeIconFile</key>
-			<string>ichm_file</string>
-			<key>CFBundleTypeName</key>
-			<string>Compiled HTML Archive</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.microsoft.chm</string>
-			</array>
-			<key>NSDocumentClass</key>
-			<string>CHMDocument</string>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -49,26 +32,28 @@
 	<string>NSApplication</string>
 	<key>SUFeedURL</key>
 	<string>http://www.robinlu.com/ichm/release.xml</string>
-	<key>UTExportedTypeDeclarations</key>
+	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>UTTypeConformsTo</key>
+			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-				<string>public.composite-content </string>
+				<string>chm</string>
+				<string>CHM</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>Compiled HTML Archive</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.microsoft.chm</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>chm</string>
-				</array>
-			</dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>ichm_file</string>
+			<key>CFBundleTypeName</key>
+			<string>CHM</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>CHM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>NSDocumentClass</key>
+			<string>CHMDocument</string>
 		</dict>
 	</array>
 </dict>
