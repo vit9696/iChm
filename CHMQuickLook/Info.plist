@@ -18,7 +18,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>CHM.qlgenerator 1.5.1, Copyright © 2012 Anthony Gelibert, Copyright © 2016 Mark Douma</string>
+	<string>CHM.qlgenerator 1.5.2, Copyright © 2012 Anthony Gelibert, Copyright © 2016 Mark Douma</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -26,9 +26,9 @@
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5.1</string>
+	<string>1.5.2</string>
 	<key>CFBundleVersion</key>
-	<string>151</string>
+	<string>152</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>
@@ -62,7 +62,7 @@
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
-				<string>public.composite-content </string>
+				<string>public.composite-content</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Compiled HTML Archive</string>
