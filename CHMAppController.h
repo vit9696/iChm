@@ -17,7 +17,6 @@
 	
 }
 
-- (IBAction)donate:(id)sender;
 - (IBAction)homepage:(id)sender;
 
 - (BookmarkController *)bookmarkController;

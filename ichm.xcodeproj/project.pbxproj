@@ -55,8 +55,6 @@
 		C33D3B0E0E4F245600F7B487 /* BookmarkController.m in Sources */ = {isa = PBXBuildFile; fileRef = C33D3B0D0E4F245600F7B487 /* BookmarkController.m */; };
 		C33DE50B0E40A651009FF1F4 /* ichm.css in Resources */ = {isa = PBXBuildFile; fileRef = C33DE50A0E40A651009FF1F4 /* ichm.css */; };
 		C33DE67D0E40C40A009FF1F4 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = C33DE67B0E40C40A009FF1F4 /* highlight.js */; };
-		C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; };
-		C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C346DF060E530E8B00A76373 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C35B99FA0E39C23400A63BC3 /* redbird.icns in Resources */ = {isa = PBXBuildFile; fileRef = C35B99F90E39C23400A63BC3 /* redbird.icns */; };
 		C36FD4240E482D3800496822 /* CHMWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C36FD4230E482D3800496822 /* CHMWebView.xib */; };
 		C36FD52C0E48403F00496822 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C36FD52B0E48403F00496822 /* Localizable.strings */; };
@@ -214,7 +212,6 @@
 			files = (
 				C1DA9EF11CD9668C00FE354F /* CHMKit.framework in Copy Frameworks */,
 				C186221E1C8F42DF00C1DD80 /* CHM.framework in Copy Frameworks */,
-				C346DF0B0E530E9E00A76373 /* Sparkle.framework in Copy Frameworks */,
 				C183996A1CD0083A009FDCDE /* PSMTabBarControl.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -347,7 +344,6 @@
 				C1DA9EF01CD9668C00FE354F /* CHMKit.framework in Frameworks */,
 				C186221F1C8F432300C1DD80 /* CHM.framework in Frameworks */,
 				C18399691CD00820009FDCDE /* PSMTabBarControl.framework in Frameworks */,
-				C346DF070E530E8B00A76373 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

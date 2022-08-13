@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1808" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1060" identifier="macosx"/>
-        <development version="5100" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -25,18 +24,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="458"/>
-                            <menuItem title="Check for Update..." id="465">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="checkForUpdates:" target="464" id="466"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Donate" id="456">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="donate:" target="-1" id="457"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Visit Website" id="467">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
@@ -379,6 +366,7 @@
                     </menu>
                 </menuItem>
             </items>
+            <point key="canvasLocation" x="-263" y="114"/>
         </menu>
         <customObject id="449" userLabel="CHMAppController" customClass="CHMAppController">
             <connections>
@@ -386,7 +374,6 @@
                 <outlet property="textEncodingMenu" destination="488" id="Rmp-Gc-a5I"/>
             </connections>
         </customObject>
-        <customObject id="464" customClass="SUUpdater"/>
         <customObject id="530" customClass="BookmarkController">
             <connections>
                 <outlet property="bookmarkMenu" destination="550" id="553"/>
