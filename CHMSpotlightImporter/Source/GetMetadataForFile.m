@@ -11,7 +11,7 @@
 #import "CHMSpotlightHMTLDocument.h"
 
 
-#define MD_DEBUG 1
+#define MD_DEBUG 0
 #define MD_DEBUG_PERFORMANCE 0
 
 static NSString * const MDBundleIdentifierKey = @"com.markdouma.mdimporter.CHM";
