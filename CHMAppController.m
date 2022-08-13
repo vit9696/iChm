@@ -107,7 +107,7 @@
 
 #pragma mark links
 - (IBAction)homepage:(id)sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.robinlu.com/blog/ichm"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/vit9696/ichm"]];
 }
 
 #pragma mark bookmark
