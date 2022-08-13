@@ -19,7 +19,7 @@ The original software was developed by [Robin Lu](https://github.com/veryweblog)
 * Text zoom
 * Automatically locate current document in table of content
 * Hardened runtime and sandboxing
-* Apple Silicon compatible
+* Apple Silicon and dark mode compatible
 * Localized in Chinese, German, Spanish and Dutch.
 
 ### License
