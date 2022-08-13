@@ -660,6 +660,7 @@
 				C35B9BE70E39E4AB00A63BC3 /* Copy Frameworks */,
 				C18622111C8E331000C1DD80 /* Copy CHM.mdimporter */,
 				C1C31ACE1CBDA749000F2B96 /* Copy CHM.qlgenerator */,
+				CE240D6728A8500400084289 /* Archive */,
 			);
 			buildRules = (
 			);
@@ -855,6 +856,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CE240D6728A8500400084289 /* Archive */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Archive;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "cd \"${TARGET_BUILD_DIR}\"\n\ndist=(\"$FULL_PRODUCT_NAME\")\nif [ -d \"$DWARF_DSYM_FILE_NAME\" ]; then dist+=(\"$DWARF_DSYM_FILE_NAME\"); fi\n\nrm -rf *.zip *.dmg\n\nif [ \"$DEPLOY_SCRIPT\" != \"\" ]; then\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).dmg\"\n  \"$DEPLOY_SCRIPT\" \"$FULL_PRODUCT_NAME\" \"${archive}\"\nelse\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).zip\"\n  zip -qry -FS \"${archive}\" \"${dist[@]}\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8D15AC300486D014006FF6A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1023,6 +1045,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				CURRENT_MARKETING_VERSION = 1.5.1;
 				CURRENT_PROJECT_VERSION = 152;
 				DEVELOPMENT_TEAM = DHK4829982;
 				ENABLE_APP_SANDBOX = YES;
@@ -1052,6 +1075,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				CURRENT_MARKETING_VERSION = 1.5.1;
 				CURRENT_PROJECT_VERSION = 152;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DHK4829982;

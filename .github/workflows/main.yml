@@ -31,13 +31,22 @@ jobs:
           /usr/bin/curl -OL "https://github.com/acidanthera/ocbuild/raw/master/codesign/appsign.sh" || exit 1
           chmod a+x appsign.sh || exit 1
 
+      - name: mkdir build
+        run: mkdir build
+
+      - name: Symlink (DEBUG)
+        run: ln -sf build/Build/Products/Debug build/Debug
+
+      - name: Symlink (RELEASE)
+        run: ln -sf build/Build/Products/Release build/Release
+
       - name: Compile with codesign (DEBUG)
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
         env:
           MAC_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
           MAC_ACCOUNT_NAME: ${{ secrets.MAC_ACCOUNT_NAME }}
           MAC_ACCOUNT_PASSWORD: ${{ secrets.MAC_ACCOUNT_PASSWORD }}
-        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile with codesign (RELEASE)
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
@@ -45,15 +54,15 @@ jobs:
           MAC_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
           MAC_ACCOUNT_NAME: ${{ secrets.MAC_ACCOUNT_NAME }}
           MAC_ACCOUNT_PASSWORD: ${{ secrets.MAC_ACCOUNT_PASSWORD }}
-        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile (DEBUG)
         if: github.repository_owner != 'vit9696' || github.event_name == 'pull_request'
-        run: xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        run: xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile (RELEASE)
         if: github.repository_owner != 'vit9696' || github.event_name == 'pull_request'
-        run: xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+        run: xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Upload to Artifacts
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
