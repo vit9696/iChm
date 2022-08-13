@@ -138,12 +138,6 @@
 
         NSRect aRect = NSMakeRect(frame.origin.x + 0.5, frame.origin.y - 0.5, frame.size.width, frame.size.height);
         
-        if ([cell isHighlighted] && [cell state] == NSOffState)
-            {
-            aRect.origin.y += 1.5;
-            aRect.size.height -= 1.5;
-            }
-        
         CGFloat radius = MIN(6.0, 0.5f * MIN(NSWidth(aRect), NSHeight(aRect)));
         NSRect rect = NSInsetRect(aRect, radius, radius);
         
@@ -170,8 +164,13 @@
                 NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
                 [gradient drawInBezierPath:bezier angle:80.0];
                 [gradient release];            
+            } else {
+                NSColor *startColor = [NSColor colorWithDeviceWhite:0.8 alpha:1.000];
+                NSColor *endColor = [NSColor colorWithDeviceWhite:0.8 alpha:1.000];
+                NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
+                [gradient drawInBezierPath:bezier angle:80.0];
+                [gradient release];
             }
-            
         } else {
             if ([cell state] == NSOnState) {
                 NSColor *startColor = [NSColor colorWithDeviceWhite:0.875 alpha:1.000];
@@ -180,6 +179,12 @@
                 [[NSGraphicsContext currentContext] setShouldAntialias:NO];
                 [gradient drawInBezierPath:bezier angle:90.0];
                 [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+                [gradient release];
+            } else {
+                NSColor *startColor = [NSColor colorWithDeviceWhite:0.8 alpha:1.000];
+                NSColor *endColor = [NSColor colorWithDeviceWhite:0.8 alpha:1.000];
+                NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:startColor endingColor:endColor];
+                [gradient drawInBezierPath:bezier angle:80.0];
                 [gradient release];
             }
         }        
@@ -240,16 +245,7 @@
 	NSRect gradientRect = rect;
 	gradientRect.size.height -= 1.0;
 
-	if(![tabBarControl isWindowActive]) {
 		[[NSColor windowBackgroundColor] set];
-		NSRectFill(gradientRect);
-	} else {
-        NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:0.835 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:0.843 alpha:1.0]];
-        [gradient drawInRect:gradientRect angle:90.0];
-        [gradient release];
-    }
-
-	[[NSColor colorWithCalibratedWhite:0.576 alpha:1.0] set];
 	[NSBezierPath strokeLineFromPoint:NSMakePoint(rect.origin.x, NSMinY(rect) + 0.5)
 	 toPoint:NSMakePoint(NSMaxX(rect), NSMinY(rect) + 0.5)];
 }
