@@ -9,7 +9,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>CHMKit.framework 1.5.1, Copyright © 2010 Robin Lu, Copyright © 2016 Mark Douma</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.markdouma.CHMKit.framework</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

@@ -17,14 +17,14 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleGetInfoString</key>
+	<string>CHM.qlgenerator 1.5.1, Copyright © 2012 Anthony Gelibert, Copyright © 2016 Mark Douma</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.markdouma.qlgenerator.${PRODUCT_NAME:identifier}</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>CFBundleGetInfoString</key>
-	<string>CHM.qlgenerator 1.5.1, Copyright © 2012 Anthony Gelibert, Copyright © 2016 Mark Douma</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.5.1</string>
 	<key>CFBundleVersion</key>

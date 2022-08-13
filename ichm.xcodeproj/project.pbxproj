@@ -220,24 +220,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2A37F4BAFDCFA73011CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		32DBCF750370BD2300C91783 /* ichm_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ichm_Prefix.pch; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* iChm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iChm.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		90C4D9C00E7DCBA8006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Dutch.lproj/CHMDocument.xib; sourceTree = "<group>"; };
-		90C4D9C10E7DCBBB006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Dutch.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		90C4D9C20E7DCBDF006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Dutch.lproj/CHMWebView.xib; sourceTree = "<group>"; };
-		90C4D9C30E7DCBFA006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Dutch.lproj/Bookmark.xib; sourceTree = "<group>"; };
-		90C4D9C40E7DCC17006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
-		90C4D9C50E7DCC23006B2109 /* Dutch */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		90C4D9C60E7DCC31006B2109 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
 		C12CE0341CC1798300970809 /* CHMDocumentFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMDocumentFile.h; path = ../CHMDocumentFile.h; sourceTree = "<group>"; };
 		C12CE0351CC1798300970809 /* CHMDocumentFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMDocumentFile.m; path = ../CHMDocumentFile.m; sourceTree = "<group>"; };
 		C1356DCC1CF77E4E007D0DEF /* CHMDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocumentController.h; sourceTree = "<group>"; };
@@ -267,7 +257,6 @@
 		C30F2B2E0E42135C003A17A7 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
 		C33A4AB90E34E92D00277D64 /* CHMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMDocument.h; sourceTree = "<group>"; };
 		C33A4ABA0E34E92D00277D64 /* CHMDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMDocument.m; sourceTree = "<group>"; };
-		C33A4AE00E34EA7700277D64 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C33BB2040E46DA100026F435 /* ichm_file.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ichm_file.icns; sourceTree = "<group>"; };
 		C33D3AC90E4F05E500F7B487 /* Bookmarks.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Bookmarks.xcdatamodel; sourceTree = "<group>"; };
 		C33D3AD20E4F1E3800F7B487 /* CHMFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMFile.h; sourceTree = "<group>"; };
@@ -276,29 +265,20 @@
 		C33D3AD50E4F1E3800F7B487 /* CHMTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMTag.m; sourceTree = "<group>"; };
 		C33D3B0C0E4F245600F7B487 /* BookmarkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkController.h; sourceTree = "<group>"; };
 		C33D3B0D0E4F245600F7B487 /* BookmarkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkController.m; sourceTree = "<group>"; };
-		C33D3B1C0E4F256B00F7B487 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/Bookmark.xib; sourceTree = "<group>"; };
 		C33DE50A0E40A651009FF1F4 /* ichm.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = ichm.css; sourceTree = "<group>"; };
 		C33DE67B0E40C40A009FF1F4 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		C33DE6DC0E40CA96009FF1F4 /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		C346DF060E530E8B00A76373 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		C35B99F90E39C23400A63BC3 /* redbird.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = redbird.icns; sourceTree = "<group>"; };
-		C36FD41A0E4829B400496822 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/CHMDocument.xib; sourceTree = "<group>"; };
-		C36FD41D0E482AFA00496822 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		C36FD4520E48368C00496822 /* German */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C36FD4F00E48393000496822 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C36FD4F50E483DA800496822 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C36FD4F60E483DD900496822 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		C36FD4F70E483DE200496822 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/CHMWebView.xib; sourceTree = "<group>"; };
-		C36FD5290E48403A00496822 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C36FD52D0E48404B00496822 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C36FD5830E4850F100496822 /* German */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C36FD5840E48513900496822 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/CHMWebView.xib; sourceTree = "<group>"; };
 		C38B8E840E627FDD00E0DC42 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = zh_TW.lproj/CHMDocument.xib; sourceTree = "<group>"; };
 		C38B8E850E627FE600E0DC42 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = zh_TW.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C38B8E860E627FEC00E0DC42 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = zh_TW.lproj/CHMWebView.xib; sourceTree = "<group>"; };
 		C38B8E870E627FF300E0DC42 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = zh_TW.lproj/Bookmark.xib; sourceTree = "<group>"; };
 		C38B8E880E627FFA00E0DC42 /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C38B8EA00E628B8D00E0DC42 /* Spanish */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Spanish; path = Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C3907F3C0EC005430018AA80 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		C3907F680EC005B30018AA80 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		C390802C0EC027070018AA80 /* CHMWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMWebView.h; sourceTree = "<group>"; };
@@ -307,13 +287,11 @@
 		C390817A0EC0A4EC0018AA80 /* CHMExporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMExporter.m; sourceTree = "<group>"; };
 		C3A79CC10E30438B00FF4485 /* CHMTableOfContents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHMTableOfContents.h; path = ../CHMTableOfContents.h; sourceTree = "<group>"; };
 		C3A79CC20E30438B00FF4485 /* CHMTableOfContents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHMTableOfContents.m; path = ../CHMTableOfContents.m; sourceTree = "<group>"; };
-		C3AA9B1D0E3EC88600D2FB53 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CHMWebView.xib; sourceTree = "<group>"; };
 		C3AA9B200E3EC8A200D2FB53 /* CHMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMWebViewController.h; sourceTree = "<group>"; };
 		C3AA9B210E3EC8A200D2FB53 /* CHMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMWebViewController.m; sourceTree = "<group>"; };
 		C3BF8B9E0E4FDD7200AE3BEE /* CHMBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHMBookmark.h; sourceTree = "<group>"; };
 		C3BF8B9F0E4FDD7200AE3BEE /* CHMBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMBookmark.m; sourceTree = "<group>"; };
 		C3C082240E4557E700D58E19 /* TB_Sidebar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TB_Sidebar.png; sourceTree = "<group>"; };
-		C3D2046C0E53EFB700D5CA58 /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = German.lproj/Bookmark.xib; sourceTree = "<group>"; };
 		C3D2046D0E53EFBA00D5CA58 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = zh_CN.lproj/Bookmark.xib; sourceTree = "<group>"; };
 		C3D5D3330E5159D5007C51BD /* BookmarkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookmarkView.h; sourceTree = "<group>"; };
 		C3D5D3340E5159D5007C51BD /* BookmarkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookmarkView.m; sourceTree = "<group>"; };
@@ -326,10 +304,32 @@
 		C3DB252E0E2DD646000E5A20 /* CHMAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHMAppController.m; sourceTree = "<group>"; };
 		C3E9715D0E4BEAA000B7B36D /* lcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lcid.h; path = ../lcid.h; sourceTree = "<group>"; };
 		C3ED1D9F0E43106D00C1B93A /* textEncodings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = textEncodings.plist; sourceTree = "<group>"; };
-		C3FF6BAD0E585DC300F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/CHMDocument.xib; sourceTree = "<group>"; };
-		C3FF6BAE0E585DCF00F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		C3FF6BAF0E585DD600F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/CHMWebView.xib; sourceTree = "<group>"; };
-		C3FF6BB00E585DDD00F9EBC2 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Spanish.lproj/Bookmark.xib; sourceTree = "<group>"; };
+		CE240CBF28A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Bookmark.xib; sourceTree = "<group>"; };
+		CE240CC028A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CE240CC128A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CHMDocument.xib; sourceTree = "<group>"; };
+		CE240CC228A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CHMWebView.xib; sourceTree = "<group>"; };
+		CE240CC328A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		CE240CC428A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CE240CC528A81BF200084289 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE240CC628A81BF500084289 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Bookmark.xib; sourceTree = "<group>"; };
+		CE240CC728A81BF500084289 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CE240CC828A81BF500084289 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CHMDocument.xib; sourceTree = "<group>"; };
+		CE240CC928A81BF500084289 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CHMWebView.xib; sourceTree = "<group>"; };
+		CE240CCF28A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/Bookmark.xib; sourceTree = "<group>"; };
+		CE240CD028A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CE240CD128A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/CHMDocument.xib; sourceTree = "<group>"; };
+		CE240CD228A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nl; path = nl.lproj/CHMWebView.xib; sourceTree = "<group>"; };
+		CE240CD328A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = nl; path = nl.lproj/Credits.rtf; sourceTree = "<group>"; };
+		CE240CD428A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CE240CD528A81C0300084289 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE240CD628A81C0500084289 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/CHMWebView.xib; sourceTree = "<group>"; };
+		CE240CD728A81C0500084289 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CE240CD828A81C0500084289 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE240CD928A81C0700084289 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/Bookmark.xib; sourceTree = "<group>"; };
+		CE240CDA28A81C0700084289 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CE240CDB28A81C0700084289 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/CHMDocument.xib; sourceTree = "<group>"; };
+		CE240CDC28A81C0700084289 /* es */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = es; path = es.lproj/CHMWebView.xib; sourceTree = "<group>"; };
+		CE240CDD28A81C0700084289 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +703,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					8D15AC270486D014006FF6A4 = {
 						DevelopmentTeam = DHK4829982;
@@ -711,17 +712,18 @@
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "ichm" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
 				zh_CN,
-				Spanish,
 				zh_TW,
-				Dutch,
+				en,
+				Base,
+				nl,
+				de,
+				es,
+				ja,
+				fr,
 			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* ichm */;
 			projectDirPath = "";
@@ -928,10 +930,10 @@
 		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C1660FE840EACC02AAC07 /* English */,
-				C36FD4520E48368C00496822 /* German */,
 				C36FD4F00E48393000496822 /* zh_CN */,
-				90C4D9C50E7DCC23006B2109 /* Dutch */,
+				CE240CC428A81BF200084289 /* en */,
+				CE240CD428A81C0300084289 /* nl */,
+				CE240CD728A81C0500084289 /* de */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -939,12 +941,12 @@
 		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1DDD582B0DA1D0D100B32029 /* English */,
-				C36FD41D0E482AFA00496822 /* German */,
 				C36FD4F60E483DD900496822 /* zh_CN */,
-				C3FF6BAE0E585DCF00F9EBC2 /* Spanish */,
 				C38B8E850E627FE600E0DC42 /* zh_TW */,
-				90C4D9C10E7DCBBB006B2109 /* Dutch */,
+				CE240CC028A81BF200084289 /* en */,
+				CE240CC728A81BF500084289 /* Base */,
+				CE240CD028A81C0300084289 /* nl */,
+				CE240CDA28A81C0700084289 /* es */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -952,8 +954,8 @@
 		2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */ = {
 			isa = PBXVariantGroup;
 			children = (
-				2A37F4BAFDCFA73011CA2CEA /* English */,
-				90C4D9C60E7DCC31006B2109 /* Dutch */,
+				CE240CC328A81BF200084289 /* en */,
+				CE240CD328A81C0300084289 /* nl */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";
@@ -961,12 +963,12 @@
 		C33A4ADF0E34EA7700277D64 /* CHMDocument.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C33A4AE00E34EA7700277D64 /* English */,
-				C36FD41A0E4829B400496822 /* German */,
 				C36FD4F50E483DA800496822 /* zh_CN */,
-				C3FF6BAD0E585DC300F9EBC2 /* Spanish */,
 				C38B8E840E627FDD00E0DC42 /* zh_TW */,
-				90C4D9C00E7DCBA8006B2109 /* Dutch */,
+				CE240CC128A81BF200084289 /* en */,
+				CE240CC828A81BF500084289 /* Base */,
+				CE240CD128A81C0300084289 /* nl */,
+				CE240CDB28A81C0700084289 /* es */,
 			);
 			name = CHMDocument.xib;
 			sourceTree = "<group>";
@@ -974,12 +976,12 @@
 		C36FD4230E482D3800496822 /* CHMWebView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C3AA9B1D0E3EC88600D2FB53 /* English */,
-				C36FD4F70E483DE200496822 /* zh_CN */,
-				C36FD5840E48513900496822 /* German */,
-				C3FF6BAF0E585DD600F9EBC2 /* Spanish */,
 				C38B8E860E627FEC00E0DC42 /* zh_TW */,
-				90C4D9C20E7DCBDF006B2109 /* Dutch */,
+				CE240CC228A81BF200084289 /* en */,
+				CE240CC928A81BF500084289 /* Base */,
+				CE240CD228A81C0300084289 /* nl */,
+				CE240CD628A81C0500084289 /* de */,
+				CE240CDC28A81C0700084289 /* es */,
 			);
 			name = CHMWebView.xib;
 			sourceTree = "<group>";
@@ -987,12 +989,12 @@
 		C36FD52B0E48403F00496822 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C36FD5290E48403A00496822 /* English */,
 				C36FD52D0E48404B00496822 /* zh_CN */,
-				C36FD5830E4850F100496822 /* German */,
 				C38B8E880E627FFA00E0DC42 /* zh_TW */,
-				C38B8EA00E628B8D00E0DC42 /* Spanish */,
-				90C4D9C40E7DCC17006B2109 /* Dutch */,
+				CE240CC528A81BF200084289 /* en */,
+				CE240CD528A81C0300084289 /* nl */,
+				CE240CD828A81C0500084289 /* de */,
+				CE240CDD28A81C0700084289 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1000,12 +1002,12 @@
 		C3D2046A0E53EFAF00D5CA58 /* Bookmark.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C33D3B1C0E4F256B00F7B487 /* English */,
-				C3D2046C0E53EFB700D5CA58 /* German */,
 				C3D2046D0E53EFBA00D5CA58 /* zh_CN */,
-				C3FF6BB00E585DDD00F9EBC2 /* Spanish */,
 				C38B8E870E627FF300E0DC42 /* zh_TW */,
-				90C4D9C30E7DCBFA006B2109 /* Dutch */,
+				CE240CBF28A81BF200084289 /* en */,
+				CE240CC628A81BF500084289 /* Base */,
+				CE240CCF28A81C0300084289 /* nl */,
+				CE240CD928A81C0700084289 /* es */,
 			);
 			name = Bookmark.xib;
 			sourceTree = "<group>";
@@ -1018,6 +1020,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEVELOPMENT_TEAM = DHK4829982;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1025,13 +1029,13 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ichm_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markdouma.iChm;
 				PRODUCT_NAME = iChm;
 			};
 			name = Debug;
@@ -1041,6 +1045,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DHK4829982;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1053,6 +1059,7 @@
 				GCC_PREFIX_HEADER = ichm_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markdouma.iChm;
 				PRODUCT_NAME = iChm;
 			};
 			name = Release;
@@ -1060,14 +1067,39 @@
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				SDKROOT = macosx;
@@ -1078,14 +1110,38 @@
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				SDKROOT = macosx;
 			};
@@ -1096,6 +1152,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -1125,6 +1182,7 @@
 				INSTALL_PATH = "@rpath/";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markdouma.CHMKit.framework;
 				PRODUCT_NAME = CHMKit;
 			};
 			name = Debug;
@@ -1134,6 +1192,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -1163,6 +1222,7 @@
 				INSTALL_PATH = "@rpath/";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.markdouma.CHMKit.framework;
 				PRODUCT_NAME = CHMKit;
 			};
 			name = Release;

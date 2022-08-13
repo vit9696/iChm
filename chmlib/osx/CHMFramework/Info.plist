@@ -9,7 +9,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>CHM.framework 0.4</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.markdouma.CHM.framework</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
