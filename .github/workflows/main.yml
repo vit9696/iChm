@@ -31,15 +31,6 @@ jobs:
           /usr/bin/curl -OL "https://github.com/acidanthera/ocbuild/raw/master/codesign/appsign.sh" || exit 1
           chmod a+x appsign.sh || exit 1
 
-      - name: mkdir build
-        run: mkdir build
-
-      - name: Symlink (DEBUG)
-        run: ln -sf build/Build/Products/Debug build/Debug
-
-      - name: Symlink (RELEASE)
-        run: ln -sf build/Build/Products/Release build/Release
-
       - name: Compile with codesign (DEBUG)
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
         env:
@@ -69,13 +60,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
-          path: build/*/*.dmg
+          path: build/Build/Products/*/*.dmg
 
       - name: Upload to Release
         if: github.event_name == 'release' && github.repository_owner == 'vit9696'
         uses: svenstaro/upload-release-action@e74ff71f7d8a4c4745b560a485cc5fdb9b5b999d
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/*/*.dmg
+          file: build/Build/Products/*/*.dmg
           tag: ${{ github.ref }}
           file_glob: true
