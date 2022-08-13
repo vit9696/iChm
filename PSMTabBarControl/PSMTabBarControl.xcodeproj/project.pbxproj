@@ -710,6 +710,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A5652FC15D1E72F00F9EFD5 /* PSMTabBarControlDemo-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
 			name = Debug;
 		};
@@ -717,6 +719,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A5652FD15D1E72F00F9EFD5 /* PSMTabBarControlDemo-Release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
 			name = Release;
 		};
@@ -724,7 +728,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A5652FF15D1E72F00F9EFD5 /* PSMTabBarControlFramework-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = NO;
 				STRIP_INSTALLED_PRODUCT = NO;
 			};
@@ -734,8 +740,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A56530015D1E72F00F9EFD5 /* PSMTabBarControlFramework-Release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Release;
@@ -757,14 +765,14 @@
 		C056398C08A954F8003078D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
 			name = Debug;
 		};
 		C056398D08A954F8003078D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
 			name = Release;
 		};
