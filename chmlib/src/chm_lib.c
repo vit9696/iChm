@@ -1240,13 +1240,13 @@ static int64_t _chm_decompress_block(struct chmFile* h, uint64_t block, uint8_t*
 
     /* let the caching system pull its weight! */
     if (block - blockAlign <= h->lzx_last_block && block >= h->lzx_last_block)
-        blockAlign = (block - h->lzx_last_block);
+        blockAlign = (uint32_t)(block - h->lzx_last_block);
 
     /* check if we need previous blocks */
     if (blockAlign != 0) {
         /* fetch all required previous blocks since last reset */
         for (i = blockAlign; i > 0; i--) {
-            uint32_t curBlockIdx = block - i;
+            uint32_t curBlockIdx = (uint32_t)(block - i);
 
             /* check if we most recently decompressed the previous block */
             if (h->lzx_last_block != (int)curBlockIdx) {
