@@ -37,7 +37,7 @@ jobs:
           MAC_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
           MAC_ACCOUNT_NAME: ${{ secrets.MAC_ACCOUNT_NAME }}
           MAC_ACCOUNT_PASSWORD: ${{ secrets.MAC_ACCOUNT_PASSWORD }}
-        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)'
+        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile with codesign (RELEASE)
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
@@ -45,15 +45,15 @@ jobs:
           MAC_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
           MAC_ACCOUNT_NAME: ${{ secrets.MAC_ACCOUNT_NAME }}
           MAC_ACCOUNT_PASSWORD: ${{ secrets.MAC_ACCOUNT_PASSWORD }}
-        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)'
+        run: DEPLOY_SCRIPT="$(pwd)/appsign.sh" xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile (DEBUG)
         if: github.repository_owner != 'vit9696' || github.event_name == 'pull_request'
-        run: xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)'
+        run: xcodebuild -jobs 1 -configuration Debug -scheme 'iChm (Debug)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Compile (RELEASE)
         if: github.repository_owner != 'vit9696' || github.event_name == 'pull_request'
-        run: xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)'
+        run: xcodebuild -jobs 1 -configuration Release -scheme 'iChm (Release)' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
       - name: Upload to Artifacts
         if: github.repository_owner == 'vit9696' && github.event_name != 'pull_request'
