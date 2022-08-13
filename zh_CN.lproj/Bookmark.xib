@@ -135,13 +135,13 @@ Gw
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" copiesOnScroll="NO" id="yRo-fm-jg2">
                                             <rect key="frame" x="0.0" y="0.0" width="122" height="394"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" indentationPerLevel="10" autoresizesOutlineColumn="YES" outlineTableColumn="75" id="73">
                                                     <rect key="frame" x="0.0" y="0.0" width="122" height="394"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
-                                                    <color key="backgroundColor" red="0.83921570000000001" green="0.86666666999999997" blue="0.85882354000000005" alpha="0.99000001000000004" colorSpace="calibratedRGB"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
                                                         <tableColumn editable="NO" width="90" minWidth="16" maxWidth="1000" id="75">
@@ -184,7 +184,7 @@ Gw
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" copiesOnScroll="NO" id="aHv-O1-8hT">
                                             <rect key="frame" x="0.0" y="0.0" width="598" height="394"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="83" id="82">
                                                     <rect key="frame" x="0.0" y="0.0" width="598" height="377"/>
@@ -259,7 +259,7 @@ Gw
                                             <rect key="frame" x="522" y="17" width="15" height="340"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <tableHeaderView key="headerView" id="83">
+                                        <tableHeaderView key="headerView" wantsLayer="YES" id="83">
                                             <rect key="frame" x="0.0" y="0.0" width="598" height="17"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableHeaderView>
@@ -289,6 +289,7 @@ Gw
             <connections>
                 <outlet property="delegate" destination="-2" id="117"/>
             </connections>
+            <point key="canvasLocation" x="139" y="476"/>
         </window>
         <arrayController mode="entity" entityName="Bookmark" id="90">
             <declaredKeys>
