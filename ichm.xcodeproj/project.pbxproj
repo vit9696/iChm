@@ -873,7 +873,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "cd \"${TARGET_BUILD_DIR}\"\n\ndist=(\"$FULL_PRODUCT_NAME\")\nif [ -d \"$DWARF_DSYM_FILE_NAME\" ]; then dist+=(\"$DWARF_DSYM_FILE_NAME\"); fi\n\nrm -rf *.zip *.dmg\n\nif [ \"$DEPLOY_SCRIPT\" != \"\" ]; then\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).dmg\"\n  \"$DEPLOY_SCRIPT\" \"$FULL_PRODUCT_NAME\" \"${archive}\"\nelse\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).zip\"\n  zip -qry -FS \"${archive}\" \"${dist[@]}\"\nfi\n";
+			shellScript = "cd \"${TARGET_BUILD_DIR}\"\n\ndist=(\"$FULL_PRODUCT_NAME\")\nif [ -d \"$DWARF_DSYM_FILE_NAME\" ]; then dist+=(\"$DWARF_DSYM_FILE_NAME\"); fi\n\nrm -rf *.zip *.dmg\n\nif [ \"$DEPLOY_SCRIPT\" != \"\" ]; then\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).dmg\"\n  \"$DEPLOY_SCRIPT\" \"$FULL_PRODUCT_NAME\" \"${archive}\" \"--entitlements ${PROJECT_DIR}/Entitlements.plist\"\nelse\n  archive=\"${PRODUCT_NAME}-${CURRENT_MARKETING_VERSION}-$(echo $CONFIGURATION | tr /a-z/ /A-Z/).zip\"\n  zip -qry -FS \"${archive}\" \"${dist[@]}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
