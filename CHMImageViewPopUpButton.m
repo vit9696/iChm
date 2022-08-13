@@ -7,6 +7,7 @@
 //
 
 #import "CHMImageViewPopUpButton.h"
+#import <CoreImage/CoreImage.h>
 
 
 
@@ -24,6 +25,24 @@
 
 - (void)awakeFromNib {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endTracking:) name:NSMenuDidEndTrackingNotification object:[self menu]];
+    
+    if (@available(macOS 10.14, *)) {
+        if ([[self effectiveAppearance].name isEqualTo:NSAppearanceNameDarkAqua]) {
+            CIImage* ciImage = [[CIImage alloc] initWithData:[self.image TIFFRepresentation]];
+            CIFilter *filter = [CIFilter filterWithName:@"CIColorMatrix" withInputParameters:@{
+                kCIInputImageKey:ciImage,
+                @"inputRVector":[CIVector vectorWithX:-1 Y:0 Z:0],
+                @"inputGVector":[CIVector vectorWithX:0 Y:-1 Z:0],
+                @"inputBVector":[CIVector vectorWithX:0 Y:0 Z:-1],
+                @"inputBiasVector":[CIVector vectorWithX:1 Y:1 Z:1],
+            }];
+    
+            NSCIImageRep *rep = [NSCIImageRep imageRepWithCIImage:[filter outputImage]];
+            NSImage *nsImage = [[NSImage alloc] initWithSize:rep.size];
+            [nsImage addRepresentation:rep];
+            self.image = nsImage;
+        }
+    }
 }
 
 - (void)dealloc {
@@ -52,15 +71,6 @@
 - (void)endTracking:(NSNotification *)notification {
 	MDLog(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
 	
-}
-
-
-- (void)drawRect:(NSRect)dirtyRect {
-	NSRect frame = self.frame;
-	[super drawRect:frame];
-	[[NSColor colorWithCalibratedRed:0.76 green:0.76 blue:0.76 alpha:1.0] set];
-	NSRect dividerRect = NSMakeRect(NSWidth(frame) - 1.0, 1.0, 1.0, NSHeight(frame) - 2.0);
-	NSRectFill(dividerRect);
 }
 
 
